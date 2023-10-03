@@ -1,3 +1,44 @@
 {
-  "title": "Sign in"
+  "english": "English",
+  "vietnam": "Vietnamese",
+  "sign-in": "Sign in",
+  "sign-up": "Sign up",
+  "incorrect": "Incorrect email or password!",
+  "menu": {
+    "change_password": "Change password",
+    "logout": "Logout",
+    "account": "Account",
+    "admin": "Admin Management"
+  },
+  "not-found": "The account has not been registered!",
+  "dob": "Date of birth",
+  "select-year": "Year",
+  "select-month": "Month",
+  "select-day": "Day",
+  "error": {
+    "send-mail-failed": "Send mail failed!",
+    "email-conflict": "Email has been used!",
+    "internal-server-error": "Internal server error!",
+    "invalid-token": "Invalid token!",
+    "user-not-found": "User not found!",
+    "message-email": "Email is required!",
+    "incorrect-password": "Incorrect old password!",
+    "same-password": "New password must be different from old password!"
+  },
+  "verify": {
+    "resend": "Resend verify email",
+    "success": "Verify success!",
+    "failed": "Verify failed!",
+    "title": "Verify email",
+    "description-success": "Your account has been verified successfully!",
+    "description-failed": "Your account has been verified failed!"
+  },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "user": "User",
+    "category": "Category pharma",
+    "product": "Product",
+    "order": "Order",
+    "setting": "Setting"
+  }
 }

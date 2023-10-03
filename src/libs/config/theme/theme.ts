@@ -13,6 +13,7 @@ import {
   grey,
   greyScale,
   red,
+  rgba,
   status,
   trueGrey,
   yellow,
@@ -42,6 +43,7 @@ declare module '@mui/material' {
     blue: typeof blue
     green: typeof green
     status: typeof status
+    rgba: typeof rgba
   }
 
   interface PaletteOptions {
@@ -57,6 +59,7 @@ declare module '@mui/material' {
     blue: typeof blue
     green: typeof green
     status: typeof status
+    rgba: typeof rgba
   }
 }
 
@@ -106,6 +109,7 @@ const defaultTheme: Theme = createTheme({
     blue,
     green,
     status,
+    rgba,
   },
   typography: {
     h1: {
@@ -175,38 +179,38 @@ const defaultTheme: Theme = createTheme({
         },
         contained: {
           color: base.white,
-          backgroundColor: customPrimary[700],
+          backgroundColor: green[700],
           ':hover': {
-            backgroundColor: customPrimary[800],
+            backgroundColor: green[800],
           },
           ':focus': {
-            backgroundColor: customPrimary[900],
+            backgroundColor: green[900],
           },
           ':disabled': {
-            backgroundColor: customPrimary[0],
+            backgroundColor: green[0],
             color: base.white,
           },
         },
 
         outlined: {
-          color: customPrimary[700],
-          border: `1px solid ${customPrimary[700]}`,
+          color: green[700],
+          border: `1px solid ${green[700]}`,
           backgroundColor: base.white,
           ':hover': {
-            color: customPrimary[800],
-            border: `1px solid ${customPrimary[800]}`,
+            color: green[800],
+            border: `1px solid ${green[800]}`,
           },
           ':focus': {
-            color: customPrimary[900],
-            border: `1px solid ${customPrimary[900]}`,
+            color: green[900],
+            border: `1px solid ${green[900]}`,
           },
           ':disabled': {
-            color: customPrimary[0],
-            border: `1px solid ${customPrimary[0]}`,
+            color: green[0],
+            border: `1px solid ${green[0]}`,
           },
         },
         text: {
-          color: customPrimary[700],
+          color: green[700],
         },
       },
     },

@@ -17,6 +17,7 @@
     "incremental": true,
     "noUncheckedIndexedAccess": true,
     "baseUrl": ".",
+    "typeRoots": ["./types"],
     "paths": {
       "@/*": ["./src/*"],
       "public/*": ["./public/*"]

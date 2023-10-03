@@ -4,7 +4,7 @@ const regExpEmail = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/
 
 export const emailPolicySchema = z
   .string()
-  .min(1, { message: 'error.message_email' })
+  .min(1, { message: 'error.message-email' })
   .regex(regExpEmail, { message: 'error.invalid_string_email' })
 
 export const LoginSchema = z.object({
@@ -14,7 +14,7 @@ export const LoginSchema = z.object({
 
 export const ForgotPasswordInputSchema = z.object({
   email: emailPolicySchema,
-  language: z.enum(['en', 'jp']).default('jp'),
+  language: z.enum(['en', 'vi']).default('vi'),
 })
 
 export type SignInType = z.infer<typeof LoginSchema>
@@ -38,7 +38,8 @@ export const SignUpInputSchema = z
     name: z.string().max(30).trim().min(1),
     email: emailPolicySchema,
     password: passwordPolicySchema,
-    date_of_birth: z.string().datetime().nullable(),
+    date_of_birth: z.string().datetime(),
+    language: z.enum(['en', 'vi']).default('vi'),
   })
   .refine(
     (data) => {
@@ -54,20 +55,6 @@ export const SignUpInputSchema = z
   )
 
 export type SignUpInputType = z.infer<typeof SignUpInputSchema>
-
-export const SignUpSchemaForm = z
-  .intersection(
-    SignUpInputSchema,
-    z.object({
-      reenter_password: passwordPolicySchema,
-    }),
-  )
-  .refine((data) => data.password === data.reenter_password, {
-    message: 'error.error_match_password',
-    path: ['reenter_password'],
-  })
-
-export type SignUpFormType = z.infer<typeof SignUpSchemaForm>
 
 export const ResetPasswordInputSchema = z
   .object({
@@ -95,7 +82,7 @@ export const ChangePasswordInputSchema = z
     'confirm-new-password': passwordPolicySchema,
   })
   .refine((data) => data['old-password'] !== data['new-password'], {
-    message: 'error.same_password',
+    message: 'error.same-password',
     path: ['new-password'],
   })
   .refine((data) => data['new-password'] === data['confirm-new-password'], {

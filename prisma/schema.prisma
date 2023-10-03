@@ -14,13 +14,8 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Example {
-    id        Int      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    @@index([name])
+generator zod {
+    provider = "yarn zod-prisma-types"
 }
 
 // Necessary for Next auth
@@ -59,9 +54,9 @@ model User {
     id             String         @id @default(cuid())
     name           String
     email          String         @unique
-    address        String
     emailVerified  DateTime?
     image          String?
+    sex            String?
     password       String
     date_of_birth  DateTime
     accounts       Account[]
@@ -70,6 +65,10 @@ model User {
     password_reset PasswordReset?
     createdAt      DateTime       @default(now())
     updatedAt      DateTime       @updatedAt
+    address        Address[]
+    Cart           Cart[]
+    // Invoice        Invoice[]
+    order          Order[]
 }
 
 model VerificationToken {
@@ -81,7 +80,7 @@ model VerificationToken {
 }
 
 model PasswordReset {
-    id         Int      @id @default(autoincrement())
+    id         String   @id @default(cuid())
     user_id    String   @unique
     token      String   @unique
     created_at DateTime @default(now())
@@ -89,4 +88,170 @@ model PasswordReset {
     user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
     @@unique([user_id, token])
+}
+
+enum AddressType {
+    HOME
+    OFFICE
+}
+
+model Address {
+    id             String      @id @default(cuid())
+    name           String
+    phone_number   String
+    province       Province    @relation(fields: [province_id], references: [province_id])
+    district       District    @relation(fields: [district_id], references: [district_id])
+    wards          Wards       @relation(fields: [wardsWards_id], references: [wards_id])
+    address_detail String
+    type_address   AddressType
+    created_at     DateTime    @default(now())
+    updated_at     DateTime    @updatedAt
+    province_id    String
+    district_id    String
+    wardsWards_id  String
+    User           User?       @relation(fields: [userId], references: [id])
+    userId         String?
+    // Invoice        Invoice[]
+}
+
+model District {
+    district_id String    @id @default(cuid())
+    province_id String
+    name        String
+    Province    Province? @relation(fields: [province_id], references: [province_id])
+    Ward        Wards[]
+    Address     Address[]
+}
+
+model Province {
+    province_id String     @id @default(cuid())
+    name        String
+    districts   District[]
+    Address     Address[]
+}
+
+model Wards {
+    wards_id    String    @id @default(cuid())
+    district_id String
+    name        String
+    District    District? @relation(fields: [district_id], references: [district_id])
+    Address     Address[]
+}
+
+model Unit {
+    id        String    @id @default(cuid())
+    name      String
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+    Product   Product[]
+}
+
+model Product {
+    id                String         @id @default(cuid())
+    name              String
+    price             Float
+    description       String
+    short_description String
+    unit_id           String
+    createdAt         DateTime       @default(now())
+    updatedAt         DateTime       @updatedAt
+    quantity          Int
+    expiryProduct     DateTime
+    image             ImageProduct[]
+    brand_origin_id   String?
+    category_id       String?
+    brand_name_id     String?
+    unit              Unit           @relation(fields: [unit_id], references: [id])
+    BrandOrigin       BrandOrigin?   @relation(fields: [brand_origin_id], references: [id])
+    Category          Category?      @relation(fields: [category_id], references: [id])
+    BrandName         BrandName?     @relation(fields: [brand_name_id], references: [id])
+    Cart              Cart[]
+    order             Order[]
+}
+
+model ImageProduct {
+    id         String   @id @default(cuid())
+    url        String
+    product_id String
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+    Product    Product? @relation(fields: [product_id], references: [id])
+}
+
+model BrandOrigin {
+    id        String    @id @default(cuid())
+    name      String
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+    Product   Product[]
+}
+
+model Category {
+    id        String    @id @default(cuid())
+    name      String
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+    Product   Product[]
+}
+
+model BrandName {
+    id        String    @id @default(cuid())
+    name      String
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+    Product   Product[]
+}
+
+model Cart {
+    id         String   @id @default(cuid())
+    user_id    String
+    product_id String
+    quantity   Int
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+    User       User     @relation(fields: [user_id], references: [id])
+    Product    Product  @relation(fields: [product_id], references: [id])
+}
+
+// model Invoice {
+//     id            String          @id @default(cuid())
+//     user_id       String
+//     address_id    String
+//     createdAt     DateTime        @default(now())
+//     updatedAt     DateTime        @updatedAt
+//     User          User            @relation(fields: [user_id], references: [id])
+//     Address       Address         @relation(fields: [address_id], references: [id])
+//     InvoiceDetail InvoiceDetail[]
+// }
+
+// model InvoiceDetail {
+//     id         String   @id @default(cuid())
+//     invoiceId  String
+//     product_id String
+//     quantity   Int
+//     createdAt  DateTime @default(now())
+//     updatedAt  DateTime @updatedAt
+//     Invoice    Invoice  @relation(fields: [invoiceId], references: [id])
+//     Product    Product  @relation(fields: [product_id], references: [id])
+// }
+
+model Order {
+    id              String      @id @default(cuid())
+    user_id         String
+    product_id      String
+    quantity        Int
+    createdAt       DateTime    @default(now())
+    updatedAt       DateTime    @updatedAt
+    User            User        @relation(fields: [user_id], references: [id])
+    Product         Product     @relation(fields: [product_id], references: [id])
+    status          StatusOrder @relation(fields: [status_order_id], references: [id])
+    status_order_id String
+}
+
+model StatusOrder {
+    id        String   @id @default(cuid())
+    name      String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    Order     Order[]
 }

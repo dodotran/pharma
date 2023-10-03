@@ -1,5 +1,6 @@
 import {
   ChangePasswordInputSchema,
+  ForgotPasswordInputSchema,
   ResetPasswordInputSchema,
   SignUpInputSchema,
 } from '@/libs/schema'
@@ -33,7 +34,7 @@ export const authRouter = createTRPCRouter({
     }),
   resendVerifyEmail: publicProcedure
     .meta({ openapi: { method: 'POST', path: '/resend-email' } })
-    .input(z.object({ email: z.string().email(), language: z.enum(['en', 'jp']).default('jp') }))
+    .input(z.object({ email: z.string().email(), language: z.enum(['en', 'vi']).default('vi') }))
     .output(z.string())
     .mutation(({ input }) => {
       return authService.resendVerifyEmail(input.email, input.language)
@@ -48,5 +49,12 @@ export const authRouter = createTRPCRouter({
         input['new-password'],
         ctx.session.user.id,
       )
+    }),
+  forgotPassword: publicProcedure
+    .meta({ openapi: { method: 'GET', path: '/forgot-password' } })
+    .input(ForgotPasswordInputSchema)
+    .output(z.string())
+    .mutation(({ input }) => {
+      return authService.forgotPassword(input.email, input.language)
     }),
 })

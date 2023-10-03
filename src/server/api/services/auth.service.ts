@@ -1,16 +1,60 @@
-import { SignUpInputSchema } from '@/libs/schema'
+import { SignUpInputType } from '@/libs/schema'
 import MailUtils from '@/libs/utils/mail'
 import { prisma } from '@/server/db'
 import { TRPCError } from '@trpc/server'
 import * as argon2 from 'argon2'
 import { nanoid } from 'nanoid'
-import { z } from 'zod'
 
 const ONE_DAY = 24 * 60 * 60 * 1000
 
 class AuthService {
-  async signUp(userInfo: z.infer<typeof SignUpInputSchema>) {
-    const { email, password, name, ...createUserData } = userInfo
+  async forgotPassword(email: string, language: string) {
+    const user = await prisma.user.findUnique({
+      where: {
+        email,
+      },
+    })
+
+    if (!user) {
+      throw new TRPCError({
+        code: 'NOT_FOUND',
+        message: 'error.user-not-found',
+      })
+    }
+
+    const token = nanoid()
+
+    await prisma.passwordReset.upsert({
+      where: {
+        user_id: user.id,
+      },
+      update: {
+        token,
+      },
+      create: {
+        user_id: user.id,
+        token,
+      },
+    })
+    try {
+      await MailUtils.getInstance().sendPasswordResetMail(
+        user.email as string,
+        token,
+        user.name as string,
+        language,
+      )
+    } catch (error) {
+      throw new TRPCError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'error.send-mail-failed',
+      })
+    }
+
+    return 'ok!'
+  }
+
+  async signUp(userInfo: SignUpInputType) {
+    const { email, password, name, date_of_birth, language } = userInfo
 
     const user = await prisma.user.findUnique({
       where: {
@@ -21,7 +65,7 @@ class AuthService {
     if (user) {
       throw new TRPCError({
         code: 'CONFLICT',
-        message: 'error.email_conflict',
+        message: 'error.email-conflict',
       })
     } else {
       const hash = await argon2.hash(password as string)
@@ -31,7 +75,7 @@ class AuthService {
         const [user] = await prisma.$transaction([
           prisma.user.create({
             data: {
-              ...createUserData,
+              date_of_birth,
               email,
               name,
               password: hash,
@@ -46,7 +90,7 @@ class AuthService {
           }),
         ])
 
-        await MailUtils.getInstance().sendVerifyMail(email, token, name, 'jp')
+        await MailUtils.getInstance().sendVerifyMail(email, token, name, language)
 
         const { password: _, ...userWithoutPassword } = user
 
@@ -93,7 +137,7 @@ class AuthService {
     } catch (error) {
       throw new TRPCError({
         code: 'INTERNAL_SERVER_ERROR',
-        message: 'error.internal_server_error',
+        message: 'error.internal-server-error',
       })
     }
 
@@ -108,7 +152,7 @@ class AuthService {
    * database and validate its expiration time.
    * @returns The function `validateResetPasswordToken` returns the `checkToken` object if it exists and
    * is valid. If the token is invalid or expired, it throws a `TRPCError` with an error code of
-   * `UNAUTHORIZED` and a message of `error.invalid_token`.
+   * `UNAUTHORIZED` and a message of `error.invalid-token`.
    */
   async validateResetPasswordToken(token: string) {
     const checkToken = await prisma.passwordReset.findUnique({
@@ -120,7 +164,7 @@ class AuthService {
     if (!checkToken) {
       throw new TRPCError({
         code: 'UNAUTHORIZED',
-        message: 'error.invalid_token',
+        message: 'error.invalid-token',
       })
     }
 
@@ -136,7 +180,7 @@ class AuthService {
 
       throw new TRPCError({
         code: 'UNAUTHORIZED',
-        message: 'error.invalid_token',
+        message: 'error.invalid-token',
       })
     }
 
@@ -191,7 +235,7 @@ class AuthService {
     if (!checkToken) {
       throw new TRPCError({
         code: 'UNAUTHORIZED',
-        message: 'error.invalid_token',
+        message: 'error.invalid-token',
       })
     }
 
@@ -204,14 +248,14 @@ class AuthService {
 
       throw new TRPCError({
         code: 'UNAUTHORIZED',
-        message: 'error.invalid_token',
+        message: 'error.invalid-token',
       })
     }
 
     return checkToken
   }
 
-  async resendVerifyEmail(email: string, language: string) {
+  async resendVerifyEmail(email: string, language: 'vi' | 'en') {
     const checkEmail = await prisma.user.findUnique({
       where: {
         email,
@@ -252,7 +296,7 @@ class AuthService {
       email,
       checkVerifyToken.token,
       checkEmail.name as string,
-      'en',
+      language,
     )
     return 'ok!'
   }
@@ -266,7 +310,7 @@ class AuthService {
     if (!user) {
       throw new TRPCError({
         code: 'UNAUTHORIZED',
-        message: 'error.error_user_not_found',
+        message: 'error.user-not-found',
       })
     }
     const isVerify = await argon2.verify(user.password as string, password)
@@ -284,7 +328,7 @@ class AuthService {
     } else {
       throw new TRPCError({
         code: 'UNAUTHORIZED',
-        message: 'error.incorrect_password',
+        message: 'error.incorrect-password',
       })
     }
   }

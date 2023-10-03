@@ -12,29 +12,27 @@ const ForgotPasswordMail: FC<EmailProps> = (props) => {
   const { url, name, language } = props
   return (
     <MailLayout language={language}>
-      {language === 'jp' ? (
+      {language === 'vi' ? (
         <>
           <Text style={textStyle}>
-            こんにちは <b>{name}</b> さん
+            Xin chào <b>{name}</b>
           </Text>
 
           <Text style={textStyle}>
-            ご登録のアカウントからパスワード再設定のリクエストを受け取りました。もし、パスワード再設定のリクエストに身に覚えがなければ、このメールを無視・消去いただいても構いません。
-          </Text>
-
-          <Text style={textStyle}>
-            現段階ではあなたのパスワードは変更されておりせんが、パスワードをリセットするには以下のボタンをクリックしてください：
+            Chúng tôi đã nhận được yêu cầu đặt lại mật khẩu cho tài khoản của bạn. Nếu bạn không làm
+            yêu cầu này, vui lòng bỏ qua email này và mật khẩu của bạn sẽ không bị thay đổi. Để
+            thiết lập lại mật khẩu của bạn, vui lòng nhấp vào nút bên dưới:
           </Text>
           <Button
             href={url}
             style={{ color: 'white !important' }}
-            className="w-[154px] bg-[#3E19A3] text-center py-[14px] text-white rounded-[6px] font-semibold"
+            className="w-[154px] bg-[#129151] text-center py-[14px] text-white rounded-[6px] font-semibold"
           >
-            パスワード再設定
+            Đặt lai mật khẩu
           </Button>
 
           <Text className="my-6" style={textStyle}>
-            ボタンを押せない場合は、お手数ですがパスワード再設定ページへの移動をお願い致します。下記リンクより:&nbsp;
+            Bạn cũng có thể nhấp vào đường dẫn này để đặt lại mật khẩu::&nbsp;
             <Link href={url}>{url}</Link>
           </Text>
         </>
@@ -53,7 +51,7 @@ const ForgotPasswordMail: FC<EmailProps> = (props) => {
           <Button
             href={url}
             style={{ color: 'white !important' }}
-            className="w-[154px] bg-[#3E19A3] text-center py-[14px] text-white rounded-[6px] font-semibold"
+            className="w-[154px] bg-[#129151] text-center py-[14px] text-white rounded-[6px] font-semibold"
           >
             Reset password
           </Button>

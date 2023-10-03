@@ -1,4 +1,5 @@
-import { AlertTitle, Typography } from '@mui/material'
+import { api } from '@/utils/api'
+import { AlertTitle, CircularProgress, Typography } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
@@ -7,11 +8,12 @@ import {
   SnackbarContent,
   SnackbarProviderProps,
   closeSnackbar,
+  enqueueSnackbar,
 } from 'notistack'
 import checked from 'public/assets/svgs/checked.svg'
 import info from 'public/assets/svgs/info.svg'
 import { forwardRef } from 'react'
-import { Alert } from './styled'
+import { Alert, ButtonStyle } from './styled'
 
 declare module 'notistack' {
   interface VariantOverrides {
@@ -20,6 +22,7 @@ declare module 'notistack' {
 
     success: {
       description?: string
+      textIsKey?: boolean
     }
     error: {
       description?: string
@@ -37,8 +40,10 @@ interface CustomSnackbarProps extends CustomContentProps {
 
 export const SnackbarCustom = forwardRef<HTMLDivElement, CustomSnackbarProps>(
   function CustomComponent(props, ref) {
-    // const { mutate, isLoading } = api.auth.resendVerifyEmail.useMutation()
+    const router = useRouter()
     const { t } = useTranslation('common')
+    const { mutate, isLoading } = api.auth.resendVerifyEmail.useMutation()
+
     const {
       id,
       message,
@@ -57,8 +62,6 @@ export const SnackbarCustom = forwardRef<HTMLDivElement, CustomSnackbarProps>(
       closeSnackbar(id)
     }
 
-    const router = useRouter()
-
     return (
       <SnackbarContent ref={ref} role="alert" {...other}>
         <Alert
@@ -74,12 +77,12 @@ export const SnackbarCustom = forwardRef<HTMLDivElement, CustomSnackbarProps>(
           {description && (
             <Typography variant="body2">{textIsKey ? t(description) : description}</Typography>
           )}
-          {/* {verifyEmail && (
+          {verifyEmail && (
             <ButtonStyle
               variant="contained"
               onClick={() => {
                 mutate(
-                  { email: verifyEmail, language: router.locale as LanguageEmail },
+                  { email: verifyEmail, language: router.locale as 'vi' | 'en' },
                   {
                     onError(error) {
                       enqueueSnackbar(t(error.message), {
@@ -93,9 +96,9 @@ export const SnackbarCustom = forwardRef<HTMLDivElement, CustomSnackbarProps>(
                 )
               }}
             >
-              {isLoading ? <CircularProgress size="1.2rem" /> : t('verify_resend')}
+              {isLoading ? <CircularProgress size="1.2rem" /> : t('verify.resend')}
             </ButtonStyle>
-          )} */}
+          )}
         </Alert>
       </SnackbarContent>
     )

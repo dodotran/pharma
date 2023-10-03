@@ -15,13 +15,12 @@ const VerifyEmail: FC<EmailProps> = (props) => {
       {language === 'jp' ? (
         <>
           <Text style={textStyle}>
-            こんにちは <b>{name}</b> さん
+            Xin chào <b>{name}</b>
           </Text>
 
-          <Text style={textStyle}>KPI Masterにご登録いただき、ありがとうございます。</Text>
-
           <Text style={textStyle}>
-            アカウントの登録を完了するために、以下のリンクをクリックして、メール認証を完了させてください。
+            Cảm ơn bạn đã đăng ký Pharma. Để hoàn tất việc đăng ký tài khoản, vui lòng nhấp vào liên
+            kết bên dưới để hoàn tất xác minh email của bạn.
           </Text>
 
           <Text className="my-6" style={textStyle}>

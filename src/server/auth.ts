@@ -5,9 +5,10 @@ import { PrismaAdapter } from '@next-auth/prisma-adapter'
 import { verify } from 'argon2'
 import { type GetServerSidePropsContext } from 'next'
 import { getServerSession, type DefaultSession, type NextAuthOptions } from 'next-auth'
-import { CredentialsConfig } from 'next-auth/providers'
 import CredentialsProvider from 'next-auth/providers/credentials'
+import FaceBookProvider from 'next-auth/providers/facebook'
 import GithubProvider from 'next-auth/providers/github'
+import GoogleProvider from 'next-auth/providers/google'
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -37,26 +38,54 @@ declare module 'next-auth' {
  */
 export const authOptions: NextAuthOptions = {
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
         token.id = user.id
+        token.role = user.role
+      }
+
+      if (!session) {
+        const data = await prisma.user.findUnique({ where: { id: token.id as string } })
+
+        token.picture = data?.image || token.picture
+        token.name = data?.name || token.name
+      } else if (trigger === 'update') {
+        token.picture = session.image || token.picture
+        token.name = session.name || token.name
       }
 
       return token
     },
-    session: ({ session, user }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id,
-      },
-    }),
+    session: ({ session, token, trigger }) => {
+      if (session.user) {
+        session.user.id = token.id as string
+        session.role = token.role as string
+        // session.user.role = user.role; <-- put other properties on the session here
+      }
+      if (trigger === 'update') {
+        // You can update the session in the database if it's not already updated.
+
+        // Make sure the updated value is reflected on the client
+        session.user.image = token.picture
+        session.user.name = token.name
+      }
+
+      return session
+    },
   },
   adapter: PrismaAdapter(prisma),
   providers: [
     GithubProvider({
       clientId: env.GITHUB_CLIENT_ID,
       clientSecret: env.GITHUB_CLIENT_SECRET,
+    }),
+    GoogleProvider({
+      clientId: env.GOOGLE_CLIENT_ID,
+      clientSecret: env.GOOGLE_CLIENT_SECRET,
+    }),
+    FaceBookProvider({
+      clientId: env.FACEBOOK_CLIENT_ID,
+      clientSecret: env.FACEBOOK_CLIENT_SECRET,
     }),
     /**
      * ...add more providers here.
@@ -77,11 +106,11 @@ export const authOptions: NextAuthOptions = {
         email: {
           label: 'email',
           type: 'text',
-          placeholder: 'user@kpi-master.jp',
+          placeholder: 'thinh221201@gmail.com',
         },
         password: { label: 'Password', type: 'password' },
       },
-      authorize: (async (credentials) => {
+      authorize: async (credentials) => {
         // You need to provide your own logic here that takes the credentials
         // submitted and returns either a object representing a user or value
         // that is false/null if the credentials are invalid.
@@ -95,7 +124,7 @@ export const authOptions: NextAuthOptions = {
         })
 
         if (!user) {
-          throw new Error('not_found')
+          throw new Error('not-found')
         }
 
         if (user && user.password) {
@@ -110,11 +139,13 @@ export const authOptions: NextAuthOptions = {
 
           return user
         } else {
+          console.log('incorrect')
           throw new Error('incorrect')
         }
-      }) as CredentialsConfig['authorize'],
+      },
     }),
   ],
+  session: { strategy: 'jwt' },
 }
 
 /**

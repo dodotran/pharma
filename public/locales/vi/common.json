@@ -1,3 +1,44 @@
 {
-  "title": "Đăng nhập"
+  "english": "Tiếng Anh",
+  "vietnam": "Tiếng Việt",
+  "sign-in": "Đăng nhập",
+  "sign-up": "Đăng ký",
+  "incorrect": "Email hoặc mật khẩu không chính xác!",
+  "menu": {
+    "change_password": "Đổi mật khẩu",
+    "logout": "Đăng xuất",
+    "account": "Thông tin cá nhân",
+    "admin": "Trang quản trị"
+  },
+  "not-found": "Tài khoản chưa được đăng ký!",
+  "dob": "Ngày sinh",
+  "select-year": "Năm",
+  "select-month": "Tháng",
+  "select-day": "Ngày",
+  "error": {
+    "send-mail-failed": "Gửi mail thất bại!",
+    "email-conflict": "Email đã tồn tại!",
+    "internal-server-error": "Lỗi máy chủ!",
+    "invalid-token": "Token không hợp lệ",
+    "user-not-found": "Email không tồn tại!",
+    "message-email": "Email không hợp lệ!",
+    "incorrect-password": "Mật khẩu không chính xác!",
+    "same-password": "Mật khẩu mới không được trùng với mật khẩu cũ!"
+  },
+  "verify": {
+    "resend": "Gửi lại",
+    "success": "Xác thực thành công!",
+    "failed": "Xác thực thất bại!",
+    "title": "Xác thực tài khoản",
+    "description-success": "Tài khoản của bạn đã được xác thực thành công!",
+    "description-failed": "Tài khoản của bạn chưa được xác thực!"
+  },
+  "sidebar": {
+    "dashboard": "Bảng điều khiển",
+    "user": "Người dùng",
+    "category": "Danh mục thuốc",
+    "product": "Sản phẩm",
+    "order": "Đơn hàng",
+    "setting": "Cài đặt"
+  }
 }

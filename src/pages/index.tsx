@@ -1,26 +1,25 @@
-import { Button, Stack } from '@mui/material'
-import { signIn, signOut, useSession } from 'next-auth/react'
+import { Layout } from '@/libs/shared/Layout'
+import { api } from '@/utils/api'
+import { Button } from '@mui/material'
+import { GetStaticPropsContext } from 'next'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { useRouter } from 'next/router'
+
+export async function getStaticProps({ locale }: GetStaticPropsContext) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale as string, ['common', 'auth'])),
+    },
+  }
+}
 
 export default function Home() {
   const router = useRouter()
-
+  const { data } = api.wards.get.useQuery()
+  console.log(data)
   return (
-    <Stack>
+    <Layout>
       <Button onClick={() => router.push('/sign-in')}>Sign in</Button>
-    </Stack>
-  )
-}
-
-function AuthShowcase() {
-  const { data: sessionData } = useSession()
-
-  return (
-    <div>
-      <p>{sessionData && <span>Logged in as {sessionData.user?.name}</span>}</p>
-      <button onClick={sessionData ? () => void signOut() : () => void signIn()}>
-        {sessionData ? 'Sign out' : 'Sign in'}
-      </button>
-    </div>
+    </Layout>
   )
 }

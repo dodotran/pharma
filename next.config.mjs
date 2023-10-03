@@ -15,6 +15,9 @@ const config = {
    * @see https://github.com/vercel/next.js/issues/41980
    */
   i18n: configI18n.i18n,
+  images: {
+    domains: ['res.cloudinary.com'],
+  },
 }
 
 export default config
