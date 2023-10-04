@@ -1,4 +1,4 @@
-import { CreateProductPage } from '@/features/product/CreateProduct'
+import { CreateProductPage } from '@/features/admin'
 import { authOptions } from '@/server/auth'
 import { GetServerSidePropsContext } from 'next'
 import { getServerSession } from 'next-auth'

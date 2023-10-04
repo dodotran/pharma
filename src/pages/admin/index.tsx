@@ -1,17 +1,17 @@
+import {  Product } from '@/features/admin'
 import { authOptions } from '@/server/auth'
 import { GetServerSidePropsContext } from 'next'
 import { getServerSession } from 'next-auth'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
-import CreateProductPage from './product'
 
 export async function getServerSideProps({ locale, req, res }: GetServerSidePropsContext) {
   const session = await getServerSession(req, res, authOptions)
 
   return {
     props: {
-      ...(await serverSideTranslations(locale as string, ['common', 'auth'])),
+      ...(await serverSideTranslations(locale as string, ['common', 'auth', 'product'])),
     },
   }
 }
 
-export default CreateProductPage
+export default Product

@@ -1,1 +1,2 @@
-export * from './CreateProduct'
+export * from './FormCreateProduct'
+export * from './Product'

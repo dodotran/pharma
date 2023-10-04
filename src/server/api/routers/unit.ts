@@ -1,6 +1,7 @@
-import { BrandSchema, BrandSchemaUpdate, ListBrandSchema } from '@/libs/schema/brand.schema'
+import { createUnitSchema, updateUnitSchema } from '@/libs/schema/product.schema'
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '@/server/api/trpc'
 import { User } from 'next-auth'
+import { UnitSchema } from 'prisma/generated/zod'
 import { z } from 'zod'
 import UnitService from '../services/unit.service'
 
@@ -10,20 +11,20 @@ export const unitRouter = createTRPCRouter({
   get: publicProcedure
     .meta({ openapi: { method: 'GET', path: '/' } })
     .input(z.void())
-    .output(ListBrandSchema)
+    .output(z.array(UnitSchema))
     .query(() => {
       return unitService.getAll()
     }),
   create: protectedProcedure
     .input(z.object({ name: z.string() }))
-    .output(BrandSchema)
+    .output(createUnitSchema)
     .mutation(({ input, ctx }) => {
       return unitService.create(input, ctx.session.user as User)
     }),
   update: protectedProcedure
     .meta({ openapi: { method: 'PUT', path: '/:id' } })
-    .input(BrandSchemaUpdate)
-    .output(BrandSchema)
+    .input(updateUnitSchema)
+    .output(UnitSchema)
     .mutation(({ input, ctx }) => {
       return unitService.update(input, ctx.session.user as User)
     }),

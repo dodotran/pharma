@@ -1,10 +1,16 @@
-import { CreateProductSchemaType } from '@/libs/schema/product.schema'
+import { CreateProduct } from '@/libs/schema/product.schema'
 import { prisma } from '@/server/db'
 import { UtilsService } from './utils.service'
 
 class ProductService extends UtilsService {
   async getAll() {
-    const product = await prisma.product.findMany()
+    const product = await prisma.product.findMany({
+      include: {
+        unit: true,
+        category: true,
+        image: true,
+      },
+    })
 
     return product
   }
@@ -16,9 +22,7 @@ class ProductService extends UtilsService {
       },
       include: {
         unit: true,
-        BrandName: true,
-        Category: true,
-        BrandOrigin: true,
+        category: true,
         image: true,
       },
     })
@@ -26,15 +30,12 @@ class ProductService extends UtilsService {
     return product
   }
 
-  async create(data: CreateProductSchemaType) {
-    const date = new Date()
-
+  async create(data: CreateProduct) {
     const product = await prisma.product.create({
       data: {
         ...data,
         price: Number(data.price),
         quantity: Number(data.quantity),
-        expiryProduct: date,
       },
     })
 

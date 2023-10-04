@@ -1,13 +1,5 @@
 import { createTRPCRouter } from '@/server/api/trpc'
-import {
-  authRouter,
-  brandOriginRouter,
-  brandRouter,
-  categoryRouter,
-  productRoute,
-  unitRouter,
-  wardsRouter,
-} from './routers'
+import { authRouter, categoryRouter, productRoute, unitRouter, wardsRouter } from './routers'
 
 /**
  * This is the primary router for your server.
@@ -17,10 +9,8 @@ import {
 export const appRouter = createTRPCRouter({
   auth: authRouter,
   wards: wardsRouter,
-  brand: brandRouter,
   category: categoryRouter,
   unit: unitRouter,
-  brandOrigin: brandOriginRouter,
   product: productRoute,
 })
 

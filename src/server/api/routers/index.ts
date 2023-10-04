@@ -1,6 +1,4 @@
 export * from './auth'
-export * from './brand'
-export * from './brand-origin'
 export * from './category'
 export * from './product'
 export * from './unit'
