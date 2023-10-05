@@ -36,7 +36,6 @@ const FormCreateProduct = () => {
     resolver: zodResolver(createProductSchema),
   })
 
-  console.log(formState.errors)
   const onSubmit: SubmitHandler<CreateProduct> = useCallback(
     async (data) => {
       console.log(data)
@@ -51,6 +50,7 @@ const FormCreateProduct = () => {
           onError: (err) => {
             const error = String(err.message)
             const description = t(error, { ns: 'common' })
+
             enqueueSnackbar(t(`${description}`), {
               variant: 'error',
             })

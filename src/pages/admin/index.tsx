@@ -1,4 +1,4 @@
-import { Category } from '@/features/admin/category'
+import { Unit } from '@/features/admin'
 import { GetStaticPropsContext } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
@@ -10,4 +10,4 @@ export async function getStaticProps({ locale }: GetStaticPropsContext) {
   }
 }
 
-export default Category
+export default Unit

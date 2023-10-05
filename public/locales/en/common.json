@@ -40,5 +40,30 @@
     "product": "Product",
     "order": "Order",
     "setting": "Setting"
+  },
+  "unit": {
+    "title": "Unit Screen",
+    "unit_name": "Unit name",
+    "unit_name_placeholder": "Enter unit name",
+    "create": "Create unit",
+    "update": "Update unit",
+    "submit": "Submit",
+    "unit_id": "Unit ID",
+    "created_at": "Created at",
+    "updated_at": "Updated at",
+    "create-success": "Create unit successfully!",
+    "update-success": "Update unit successfully!",
+    "delete-success": "Delete unit successfully!",
+    "delete-failed": "Delete unit failed!",
+    "create-failed": "Create unit failed!",
+    "number-of-drugs": "Number of drugs"
+  },
+  "category": {
+    "category": "Category",
+    "category_name": "Category name",
+    "category_name_placeholder": "Enter category name",
+    "create": "Create category",
+    "update": "Update category",
+    "submit": "Submit"
   }
 }

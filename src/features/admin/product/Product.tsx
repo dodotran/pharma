@@ -4,7 +4,7 @@ import { ReactTable } from '@/libs/shared/Table'
 import { api } from '@/utils/api'
 import { Button, Stack, Typography } from '@mui/material'
 import { useState } from 'react'
-import { FormCreateProduct } from './FormCreateProduct'
+import { FormCreateProduct } from './Create'
 
 const Product = () => {
   const { data, isLoading } = api.product.getAll.useQuery()
@@ -72,7 +72,7 @@ const Product = () => {
         </Button>
       </Stack>
 
-      <ReactTable columns={columns} data={data} isLoading={isLoading} />
+      <ReactTable columns={columns} data={data || []} isLoading={isLoading} />
 
       <Modal open={open} handleClose={handleClose} title="Product">
         <FormCreateProduct />

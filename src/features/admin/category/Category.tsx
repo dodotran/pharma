@@ -1,9 +1,9 @@
 import { LayoutAdmin } from '@/libs/shared/Layout'
 import { Modal } from '@/libs/shared/Modal'
 import { ReactTable } from '@/libs/shared/Table'
+import { ButtonDetail, MuiImage } from '@/libs/shared/styled'
 import { api } from '@/utils/api'
-import { Button, Stack, Typography, styled } from '@mui/material'
-import Image from 'next/image'
+import { Button, Stack, Typography } from '@mui/material'
 import DetailIcon from 'public/assets/imgs/detail.png'
 import EditIcon from 'public/assets/imgs/edit.png'
 import { useState } from 'react'
@@ -97,22 +97,3 @@ const Category = () => {
 }
 
 export { Category }
-
-const ButtonDetail = styled(Button)({
-  backgroundColor: 'transparent',
-  padding: 0,
-  minWidth: 0,
-  '&:hover': {
-    backgroundColor: 'transparent',
-    boxShadow: 'none',
-  },
-  '&:focus': {
-    backgroundColor: 'transparent',
-  },
-})
-
-const MuiImage = styled(Image)({
-  cursor: 'pointer',
-  width: 25,
-  height: 25,
-})

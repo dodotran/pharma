@@ -1,5 +1,6 @@
 import { CategorySchemaType, CategorySchemaUpdateType } from '@/libs/schema/category.schema'
 import { prisma } from '@/server/db'
+import { TRPCError } from '@trpc/server'
 import { User } from 'next-auth'
 import { UtilsService } from './utils.service'
 
@@ -32,7 +33,6 @@ class CategoryService extends UtilsService {
 
   async update(data: CategorySchemaUpdateType, user: User) {
     await this.CheckAdmin(user.id)
-
     const { id, name } = data
 
     const category = await prisma.category.update({
@@ -43,7 +43,10 @@ class CategoryService extends UtilsService {
         name,
       },
     })
-    console.log(category)
+
+    if (!category) {
+      throw new TRPCError({ code: 'NOT_FOUND', message: 'error.category-not-found' })
+    }
 
     return category
   }
