@@ -1,7 +1,12 @@
-import { CategorySchemaUpdate, ListCategorySchema } from '@/libs/schema/category.schema'
+import {
+  CategorySchemaUpdate,
+  CategorySchema as CreateCategorySchema,
+  ListCategorySchema,
+} from '@/libs/schema/category.schema'
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '@/server/api/trpc'
 import { User } from 'next-auth'
 import { CategorySchema } from 'prisma/generated/zod'
+
 import { z } from 'zod'
 import CategoryService from '../services/category.service'
 
@@ -17,7 +22,7 @@ export const categoryRouter = createTRPCRouter({
     }),
   create: protectedProcedure
     .meta({ openapi: { method: 'POST', path: '/category' } })
-    .input(z.object({ name: z.string() }))
+    .input(CreateCategorySchema)
     .output(CategorySchema)
     .mutation(({ input, ctx }) => {
       return categoryService.create(input, ctx.session.user as User)

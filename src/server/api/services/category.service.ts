@@ -58,6 +58,19 @@ class CategoryService extends UtilsService {
 
     return 'Delete success!'
   }
+
+  async getProductByCategory(id: string) {
+    const category = await prisma.category.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        Product: true,
+      },
+    })
+
+    return category
+  }
 }
 
 export default CategoryService

@@ -41,7 +41,6 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user, trigger, session }) {
       if (user) {
         token.id = user.id
-        token.role = user.role
       }
 
       if (!session) {
@@ -59,7 +58,6 @@ export const authOptions: NextAuthOptions = {
     session: ({ session, token, trigger }) => {
       if (session.user) {
         session.user.id = token.id as string
-        session.role = token.role as string
         // session.user.role = user.role; <-- put other properties on the session here
       }
       if (trigger === 'update') {
@@ -146,6 +144,9 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   session: { strategy: 'jwt' },
+  pages: {
+    signIn: '/',
+  },
 }
 
 /**
