@@ -7,6 +7,11 @@ export const createProductSchema = ProductSchema.omit({
   updatedAt: true,
 })
 
+export const updateProductSchema = ProductSchema.omit({
+  createdAt: true,
+  updatedAt: true,
+})
+
 export const createUnitSchema = UnitSchema.omit({
   id: true,
   createdAt: true,
@@ -19,5 +24,6 @@ export const updateUnitSchema = UnitSchema.omit({
 })
 
 export type CreateProduct = z.infer<typeof createProductSchema>
+export type UpdateProduct = z.infer<typeof updateProductSchema>
 export type CreateUnit = z.infer<typeof createUnitSchema>
 export type UpdateUnit = z.infer<typeof updateUnitSchema>

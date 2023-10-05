@@ -18,4 +18,19 @@ export class UtilsService {
       }
     }
   }
+
+  async CheckAuth(id: string) {
+    const userData = await prisma.user.findUnique({
+      where: {
+        id,
+      },
+    })
+
+    if (!userData) {
+      throw new TRPCError({
+        code: 'UNAUTHORIZED',
+        message: 'error.unauthorized',
+      })
+    }
+  }
 }

@@ -9,7 +9,7 @@ const unitService = new UnitService()
 
 export const unitRouter = createTRPCRouter({
   get: publicProcedure
-    .meta({ openapi: { method: 'GET', path: '/' } })
+    .meta({ openapi: { method: 'GET', path: '/unit' } })
     .input(z.void())
     .output(z.array(UnitSchema))
     .query(() => {
@@ -22,14 +22,14 @@ export const unitRouter = createTRPCRouter({
       return unitService.create(input, ctx.session.user as User)
     }),
   update: protectedProcedure
-    .meta({ openapi: { method: 'PUT', path: '/:id' } })
+    .meta({ openapi: { method: 'PUT', path: '/unit/:id' } })
     .input(updateUnitSchema)
     .output(UnitSchema)
     .mutation(({ input, ctx }) => {
       return unitService.update(input, ctx.session.user as User)
     }),
   delete: protectedProcedure
-    .meta({ openapi: { method: 'DELETE', path: '/:id' } })
+    .meta({ openapi: { method: 'DELETE', path: '/unit:id' } })
     .input(z.object({ id: z.string() }))
     .output(z.string())
     .mutation(({ input, ctx }) => {
