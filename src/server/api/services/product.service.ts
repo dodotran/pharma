@@ -1,4 +1,4 @@
-import { CreateProduct } from '@/libs/schema/product.schema'
+import { CreateProduct, UpdateProduct } from '@/libs/schema/product.schema'
 import { prisma } from '@/server/db'
 import { UtilsService } from './utils.service'
 
@@ -30,8 +30,40 @@ class ProductService extends UtilsService {
     return product
   }
 
-  async create(data: CreateProduct) {
+  async create(data: CreateProduct, userId: string) {
+    this.CheckAdmin(userId)
+
     const product = await prisma.product.create({
+      data: {
+        ...data,
+        price: Number(data.price),
+        quantity: Number(data.quantity),
+      },
+    })
+
+    return product
+  }
+
+  async delete(id: string, userId: string) {
+    this.CheckAdmin(userId)
+
+    const product = await prisma.product.delete({
+      where: {
+        id,
+      },
+    })
+
+    return product
+  }
+
+  async update(data: UpdateProduct, userId: string) {
+    this.CheckAdmin(userId)
+    const { id } = data
+
+    const product = await prisma.product.update({
+      where: {
+        id,
+      },
       data: {
         ...data,
         price: Number(data.price),
