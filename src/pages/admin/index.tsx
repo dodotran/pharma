@@ -1,17 +1,13 @@
-import {  Product } from '@/features/admin'
-import { authOptions } from '@/server/auth'
-import { GetServerSidePropsContext } from 'next'
-import { getServerSession } from 'next-auth'
+import { Category } from '@/features/admin/category'
+import { GetStaticPropsContext } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
-export async function getServerSideProps({ locale, req, res }: GetServerSidePropsContext) {
-  const session = await getServerSession(req, res, authOptions)
-
+export async function getStaticProps({ locale }: GetStaticPropsContext) {
   return {
     props: {
-      ...(await serverSideTranslations(locale as string, ['common', 'auth', 'product'])),
+      ...(await serverSideTranslations(locale as string, ['common', 'auth'])),
     },
   }
 }
 
-export default Product
+export default Category

@@ -43,6 +43,7 @@ class CategoryService extends UtilsService {
         name,
       },
     })
+    console.log(category)
 
     return category
   }
@@ -57,6 +58,29 @@ class CategoryService extends UtilsService {
     })
 
     return 'Delete success!'
+  }
+
+  async getProductByCategory(id: string) {
+    const category = await prisma.category.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        Product: true,
+      },
+    })
+
+    return category
+  }
+
+  async getById(id: string) {
+    const category = await prisma.category.findUnique({
+      where: {
+        id,
+      },
+    })
+
+    return category
   }
 }
 

@@ -10,6 +10,10 @@ class UserService extends UtilsService {
       where: {
         id: userId,
       },
+      include: {
+        address: true,
+        Cart: true,
+      },
     })
 
     return userInfo
@@ -27,18 +31,6 @@ class UserService extends UtilsService {
 
     return updatedUser
   }
-
-  //   async getInvoice(userId: string) {
-  //     this.CheckAuth(userId)
-
-  //     const invoices = await prisma.invoice.findMany({
-  //       where: {
-  //         user_id: userId,
-  //       },
-  //     })
-
-  //     return invoices
-  //   }
 }
 
 export default UserService

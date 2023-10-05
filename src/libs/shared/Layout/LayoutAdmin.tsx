@@ -29,7 +29,7 @@ const LayoutAdmin: React.FC<LayoutType> = ({
     <>
       <Head>
         <link rel="shortcut icon" href="/favicon.ico" />
-        <title>{title ? t(title) : 'KPI master'}</title>
+        <title>{title ? t(title) : 'Pharma'}</title>
       </Head>
       {HeaderComponent ? HeaderComponent : <Header />}
       <Stack direction="row">

@@ -145,8 +145,13 @@ const defaultTheme: Theme = createTheme({
       lineHeight: '22px',
       fontWeight: 400,
     },
+    subtitle2: {
+      fontSize: 14,
+      lineHeight: '20px',
+      fontWeight: 400,
+    },
     caption: {
-      fontSize: 13,
+      fontSize: 12,
       lineHeight: '18px',
       fontWeight: 400,
     },

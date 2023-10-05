@@ -1,3 +1,4 @@
+import { base } from '@/libs/config/colors'
 import { Box, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material'
 import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { RowData } from '@tanstack/table-core'
@@ -28,7 +29,7 @@ function ReactTable<T extends RowData>(
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
                 <TableCell key={header.id}>
-                  <Typography variant="subtitle1" fontWeight={700}>
+                  <Typography variant="subtitle2" fontWeight={700} color={base.black}>
                     {flexRender(header.column.columnDef.header, header.getContext())}
                   </Typography>
                 </TableCell>
@@ -47,8 +48,9 @@ function ReactTable<T extends RowData>(
                       flexRender(cell.column.columnDef.cell, cell.getContext())
                     ) : (
                       <Typography
-                        variant="subtitle1"
+                        variant="subtitle2"
                         maxWidth={250}
+                        color={base.black}
                         sx={{ wordWrap: 'break-word' }}
                       >
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
