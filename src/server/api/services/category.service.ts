@@ -43,6 +43,7 @@ class CategoryService extends UtilsService {
         name,
       },
     })
+    console.log(category)
 
     return category
   }
@@ -66,6 +67,16 @@ class CategoryService extends UtilsService {
       },
       include: {
         Product: true,
+      },
+    })
+
+    return category
+  }
+
+  async getById(id: string) {
+    const category = await prisma.category.findUnique({
+      where: {
+        id,
       },
     })
 

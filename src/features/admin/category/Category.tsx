@@ -2,17 +2,17 @@ import { LayoutAdmin } from '@/libs/shared/Layout'
 import { Modal } from '@/libs/shared/Modal'
 import { ReactTable } from '@/libs/shared/Table'
 import { api } from '@/utils/api'
-import { Button, Stack, Typography } from '@mui/material'
-import { useSession } from 'next-auth/react'
+import { Button, Stack, Typography, styled } from '@mui/material'
+import Image from 'next/image'
+import DetailIcon from 'public/assets/imgs/detail.png'
+import EditIcon from 'public/assets/imgs/edit.png'
 import { useState } from 'react'
 import { FormCreateCategory } from './FormCreateCategory'
+import { FormUpdateCategory } from './FormUpdateCategory'
 
 const Category = () => {
-  const { data: dataSession } = useSession()
-  console.log(dataSession)
-
   const { data, isLoading } = api.category.get.useQuery()
-  console.log(data)
+
   const columns = [
     {
       header: 'ID',
@@ -30,9 +30,30 @@ const Category = () => {
       header: 'Updated At',
       accessorKey: 'updatedAt',
     },
+    {
+      header: '',
+      accessorKey: 'action',
+      cell: ({ row }) => {
+        const { id } = row.original
+
+        return (
+          <Stack direction="row" alignItems="center" spacing={3.5}>
+            <ButtonDetail>
+              <MuiImage src={DetailIcon} alt="detail" />
+            </ButtonDetail>
+
+            <ButtonDetail onClick={() => handleOpenUpdate(id)}>
+              <MuiImage src={EditIcon} alt="edit" />
+            </ButtonDetail>
+          </Stack>
+        )
+      },
+    },
   ]
 
   const [open, setOpen] = useState(false)
+  const [openUpdate, setOpenUpdate] = useState(false)
+  const [id, setId] = useState('')
 
   const handleOpen = () => {
     setOpen(true)
@@ -40,6 +61,16 @@ const Category = () => {
 
   const handleClose = () => {
     setOpen(false)
+  }
+
+  const handleOpenUpdate = (id: string) => {
+    setId(id)
+    setOpenUpdate(true)
+  }
+
+  const handleCloseUpdate = () => {
+    setOpenUpdate(false)
+    setId('')
   }
 
   return (
@@ -52,13 +83,36 @@ const Category = () => {
         </Button>
       </Stack>
 
-      <ReactTable columns={columns} data={data} isLoading={isLoading} />
+      <ReactTable columns={columns} data={data || []} isLoading={isLoading} />
 
       <Modal open={open} handleClose={handleClose} title="Category">
         <FormCreateCategory />
+      </Modal>
+
+      <Modal open={openUpdate} handleClose={handleCloseUpdate} title="Category">
+        <FormUpdateCategory id={id} />
       </Modal>
     </LayoutAdmin>
   )
 }
 
 export { Category }
+
+const ButtonDetail = styled(Button)({
+  backgroundColor: 'transparent',
+  padding: 0,
+  minWidth: 0,
+  '&:hover': {
+    backgroundColor: 'transparent',
+    boxShadow: 'none',
+  },
+  '&:focus': {
+    backgroundColor: 'transparent',
+  },
+})
+
+const MuiImage = styled(Image)({
+  cursor: 'pointer',
+  width: 25,
+  height: 25,
+})

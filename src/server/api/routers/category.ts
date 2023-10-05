@@ -30,7 +30,7 @@ export const categoryRouter = createTRPCRouter({
   update: protectedProcedure
     .meta({ openapi: { method: 'PUT', path: '/category/:id' } })
     .input(CategorySchemaUpdate)
-    .output(CategorySchema)
+    .output(z.any())
     .mutation(({ input, ctx }) => {
       return categoryService.update(input, ctx.session.user as User)
     }),
@@ -40,5 +40,19 @@ export const categoryRouter = createTRPCRouter({
     .output(z.string())
     .mutation(({ input, ctx }) => {
       return categoryService.delete(input.id, ctx.session.user as User)
+    }),
+  byId: publicProcedure
+    .meta({ openapi: { method: 'GET', path: '/category/:id' } })
+    .input(z.object({ id: z.string() }))
+    .output(z.any())
+    .query(({ input }) => {
+      return categoryService.getById(input.id)
+    }),
+  getProductByCategory: publicProcedure
+    .meta({ openapi: { method: 'GET', path: '/category-product/:id/' } })
+    .input(z.object({ id: z.string() }))
+    .output(z.any())
+    .query(({ input }) => {
+      return categoryService.getProductByCategory(input.id)
     }),
 })
