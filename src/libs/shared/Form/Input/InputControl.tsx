@@ -22,7 +22,7 @@ function RawInputControl({
   ...props
 }: InputControlProps) {
   return (
-    <FormControl fullWidth={fullWidth} error={!!fieldError} {...props}>
+    <FormControl fullWidth={fullWidth} error={!!fieldError} {...props} sx={{ fontSize: '15px' }}>
       {label && (
         <FormLabel>
           {required ? (

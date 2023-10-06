@@ -6,15 +6,9 @@ import { UtilsService } from './utils.service'
 
 class CategoryService extends UtilsService {
   async getAll() {
-    const category = await prisma.category.findMany()
-
-    return category
-  }
-
-  async get(id: string) {
-    const category = await prisma.category.findUnique({
-      where: {
-        id,
+    const category = await prisma.category.findMany({
+      include: {
+        Product: true,
       },
     })
 
@@ -35,7 +29,17 @@ class CategoryService extends UtilsService {
     await this.CheckAdmin(user.id)
     const { id, name } = data
 
-    const category = await prisma.category.update({
+    const category = await prisma.category.findUnique({
+      where: {
+        id,
+      },
+    })
+
+    if (!category) {
+      throw new TRPCError({ code: 'NOT_FOUND', message: 'error.category-not-found' })
+    }
+
+    const categoryUpdate = await prisma.category.update({
       where: {
         id,
       },
@@ -44,15 +48,21 @@ class CategoryService extends UtilsService {
       },
     })
 
-    if (!category) {
-      throw new TRPCError({ code: 'NOT_FOUND', message: 'error.category-not-found' })
-    }
-
-    return category
+    return categoryUpdate
   }
 
   async delete(id: string, user: User) {
     await this.CheckAdmin(user.id)
+
+    const category = await prisma.category.findUnique({
+      where: {
+        id,
+      },
+    })
+
+    if (!category) {
+      throw new TRPCError({ code: 'NOT_FOUND', message: 'error.category-not-found' })
+    }
 
     await prisma.category.delete({
       where: {
@@ -73,6 +83,10 @@ class CategoryService extends UtilsService {
       },
     })
 
+    if (!category) {
+      throw new TRPCError({ code: 'NOT_FOUND', message: 'error.category-not-found' })
+    }
+
     return category
   }
 
@@ -81,7 +95,14 @@ class CategoryService extends UtilsService {
       where: {
         id,
       },
+      include: {
+        Product: true,
+      },
     })
+
+    if (!category) {
+      throw new TRPCError({ code: 'NOT_FOUND', message: 'error.category-not-found' })
+    }
 
     return category
   }

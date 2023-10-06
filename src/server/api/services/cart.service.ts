@@ -151,8 +151,6 @@ class CartService extends UtilsService {
   }
 
   async deleteCart(userId: string, productId: string) {
-    await this.CheckAuth(userId)
-
     const cart = await prisma.cart.findFirst({
       where: {
         user_id: userId,
@@ -174,6 +172,29 @@ class CartService extends UtilsService {
         message: 'error.notFound',
       })
     }
+  }
+
+  async deleteAllCart(userId: string) {
+    const cart = await prisma.cart.findMany({
+      where: {
+        user_id: userId,
+      },
+    })
+
+    if (!cart) {
+      throw new TRPCError({
+        code: 'NOT_FOUND',
+        message: 'error.notFound',
+      })
+    }
+
+    await prisma.cart.deleteMany({
+      where: {
+        user_id: userId,
+      },
+    })
+
+    return 'Delete cart successfully'
   }
 }
 

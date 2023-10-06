@@ -9,6 +9,7 @@ class ProductService extends UtilsService {
         unit: true,
         category: true,
         image: true,
+        product_detail: true,
       },
     })
 
@@ -33,15 +34,34 @@ class ProductService extends UtilsService {
   async create(data: CreateProduct, userId: string) {
     this.CheckAdmin(userId)
 
+    const { name, price, quantity, unit_id, expired_date, status, category_id, ...res } = data
+
     const product = await prisma.product.create({
       data: {
-        ...data,
-        price: Number(data.price),
-        quantity: Number(data.quantity),
+        name,
+        unit_id,
+        expired_date,
+        status,
+        category_id,
+        price: Number(price),
+        quantity: Number(quantity),
       },
     })
 
-    return product
+    let detail
+
+    if (product) {
+      const productDetail = await prisma.productDetail.create({
+        data: {
+          product_id: product.id,
+          ...res,
+        },
+      })
+
+      detail = productDetail
+    }
+
+    return { ...product, detail }
   }
 
   async delete(id: string, userId: string) {

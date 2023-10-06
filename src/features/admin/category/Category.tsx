@@ -4,30 +4,57 @@ import { ReactTable } from '@/libs/shared/Table'
 import { ButtonDetail, MuiImage } from '@/libs/shared/styled'
 import { api } from '@/utils/api'
 import { Button, Stack, Typography } from '@mui/material'
+import { useTranslation } from 'next-i18next'
 import DetailIcon from 'public/assets/imgs/detail.png'
 import EditIcon from 'public/assets/imgs/edit.png'
 import { useState } from 'react'
-import { FormCreateCategory } from './FormCreateCategory'
-import { FormUpdateCategory } from './FormUpdateCategory'
+import { Create } from './Create'
+import { FormUpdateCategory } from './Update'
 
 const Category = () => {
   const { data, isLoading } = api.category.get.useQuery()
+  const [open, setOpen] = useState(false)
+  const [openUpdate, setOpenUpdate] = useState(false)
+  const [id, setId] = useState('')
+  const { t } = useTranslation('common')
+
+  const handleOpen = () => {
+    setOpen(true)
+  }
+
+  const handleClose = () => {
+    setOpen(false)
+  }
+
+  const handleOpenUpdate = (id: string) => {
+    setId(id)
+    setOpenUpdate(true)
+  }
+
+  const handleCloseUpdate = () => {
+    setOpenUpdate(false)
+    setId('')
+  }
 
   const columns = [
     {
-      header: 'ID',
+      header: t('category.category_id'),
       accessorKey: 'id',
     },
     {
-      header: 'Name',
+      header: t('category.category_name'),
       accessorKey: 'name',
     },
     {
-      header: 'Created At',
+      header: t('category.number_of_drugs'),
+      accessorKey: 'Product.length',
+    },
+    {
+      header: t('category.created_at'),
       accessorKey: 'createdAt',
     },
     {
-      header: 'Updated At',
+      header: t('category.updated_at'),
       accessorKey: 'updatedAt',
     },
     {
@@ -51,43 +78,19 @@ const Category = () => {
     },
   ]
 
-  const [open, setOpen] = useState(false)
-  const [openUpdate, setOpenUpdate] = useState(false)
-  const [id, setId] = useState('')
-
-  const handleOpen = () => {
-    setOpen(true)
-  }
-
-  const handleClose = () => {
-    setOpen(false)
-  }
-
-  const handleOpenUpdate = (id: string) => {
-    setId(id)
-    setOpenUpdate(true)
-  }
-
-  const handleCloseUpdate = () => {
-    setOpenUpdate(false)
-    setId('')
-  }
-
   return (
     <LayoutAdmin>
       <Stack direction="row" justifyContent="space-between" mb={3}>
-        <Typography variant="h2">Product</Typography>
+        <Typography variant="h2">{t('category.title')}</Typography>
 
         <Button variant="contained" color="primary" onClick={() => handleOpen()}>
-          Create
+          {t('category.create')}
         </Button>
       </Stack>
 
       <ReactTable columns={columns} data={data || []} isLoading={isLoading} />
 
-      <Modal open={open} handleClose={handleClose} title="Category">
-        <FormCreateCategory />
-      </Modal>
+      <Create open={open} handleClose={handleClose} />
 
       <Modal open={openUpdate} handleClose={handleCloseUpdate} title="Category">
         <FormUpdateCategory id={id} />

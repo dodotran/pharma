@@ -59,11 +59,20 @@
     "number-of-drugs": "Số lượng thuốc"
   },
   "category": {
-    "category": "Danh mục thuốc",
+    "title": "Danh mục thuốc",
     "category_name": "Tên danh mục thuốc",
     "category_name_placeholder": "Nhập tên danh mục thuốc",
     "create": "Tạo danh mục thuốc",
     "update": "Cập nhật danh mục thuốc",
-    "submit": "Xác nhận"
+    "submit": "Xác nhận",
+    "category_id": "Mã danh mục thuốc",
+    "created_at": "Ngày tạo",
+    "updated_at": "Ngày cập nhật",
+    "create-success": "Tạo danh mục thuốc thành công!",
+    "update-success": "Cập nhật danh mục thuốc thành công!",
+    "delete-success": "Xóa danh mục thuốc thành công!",
+    "delete-failed": "Xóa danh mục thuốc thất bại!",
+    "create-failed": "Tạo danh mục thuốc thất bại!",
+    "number_of_drugs": "Số lượng thuốc"
   }
 }

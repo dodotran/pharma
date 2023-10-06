@@ -59,11 +59,20 @@
     "number-of-drugs": "Number of drugs"
   },
   "category": {
-    "category": "Category",
+    "title": "Category",
     "category_name": "Category name",
     "category_name_placeholder": "Enter category name",
     "create": "Create category",
     "update": "Update category",
-    "submit": "Submit"
+    "submit": "Submit",
+    "category_id": "Category ID",
+    "created_at": "Created at",
+    "updated_at": "Updated at",
+    "create-success": "Create category successfully!",
+    "update-success": "Update category successfully!",
+    "delete-success": "Delete category successfully!",
+    "delete-failed": "Delete category failed!",
+    "create-failed": "Create category failed!",
+    "number-of-drugs": "Number of drugs"
   }
 }

@@ -39,13 +39,6 @@ class UnitService extends UtilsService {
       data,
     })
 
-    if (!unit) {
-      throw new TRPCError({
-        code: 'TIMEOUT',
-        message: 'error.create-failed',
-      })
-    }
-
     return unit
   }
 

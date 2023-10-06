@@ -1,7 +1,7 @@
 import {
   CategorySchemaUpdate,
   CategorySchema as CreateCategorySchema,
-  ListCategorySchema,
+  UnitSchemaProduct,
 } from '@/libs/schema/category.schema'
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '@/server/api/trpc'
 import { User } from 'next-auth'
@@ -16,7 +16,7 @@ export const categoryRouter = createTRPCRouter({
   get: publicProcedure
     .meta({ openapi: { method: 'GET', path: '/category' } })
     .input(z.void())
-    .output(ListCategorySchema)
+    .output(z.array(UnitSchemaProduct))
     .query(() => {
       return categoryService.getAll()
     }),

@@ -1,5 +1,5 @@
 import { createProductSchema } from '@/libs/schema/product.schema'
-import { createTRPCRouter, publicProcedure } from '@/server/api/trpc'
+import { createTRPCRouter, protectedProcedure, publicProcedure } from '@/server/api/trpc'
 import { ProductSchema } from 'prisma/generated/zod'
 import { z } from 'zod'
 import ProductService from '../services/product.service'
@@ -10,18 +10,18 @@ export const productRoute = createTRPCRouter({
   getAll: publicProcedure
     .meta({ openapi: { method: 'GET', path: '/product' } })
     .input(z.void())
-    .output(z.array(ProductSchema))
+    .output(z.any())
     .query(() => {
       return productService.getAll()
     }),
-  byId: publicProcedure
+  byId: protectedProcedure
     .meta({ openapi: { method: 'GET', path: '/product/:id' } })
     .input(z.object({ id: z.string().min(1) }))
     .output(ProductSchema.nullable())
     .query(({ input }) => {
       return productService.byId(input.id)
     }),
-  createProduct: publicProcedure
+  createProduct: protectedProcedure
     .meta({ openapi: { method: 'POST', path: '/product' } })
     .input(createProductSchema)
     .output(ProductSchema)

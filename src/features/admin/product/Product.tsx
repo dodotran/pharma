@@ -1,53 +1,54 @@
 import { LayoutAdmin } from '@/libs/shared/Layout'
-import { Modal } from '@/libs/shared/Modal'
 import { ReactTable } from '@/libs/shared/Table'
 import { api } from '@/utils/api'
 import { Button, Stack, Typography } from '@mui/material'
+import { useTranslation } from 'next-i18next'
 import { useState } from 'react'
-import { FormCreateProduct } from './Create'
+import { Create } from './Create'
 
 const Product = () => {
   const { data, isLoading } = api.product.getAll.useQuery()
+  const { t } = useTranslation('product')
 
   const columns = [
     {
-      header: 'Name',
+      header: t('name'),
       accessorKey: 'name',
     },
     {
-      header: 'Price',
+      header: t('price'),
       accessorKey: 'price',
     },
     {
-      header: 'Quantity',
+      header: t('quantity'),
       accessorKey: 'quantity',
     },
     {
-      header: 'Unit',
+      header: t('unit'),
       accessorKey: 'unit.name',
     },
     {
-      header: 'Expired',
+      header: t('expired_date'),
       accessorKey: 'expired_date',
     },
     {
-      header: 'Image',
+      header: t('image'),
       accessorKey: 'image[0]',
     },
     {
-      header: 'Status',
+      header: t('status'),
       accessorKey: 'status',
     },
     {
-      header: 'Category',
+      header: t('category'),
       accessorKey: 'category.name',
     },
     {
-      header: 'Created At',
+      header: t('created_at'),
       accessorKey: 'createdAt',
     },
     {
-      header: 'Updated At',
+      header: t('updated_at'),
       accessorKey: 'updatedAt',
     },
   ]
@@ -65,18 +66,16 @@ const Product = () => {
   return (
     <LayoutAdmin>
       <Stack direction="row" justifyContent="space-between" mb={3}>
-        <Typography variant="h2">Product</Typography>
+        <Typography variant="h2">{t('title')}</Typography>
 
         <Button variant="contained" color="primary" onClick={() => handleOpen()}>
-          Create
+          {t('create')}
         </Button>
       </Stack>
 
       <ReactTable columns={columns} data={data || []} isLoading={isLoading} />
 
-      <Modal open={open} handleClose={handleClose} title="Product">
-        <FormCreateProduct />
-      </Modal>
+      <Create open={open} handleClose={handleClose} />
     </LayoutAdmin>
   )
 }
