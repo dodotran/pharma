@@ -56,7 +56,7 @@ const FormSignUp: React.FC<FormSignUpType> = ({ handleClose }) => {
         {t('sign-up.title')}
       </Typography>
 
-      <Stack width="80%" spacing={2} component="form" onSubmit={handleSubmit(onSubmit)} mt={2}>
+      <Stack width="90%" spacing={2} component="form" onSubmit={handleSubmit(onSubmit)} mt={2}>
         <Input
           control={control}
           name="email"

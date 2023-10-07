@@ -1,4 +1,4 @@
-import { CategorySchemaType, CategorySchemaUpdateType } from '@/libs/schema/category.schema'
+import { CategorySchemaUpdateType, CreateCategorySchemaType } from '@/libs/schema/category.schema'
 import { prisma } from '@/server/db'
 import { TRPCError } from '@trpc/server'
 import { User } from 'next-auth'
@@ -8,14 +8,14 @@ class CategoryService extends UtilsService {
   async getAll() {
     const category = await prisma.category.findMany({
       include: {
-        Product: true,
+        product: true,
       },
     })
 
     return category
   }
 
-  async create(data: CategorySchemaType, user: User) {
+  async create(data: CreateCategorySchemaType, user: User) {
     await this.CheckAdmin(user.id)
 
     const category = await prisma.category.create({
@@ -79,7 +79,7 @@ class CategoryService extends UtilsService {
         id,
       },
       include: {
-        Product: true,
+        product: true,
       },
     })
 
@@ -96,7 +96,7 @@ class CategoryService extends UtilsService {
         id,
       },
       include: {
-        Product: true,
+        product: true,
       },
     })
 

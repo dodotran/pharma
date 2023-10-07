@@ -36,6 +36,7 @@
   "created_at": "Ngày tạo",
   "updated_at": "Ngày cập nhật",
   "detail_pharmaceutical": "Chi tiết thuốc",
+  "create_new_pharmaceutical": "Thêm thuốc mới",
   "create": {
     "title": "Thêm thuốc",
     "success": "Thêm thuốc thành công",

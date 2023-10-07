@@ -9,7 +9,7 @@ class WardsService {
       include: {
         districts: {
           include: {
-            Ward: true,
+            ward: true,
           },
         },
       },

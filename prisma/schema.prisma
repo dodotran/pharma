@@ -18,7 +18,6 @@ generator zod {
     provider = "yarn zod-prisma-types"
 }
 
-// Necessary for Next auth
 model Account {
     id                String  @id @default(cuid())
     userId            String
@@ -59,15 +58,14 @@ model User {
     sex            String?
     password       String
     date_of_birth  DateTime
+    createdAt      DateTime       @default(now())
+    updatedAt      DateTime       @updatedAt
     accounts       Account[]
     sessions       Session[]
     role           UserType       @default(USER)
     password_reset PasswordReset?
-    createdAt      DateTime       @default(now())
-    updatedAt      DateTime       @updatedAt
     address        Address[]
-    Cart           Cart[]
-    // Invoice        Invoice[]
+    cart           Cart[]
     order          Order[]
 }
 
@@ -93,6 +91,7 @@ model PasswordReset {
 enum AddressType {
     HOME
     OFFICE
+    OTHER
 }
 
 model Address {
@@ -101,17 +100,17 @@ model Address {
     phone_number   String
     province       Province    @relation(fields: [province_id], references: [province_id])
     district       District    @relation(fields: [district_id], references: [district_id])
-    wards          Wards       @relation(fields: [wardsWards_id], references: [wards_id])
+    wards          Wards       @relation(fields: [wards_id], references: [wards_id])
     address_detail String
     type_address   AddressType
     created_at     DateTime    @default(now())
     updated_at     DateTime    @updatedAt
     province_id    String
     district_id    String
-    wardsWards_id  String
+    wards_id       String
     User           User?       @relation(fields: [userId], references: [id])
     userId         String?
-    // Invoice        Invoice[]
+    order          Order[]
 }
 
 model District {
@@ -119,23 +118,23 @@ model District {
     province_id String
     name        String
     Province    Province? @relation(fields: [province_id], references: [province_id])
-    Ward        Wards[]
-    Address     Address[]
+    ward        Wards[]
+    address     Address[]
 }
 
 model Province {
     province_id String     @id @default(cuid())
     name        String
     districts   District[]
-    Address     Address[]
+    address     Address[]
 }
 
 model Wards {
     wards_id    String    @id @default(cuid())
     district_id String
     name        String
-    District    District? @relation(fields: [district_id], references: [district_id])
-    Address     Address[]
+    district    District? @relation(fields: [district_id], references: [district_id])
+    address     Address[]
 }
 
 model Unit {
@@ -143,7 +142,7 @@ model Unit {
     name      String
     createdAt DateTime  @default(now())
     updatedAt DateTime  @updatedAt
-    Product   Product[]
+    product   Product[]
 }
 
 enum status {
@@ -154,37 +153,36 @@ enum status {
 }
 
 model Product {
-    id            String          @id @default(cuid())
-    name          String
-    price         Float
-    quantity      Int
-    unit_id       String
-    expired_date  DateTime
-    status        status
-    createdAt     DateTime        @default(now())
-    updatedAt     DateTime        @updatedAt
-    image         ImageProduct[]
-    category_id   String?
-    unit          Unit            @relation(fields: [unit_id], references: [id])
-    category      Category?      @relation(fields: [category_id], references: [id])
-    cart          Cart[]
-    order         Order[]
+    id             String         @id @default(cuid())
+    name           String
+    price          Float
+    quantity       Int
+    unit_id        String
+    expired_date   DateTime
+    category_id    String?
+    trademark_id   String?
+    status         status
+    image          ImageProduct[]
+    unit           Unit           @relation(fields: [unit_id], references: [id])
+    category       Category?      @relation(fields: [category_id], references: [id])
+    cart           Cart[]
+    order          Order[]
     product_detail ProductDetail?
+    trademark      Trademark?     @relation(fields: [trademark_id], references: [id])
+    createdAt      DateTime       @default(now())
+    updatedAt      DateTime       @updatedAt
 }
 
 model ProductDetail {
-    id                    String   @id @default(cuid())
-    product_id            String   @unique
-    description           String
-    short_description     String
-    bar_code              String?
-    ingredient            String
-    manufacturing_country String
-    manufacturer          String
-    how_to_use            String
-    createdAt             DateTime @default(now())
-    updatedAt             DateTime @updatedAt
-    product               Product  @relation(fields: [product_id], references: [id])
+    id                String   @id @default(cuid())
+    product_id        String   @unique
+    description       String
+    short_description String
+    ingredient        String
+    how_to_use        String
+    createdAt         DateTime @default(now())
+    updatedAt         DateTime @updatedAt
+    product           Product  @relation(fields: [product_id], references: [id])
 }
 
 model ImageProduct {
@@ -193,7 +191,7 @@ model ImageProduct {
     product_id String
     createdAt  DateTime @default(now())
     updatedAt  DateTime @updatedAt
-    Product    Product? @relation(fields: [product_id], references: [id])
+    product    Product? @relation(fields: [product_id], references: [id])
 }
 
 model Category {
@@ -201,7 +199,7 @@ model Category {
     name      String
     createdAt DateTime  @default(now())
     updatedAt DateTime  @updatedAt
-    Product   Product[]
+    product   Product[]
 }
 
 model Cart {
@@ -211,21 +209,26 @@ model Cart {
     quantity   Int
     createdAt  DateTime @default(now())
     updatedAt  DateTime @updatedAt
-    User       User     @relation(fields: [user_id], references: [id])
-    Product    Product  @relation(fields: [product_id], references: [id])
+    user       User     @relation(fields: [user_id], references: [id])
+    product    Product  @relation(fields: [product_id], references: [id])
 }
 
 model Order {
-    id              String      @id @default(cuid())
-    user_id         String
-    product_id      String
-    quantity        Int
-    createdAt       DateTime    @default(now())
-    updatedAt       DateTime    @updatedAt
-    User            User        @relation(fields: [user_id], references: [id])
-    Product         Product     @relation(fields: [product_id], references: [id])
-    status          StatusOrder @relation(fields: [status_order_id], references: [id])
-    status_order_id String
+    id                String         @id @default(cuid())
+    user_id           String
+    product_id        String
+    quantity          Int
+    address_id        String
+    is_paid           Boolean
+    createdAt         DateTime       @default(now())
+    updatedAt         DateTime       @updatedAt
+    payment_method_id String?
+    address           Address        @relation(fields: [address_id], references: [id])
+    User              User           @relation(fields: [user_id], references: [id])
+    product           Product        @relation(fields: [product_id], references: [id])
+    status            StatusOrder    @relation(fields: [status_order_id], references: [id])
+    status_order_id   String
+    payment_method    PaymentMethod? @relation(fields: [payment_method_id], references: [id])
 }
 
 model StatusOrder {
@@ -233,5 +236,24 @@ model StatusOrder {
     name      String
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-    Order     Order[]
+    order     Order[]
+}
+
+model Trademark {
+    id        String    @id @default(cuid())
+    name      String
+    image     String
+    country   String
+    introduce String
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+    product   Product[]
+}
+
+model PaymentMethod {
+    id        String   @id @default(cuid())
+    name      String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    order     Order[]
 }

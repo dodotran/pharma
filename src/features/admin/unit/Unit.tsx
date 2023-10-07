@@ -46,7 +46,7 @@ const Unit = () => {
     },
     {
       header: t('unit.number-of-drugs'),
-      accessorKey: 'Product.length',
+      accessorKey: 'product.length',
     },
     {
       header: t('unit.created_at'),

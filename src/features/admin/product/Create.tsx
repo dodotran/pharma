@@ -16,7 +16,10 @@ import {
 import { useTranslation } from 'next-i18next'
 import Image from 'next/image'
 import { enqueueSnackbar } from 'notistack'
+import AddIcon from 'public/assets/imgs/add.png'
 import CloseIcon from 'public/assets/svgs/exit.svg'
+import { useEffect, useState } from 'react'
+import { useDropzone } from 'react-dropzone'
 import { SubmitHandler, useForm } from 'react-hook-form'
 
 type CreateProps = {
@@ -70,9 +73,6 @@ const Create: React.FC<CreateProps> = ({ open, handleClose }) => {
       expired_date: new Date(),
       description: '',
       ingredient: '',
-      bar_code: '',
-      manufacturer: '',
-      manufacturing_country: '',
       how_to_use: '',
       short_description: '',
     },
@@ -99,6 +99,27 @@ const Create: React.FC<CreateProps> = ({ open, handleClose }) => {
       },
     )
   }
+
+  const [files, setFiles] = useState<File[]>([])
+
+  const [image, setImage] = useState<string>('')
+
+  useEffect(() => {
+    if (files && files.length > 0 && files[0]) {
+      const url = URL.createObjectURL(files[0])
+      setImage(url)
+    }
+  }, [files])
+
+  const { getRootProps, getInputProps } = useDropzone({
+    accept: {
+      'image/jpeg': ['.jpeg', '.png'],
+    },
+    onDrop: (acceptedFiles) => {
+      setFiles(acceptedFiles)
+    },
+    multiple: false,
+  })
 
   return (
     <Modal
@@ -128,121 +149,185 @@ const Create: React.FC<CreateProps> = ({ open, handleClose }) => {
           component="form"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <Input
-            control={control}
-            name="name"
-            label={t('name_product') as string}
-            fullWidth
-            placeholder={t('enter_name_product') as string}
-            required
-          />
+          <Stack direction="row" spacing={2} alignItems="center">
+            <Stack width="50%" spacing={2}>
+              <Input
+                control={control}
+                name="name"
+                label={t('name') as string}
+                fullWidth
+                placeholder={t('enter_name_product') as string}
+                required
+              />
 
-          <Input
-            control={control}
-            name="price"
-            label={t('price') as string}
-            fullWidth
-            placeholder={t('enter_price') as string}
-          />
+              <Input
+                control={control}
+                name="price"
+                label={t('price') as string}
+                fullWidth
+                placeholder={t('enter_price') as string}
+                required
+              />
 
-          <Select
-            control={control}
-            name="unit_id"
-            label={t('unit') as string}
-            fullWidth
-            options={UnitMapper || []}
-          />
+              <Select
+                control={control}
+                name="unit_id"
+                label={t('unit') as string}
+                fullWidth
+                options={UnitMapper || []}
+                required
+              />
 
-          <Input
-            control={control}
-            name="quantity"
-            label={t('quantity') as string}
-            fullWidth
-            placeholder={t('enter-quantity') as string}
-          />
+              <Input
+                control={control}
+                name="quantity"
+                label={t('quantity') as string}
+                fullWidth
+                placeholder={t('enter_quantity') as string}
+                required
+              />
 
-          <Select
-            control={control}
-            name="category_id"
-            label={t('category') as string}
-            fullWidth
-            options={CategoryMapper || []}
-          />
+              <Select
+                control={control}
+                name="category_id"
+                label={t('category') as string}
+                fullWidth
+                options={CategoryMapper || []}
+                required
+              />
 
-          <Select
-            control={control}
-            name="status"
-            label={t('category') as string}
-            fullWidth
-            options={status || []}
-          />
+              <Select
+                control={control}
+                name="status"
+                label={t('status') as string}
+                fullWidth
+                options={status || []}
+              />
+            </Stack>
+
+            <Stack alignItems="center" justifyContent="center" width="100%" spacing={3}>
+              <Stack direction="row" spacing={3}>
+                <Box
+                  {...getRootProps({ className: 'dropzone' })}
+                  mb={2}
+                  width={200}
+                  height={200}
+                  border="1px dashed"
+                >
+                  <input {...getInputProps()} />
+
+                  <AvatarWhenEit>
+                    <Camera>
+                      <Image
+                        src={image ? image : AddIcon}
+                        width={image ? 200 : 30}
+                        height={image ? 200 : 30}
+                        alt="choose avatar"
+                        onLoad={() => {
+                          URL.revokeObjectURL(image)
+                        }}
+                      />
+                    </Camera>
+                  </AvatarWhenEit>
+                </Box>
+
+                <Box
+                  {...getRootProps({ className: 'dropzone' })}
+                  mb={2}
+                  width={200}
+                  height={200}
+                  border="1px dashed"
+                >
+                  <input {...getInputProps()} />
+
+                  <AvatarWhenEit>
+                    <Camera>
+                      <Image src={AddIcon} width={30} height={30} alt="choose avatar" />
+                    </Camera>
+                  </AvatarWhenEit>
+                </Box>
+              </Stack>
+
+              <Stack direction="row" spacing={3}>
+                <Box
+                  {...getRootProps({ className: 'dropzone' })}
+                  mb={2}
+                  width={200}
+                  height={200}
+                  border="1px dashed"
+                >
+                  <input {...getInputProps()} />
+
+                  <AvatarWhenEit>
+                    <Camera>
+                      <Image src={AddIcon} width={30} height={30} alt="choose avatar" />
+                    </Camera>
+                  </AvatarWhenEit>
+                </Box>
+
+                <Box
+                  {...getRootProps({ className: 'dropzone' })}
+                  mb={2}
+                  width={200}
+                  height={200}
+                  border="1px dashed"
+                >
+                  <input {...getInputProps()} />
+
+                  <AvatarWhenEit>
+                    <Camera>
+                      <Image src={AddIcon} width={30} height={30} alt="choose avatar" />
+                    </Camera>
+                  </AvatarWhenEit>
+                </Box>
+              </Stack>
+            </Stack>
+          </Stack>
 
           <DatePickerYear name="expired_date" control={control} label={t('expired_date')} />
 
-          <Divider>
-            <Typography>{t('detail_pharmaceutical')}</Typography>
-          </Divider>
+          <Stack spacing={2}>
+            <Divider>
+              <Typography>{t('detail_pharmaceutical')}</Typography>
+            </Divider>
 
-          <Input
-            control={control}
-            name="description"
-            label={t('description') as string}
-            fullWidth
-            placeholder={t('enter_description') as string}
-          />
+            <Input
+              control={control}
+              name="description"
+              label={t('description') as string}
+              fullWidth
+              placeholder={t('enter_description') as string}
+            />
 
-          <Input
-            control={control}
-            name="short_description"
-            label={t('short_description') as string}
-            fullWidth
-            placeholder={t('enter_short_description') as string}
-          />
+            <Input
+              control={control}
+              name="short_description"
+              label={t('short_description') as string}
+              fullWidth
+              placeholder={t('enter_short_description') as string}
+            />
 
-          <Input
-            control={control}
-            name="ingredient"
-            label={t('ingredient') as string}
-            fullWidth
-            placeholder={t('enter_ingredient') as string}
-          />
+            <Input
+              control={control}
+              name="ingredient"
+              label={t('ingredient') as string}
+              fullWidth
+              placeholder={t('enter_ingredient') as string}
+            />
 
-          <Input
-            control={control}
-            name="bar_code"
-            label={t('bar_code') as string}
-            fullWidth
-            placeholder={t('enter_bar_code') as string}
-          />
-
-          <Input
-            control={control}
-            name="manufacturer"
-            label={t('manufacturer') as string}
-            fullWidth
-            placeholder={t('enter_manufacturer') as string}
-          />
-
-          <Input
-            control={control}
-            name="manufacturing_country"
-            label={t('manufacturing_country') as string}
-            fullWidth
-            placeholder={t('enter_manufacturing_country') as string}
-          />
-
-          <Input
-            control={control}
-            name="how_to_use"
-            label={t('how_to_use') as string}
-            fullWidth
-            placeholder={t('enter_how_to_use') as string}
-          />
+            <Input
+              control={control}
+              name="how_to_use"
+              label={t('how_to_use') as string}
+              fullWidth
+              placeholder={t('enter_how_to_use') as string}
+            />
+          </Stack>
 
           <Button variant="contained" type="submit">
             {isLoading && <CircularProgress size={18} sx={{ color: 'base.white', mr: 1 }} />}
 
-            {t('create')}
+            {t('create.submit')}
           </Button>
         </Stack>
       </BoxContainer>
@@ -255,7 +340,7 @@ const BoxContainer = styled(Box)(({ theme }) => ({
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 600,
+  width: '40%',
   boxShadow: theme.shadows[1],
   padding: 20,
   borderRadius: 2,
@@ -269,6 +354,25 @@ const ButtonClose = styled(Button)({
   paddingTop: 0,
   paddingBottom: 0,
   padding: 0,
+})
+
+const AvatarWhenEit = styled(Box)({
+  position: 'relative',
+  width: '100%',
+  height: '100%',
+  cursor: 'pointer',
+})
+
+const Camera = styled(Box)({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  background: 'rgba(0, 0, 0, 0.1)',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
 })
 
 export { Create }

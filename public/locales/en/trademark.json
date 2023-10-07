@@ -1,0 +1,25 @@
+{
+  "title": "Trademark",
+  "id": "Trademark Id",
+  "name_trademark": "Name Trademark",
+  "image": "Image",
+  "created_at": "Created At",
+  "country_trademark": "Country Trademark",
+  "updated_at": "Updated At",
+  "introduce": "Introduce",
+  "number_of_drugs": "Number Of Drugs",
+  "create": {
+    "title": "Create Trademark",
+    "enter_name": "Enter trademark name",
+    "enter_country_trademark": "Enter country trademark",
+    "image": "Image",
+    "name_trademark": "Name trademark",
+    "country_trademark": "Country trademark",
+    "submit": "Submit",
+    "success": "Success",
+    "enter_introduce": "Enter introduce"
+  },
+  "update": {
+    "title": "Update trademark"
+  }
+}

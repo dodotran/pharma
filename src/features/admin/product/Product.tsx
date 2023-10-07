@@ -69,13 +69,13 @@ const Product = () => {
         <Typography variant="h2">{t('title')}</Typography>
 
         <Button variant="contained" color="primary" onClick={() => handleOpen()}>
-          {t('create')}
+          {t('create_new_pharmaceutical')}
         </Button>
       </Stack>
 
       <ReactTable columns={columns} data={data || []} isLoading={isLoading} />
 
-      <Create open={open} handleClose={handleClose} />
+      {open && <Create open={open} handleClose={handleClose} />}
     </LayoutAdmin>
   )
 }

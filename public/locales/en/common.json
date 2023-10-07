@@ -36,10 +36,13 @@
   "sidebar": {
     "dashboard": "Dashboard",
     "user": "User",
-    "category": "Category pharma",
-    "product": "Product",
-    "order": "Order",
-    "setting": "Setting"
+    "category": "Management Category",
+    "product": "Management Pharmaceutical",
+    "order": "Management Order",
+    "setting": "Setting",
+    "unit": "Management Unit",
+    "trademark": "Management Trademark",
+    "status_order": "Management Status Order"
   },
   "unit": {
     "title": "Unit Screen",
@@ -74,5 +77,22 @@
     "delete-failed": "Delete category failed!",
     "create-failed": "Create category failed!",
     "number-of-drugs": "Number of drugs"
+  },
+  "status_order": {
+    "title": "Status Order",
+    "status_name": "Status name",
+    "status_name_placeholder": "Enter status name",
+    "create": "Create status",
+    "update": "Update status",
+    "submit": "Submit",
+    "status_id": "Status ID",
+    "created_at": "Created at",
+    "updated_at": "Updated at",
+    "create-success": "Create status successfully!",
+    "update-success": "Update status successfully!",
+    "delete-success": "Delete status successfully!",
+    "delete-failed": "Delete status failed!",
+    "create-failed": "Create status failed!",
+    "number-of-orders": "Number of orders"
   }
 }

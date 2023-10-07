@@ -34,7 +34,8 @@ const ListItemButton: React.FC<ListItemButtonType> = ({ menu }) => {
   }
 
   const handleDirection = (href: string) => {
-    // router.push(menu.href)
+    router.push(menu.href, undefined, { shallow: true })
+    console.log(href)
     if (href === '/admin') {
       setOpen(!open)
     }

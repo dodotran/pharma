@@ -1,5 +1,13 @@
-import { CartSchema } from 'prisma/generated/zod'
 import { z } from 'zod'
+
+export const CartSchema = z.object({
+  id: z.string(),
+  user_id: z.string(),
+  product_id: z.string(),
+  quantity: z.number(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+})
 
 export const CreateCartSchema = CartSchema.omit({
   id: true,
@@ -16,3 +24,4 @@ export const UpdateCartSchema = CartSchema.omit({
 
 export type CreateCart = z.infer<typeof CreateCartSchema>
 export type UpdateCart = z.infer<typeof UpdateCartSchema>
+export type CartSchemaType = z.infer<typeof CartSchema>

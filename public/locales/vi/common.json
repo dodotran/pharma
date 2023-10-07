@@ -34,12 +34,15 @@
     "description-failed": "Tài khoản của bạn chưa được xác thực!"
   },
   "sidebar": {
-    "dashboard": "Bảng điều khiển",
-    "user": "Người dùng",
-    "category": "Danh mục thuốc",
-    "product": "Sản phẩm",
-    "order": "Đơn hàng",
-    "setting": "Cài đặt"
+    "dashboard": "Dashboard",
+    "user": "Quản lý người dùng",
+    "category": "Quản lý danh mục thuốc",
+    "product": "Quản lý thuốc",
+    "order": "Quản lý đơn hàng",
+    "setting": "Cài đặt",
+    "unit": "Quản lý định lượng thuốc",
+    "trademark": "Quản lý thương hiệu thuốc",
+    "status_order": "Quản lý trạng thái đơn hàng"
   },
   "unit": {
     "title": "Định lượng thuốc",
@@ -73,6 +76,23 @@
     "delete-success": "Xóa danh mục thuốc thành công!",
     "delete-failed": "Xóa danh mục thuốc thất bại!",
     "create-failed": "Tạo danh mục thuốc thất bại!",
+    "number_of_drugs": "Số lượng thuốc"
+  },
+  "status_order": {
+    "title": "Trạng thái đơn hàng",
+    "status_name": "Tên trạng thái đơn hàng",
+    "status_name_placeholder": "Nhập tên trạng thái đơn hàng",
+    "create": "Tạo trạng thái đơn hàng",
+    "update": "Cập nhật trạng thái đơn hàng",
+    "submit": "Xác nhận",
+    "status_id": "Mã trạng thái đơn hàng",
+    "created_at": "Ngày tạo",
+    "updated_at": "Ngày cập nhật",
+    "create-success": "Tạo trạng thái đơn hàng thành công!",
+    "update-success": "Cập nhật trạng thái đơn hàng thành công!",
+    "delete-success": "Xóa trạng thái đơn hàng thành công!",
+    "delete-failed": "Xóa trạng thái đơn hàng thất bại!",
+    "create-failed": "Tạo trạng thái đơn hàng thất bại!",
     "number_of_drugs": "Số lượng thuốc"
   }
 }

@@ -9,7 +9,7 @@ class CartService extends UtilsService {
         user_id: userId,
       },
       include: {
-        Product: {
+        product: {
           include: {
             category: true,
             image: true,

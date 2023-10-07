@@ -1,5 +1,4 @@
-import { Layout } from '@/libs/shared/Layout'
-import { Stack } from '@mui/material'
+import { Home } from '@/features/home'
 import { GetStaticPropsContext } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
@@ -11,10 +10,4 @@ export async function getStaticProps({ locale }: GetStaticPropsContext) {
   }
 }
 
-export default function Home() {
-  return (
-    <Layout>
-      <Stack>12727</Stack>
-    </Layout>
-  )
-}
+export default Home

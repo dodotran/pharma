@@ -1,5 +1,5 @@
 import { trueGrey } from '@/libs/config/colors'
-import { CategorySchema, CategorySchemaType } from '@/libs/schema/category.schema'
+import { CreateCategorySchema, CreateCategorySchemaType } from '@/libs/schema/category.schema'
 import { Input } from '@/libs/shared/Form'
 import { api } from '@/utils/api'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -21,14 +21,14 @@ const Create: React.FC<CreateProps> = ({ open, handleClose }) => {
   const { mutate, isLoading } = api.unit.create.useMutation()
   const utils = api.useContext()
 
-  const { control, handleSubmit, reset } = useForm<CategorySchemaType>({
+  const { control, handleSubmit, reset } = useForm<CreateCategorySchemaType>({
     defaultValues: {
       name: '',
     },
-    resolver: zodResolver(CategorySchema),
+    resolver: zodResolver(CreateCategorySchema),
   })
 
-  const onSubmit: SubmitHandler<CategorySchemaType> = async (data) => {
+  const onSubmit: SubmitHandler<CreateCategorySchemaType> = async (data) => {
     mutate(
       { ...data },
       {

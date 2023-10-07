@@ -1,11 +1,10 @@
 import {
+  CategorySchema,
   CategorySchemaUpdate,
-  CategorySchema as CreateCategorySchema,
-  UnitSchemaProduct,
+  CreateCategorySchema,
 } from '@/libs/schema/category.schema'
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '@/server/api/trpc'
 import { User } from 'next-auth'
-import { CategorySchema } from 'prisma/generated/zod'
 
 import { z } from 'zod'
 import CategoryService from '../services/category.service'
@@ -16,7 +15,7 @@ export const categoryRouter = createTRPCRouter({
   get: publicProcedure
     .meta({ openapi: { method: 'GET', path: '/category' } })
     .input(z.void())
-    .output(z.array(UnitSchemaProduct))
+    .output(z.any())
     .query(() => {
       return categoryService.getAll()
     }),

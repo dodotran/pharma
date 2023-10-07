@@ -35,6 +35,7 @@
   "status": "Status",
   "created_at": "Created at",
   "updated_at": "Updated at",
+  "create_new_pharmaceutical": "Create new pharmaceutical",
   "detail_pharmaceutical": "Detail pharmaceutical",
   "create": {
     "title": "Create new pharmaceutical",

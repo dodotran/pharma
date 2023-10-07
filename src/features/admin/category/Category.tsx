@@ -1,5 +1,5 @@
+import { CategorySchemaType } from '@/libs/schema/category.schema'
 import { LayoutAdmin } from '@/libs/shared/Layout'
-import { Modal } from '@/libs/shared/Modal'
 import { ReactTable } from '@/libs/shared/Table'
 import { ButtonDetail, MuiImage } from '@/libs/shared/styled'
 import { api } from '@/utils/api'
@@ -9,13 +9,13 @@ import DetailIcon from 'public/assets/imgs/detail.png'
 import EditIcon from 'public/assets/imgs/edit.png'
 import { useState } from 'react'
 import { Create } from './Create'
-import { FormUpdateCategory } from './Update'
+import { Update } from './Update'
 
 const Category = () => {
   const { data, isLoading } = api.category.get.useQuery()
   const [open, setOpen] = useState(false)
   const [openUpdate, setOpenUpdate] = useState(false)
-  const [id, setId] = useState('')
+  const [category, setCategory] = useState<CategorySchemaType | null>(null)
   const { t } = useTranslation('common')
 
   const handleOpen = () => {
@@ -26,14 +26,14 @@ const Category = () => {
     setOpen(false)
   }
 
-  const handleOpenUpdate = (id: string) => {
-    setId(id)
+  const handleOpenUpdate = (data: CategorySchemaType) => {
+    setCategory(data)
     setOpenUpdate(true)
   }
 
   const handleCloseUpdate = () => {
     setOpenUpdate(false)
-    setId('')
+    setCategory(null)
   }
 
   const columns = [
@@ -47,7 +47,7 @@ const Category = () => {
     },
     {
       header: t('category.number_of_drugs'),
-      accessorKey: 'Product.length',
+      accessorKey: 'product.length',
     },
     {
       header: t('category.created_at'),
@@ -61,15 +61,13 @@ const Category = () => {
       header: '',
       accessorKey: 'action',
       cell: ({ row }) => {
-        const { id } = row.original
-
         return (
           <Stack direction="row" alignItems="center" spacing={3.5}>
             <ButtonDetail>
               <MuiImage src={DetailIcon} alt="detail" />
             </ButtonDetail>
 
-            <ButtonDetail onClick={() => handleOpenUpdate(id)}>
+            <ButtonDetail onClick={() => handleOpenUpdate(row.original)}>
               <MuiImage src={EditIcon} alt="edit" />
             </ButtonDetail>
           </Stack>
@@ -90,11 +88,11 @@ const Category = () => {
 
       <ReactTable columns={columns} data={data || []} isLoading={isLoading} />
 
-      <Create open={open} handleClose={handleClose} />
+      {open && <Create open={open} handleClose={handleClose} />}
 
-      <Modal open={openUpdate} handleClose={handleCloseUpdate} title="Category">
-        <FormUpdateCategory id={id} />
-      </Modal>
+      {openUpdate && (
+        <Update category={category} open={openUpdate} handleClose={handleCloseUpdate} />
+      )}
     </LayoutAdmin>
   )
 }

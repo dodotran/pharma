@@ -1,6 +1,12 @@
 import { Box, List } from '@mui/material'
 import { useTranslation } from 'next-i18next'
-import DashBoardIcon from 'public/assets/svgs/dashboard.svg'
+import UnitIcon from 'public/assets/imgs/boxes.png'
+import CategoryIcon from 'public/assets/imgs/category.png'
+import StatusOrderIcon from 'public/assets/imgs/clipboard.png'
+import DashBoardIcon from 'public/assets/imgs/dashboard.png'
+import MedicineIcon from 'public/assets/imgs/medicine.png'
+import OrderIcon from 'public/assets/imgs/shopping-bag.png'
+import TradeMarkIcon from 'public/assets/imgs/trademark.png'
 import { HEADER_HEIGHT } from '../Layout/Header/AppBar'
 import { ListItemButton } from './ItemSideBar'
 
@@ -14,17 +20,32 @@ const Sidebar = () => {
       title: t('sidebar.dashboard'),
       icon: DashBoardIcon,
       href: '/admin',
-      subMenu: [
-        { title: 'Hwhwwh', icon: DashBoardIcon, href: '/admin' },
-        { title: 'Hwhwwh', icon: DashBoardIcon, href: '/admin' },
-        { title: 'Hwhwwh', icon: DashBoardIcon, href: '/admin' },
-      ],
     },
-    { title: t('sidebar.category'), icon: DashBoardIcon, href: '/admin/category' },
     {
       title: t('sidebar.product'),
-      icon: DashBoardIcon,
+      icon: MedicineIcon,
       href: '/admin/product',
+    },
+    { title: t('sidebar.category'), icon: CategoryIcon, href: '/admin/category' },
+    {
+      title: t('sidebar.unit'),
+      icon: UnitIcon,
+      href: '/admin/unit',
+    },
+    {
+      title: t('sidebar.order'),
+      icon: OrderIcon,
+      href: '/admin/order',
+    },
+    {
+      title: t('sidebar.status_order'),
+      icon: StatusOrderIcon,
+      href: '/admin/status-order',
+    },
+    {
+      title: t('sidebar.trademark'),
+      icon: TradeMarkIcon,
+      href: '/admin/trademark',
     },
   ]
 

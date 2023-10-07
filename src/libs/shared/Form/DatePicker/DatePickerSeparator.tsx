@@ -29,7 +29,7 @@ const StyledAutocomplete = styled((props: AutocompleteProps<string, false, true,
   />
 ))(({ theme }) => ({
   paddingRight: '10px !important',
-  minWidth: 100,
+  minWidth: 130,
   [theme.breakpoints.down('sm')]: {
     minWidth: 104,
     '&& .MuiOutlinedInput-root': {

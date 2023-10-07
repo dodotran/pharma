@@ -1,0 +1,26 @@
+{
+  "title": "Nhãn hiệu",
+  "id": "Mã nhãn hiệu",
+  "name_trademark": "Tên nhãn hiệu",
+  "image": "Hình ảnh",
+  "created_at": "Ngày tạo",
+  "country_trademark": "Quốc gia",
+  "updated_at": "Ngày cập nhật",
+  "introduce": "Giới thiệu",
+  "number_of_drugs": "Số lượng thuốc",
+  "create": {
+    "title": "Thêm mới nhãn hiệu",
+    "enter_name": "Nhập tên nhãn hiệu",
+    "enter_country_trademark": "Nhập tên quốc gia ",
+    "image": "Hình ảnh",
+    "name_trademark": "Tên nhãn hiệu",
+    "country_trademark": "Quốc gia ",
+    "submit": "Gửi",
+    "success": "Tạo thành công",
+    "enter_introduce": "Nhập giới thiệu"
+  },
+  "update": {
+    "title": "Cập nhật nhãn hiệu",
+    "success": "Cập nhật thành công"
+  }
+}

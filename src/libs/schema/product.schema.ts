@@ -1,11 +1,36 @@
-import {
-  CategorySchema,
-  ImageProductSchema,
-  ProductDetailSchema,
-  ProductSchema,
-  UnitSchema,
-} from 'prisma/generated/zod'
 import { z } from 'zod'
+
+export const UnitSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+})
+
+export const ProductSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  price: z.string(),
+  quantity: z.string(),
+  unit_id: z.string(),
+  expired_date: z.date(),
+  category_id: z.string(),
+  trademark_id: z.string(),
+  status: z.enum(['DANG_BAN', 'HET_HANG', 'DUNG_BAN', 'DEN_HIEU_THUOC']),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+})
+
+export const ProductDetailSchema = z.object({
+  id: z.string(),
+  product_id: z.string(),
+  description: z.string(),
+  short_description: z.string(),
+  ingredient: z.string(),
+  how_to_use: z.string(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+})
 
 export const createProductSchema = z
   .object({
@@ -24,15 +49,21 @@ export const updateProductSchema = ProductSchema.omit({
   updatedAt: true,
 })
 
-export const createUnitSchema = UnitSchema.omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
+export const createUnitSchema = z.object({
+  name: z.string().min(1),
 })
 
-export const updateUnitSchema = UnitSchema.omit({
-  createdAt: true,
-  updatedAt: true,
+export const updateUnitSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1),
+})
+
+export const ImageProductSchema = z.object({
+  id: z.string(),
+  product_id: z.string(),
+  url: z.string(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
 })
 
 export const ProductSchemas = z
@@ -40,7 +71,7 @@ export const ProductSchemas = z
     unit: UnitSchema,
     ProductDetail: z.array(ProductDetailSchema),
     image: z.array(ImageProductSchema),
-    category: CategorySchema,
+    category: UnitSchema,
   })
   .merge(ProductSchema)
 
@@ -61,3 +92,7 @@ export type CreateUnit = z.infer<typeof createUnitSchema>
 export type UpdateUnit = z.infer<typeof updateUnitSchema>
 export type CreateProductDetail = z.infer<typeof CreateProductDetailSchema>
 export type UpdateProductDetail = z.infer<typeof UpdateProductDetailSchema>
+export type ImageProductSchema = z.infer<typeof ImageProductSchema>
+export type ProductSchemaType = z.infer<typeof ProductSchema>
+export type ProductDetailSchemaType = z.infer<typeof ProductDetailSchema>
+export type ProductSchemasType = z.infer<typeof ProductSchemas>

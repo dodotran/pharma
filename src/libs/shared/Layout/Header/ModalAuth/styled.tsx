@@ -5,7 +5,7 @@ const BoxContainer = styled(Box)(({ theme }) => ({
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 500,
+  width: 600,
   minHeight: 250,
   boxShadow: theme.shadows[1],
   padding: 20,

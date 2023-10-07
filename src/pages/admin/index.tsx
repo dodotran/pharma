@@ -1,4 +1,5 @@
 import { Product } from '@/features/admin'
+import { StatusOrder } from '@/features/admin/status-order'
 import { GetStaticPropsContext } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
@@ -10,4 +11,4 @@ export async function getStaticProps({ locale }: GetStaticPropsContext) {
   }
 }
 
-export default Product
+export default StatusOrder

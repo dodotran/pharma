@@ -12,7 +12,7 @@ class UserService extends UtilsService {
       },
       include: {
         address: true,
-        Cart: true,
+        cart: true,
       },
     })
 
