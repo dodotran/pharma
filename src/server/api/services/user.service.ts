@@ -1,5 +1,6 @@
 import { UpdateUser } from '@/libs/schema/user.schema'
 import { prisma } from '@/server/db'
+import { TRPCError } from '@trpc/server'
 import { UtilsService } from './utils.service'
 
 class UserService extends UtilsService {
@@ -16,6 +17,8 @@ class UserService extends UtilsService {
       },
     })
 
+    if (!userInfo) throw new TRPCError({ code: 'NOT_FOUND', message: 'User not found' })
+
     return userInfo
   }
 
@@ -27,6 +30,21 @@ class UserService extends UtilsService {
         id: userId,
       },
       data,
+    })
+
+    return updatedUser
+  }
+
+  async updateImage(userId: string, image: string) {
+    this.CheckAuth(userId)
+
+    const updatedUser = await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        image,
+      },
     })
 
     return updatedUser

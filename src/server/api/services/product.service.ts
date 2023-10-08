@@ -1,5 +1,6 @@
-import { CreateProduct, UpdateProduct } from '@/libs/schema/product.schema'
+import { CreateProduct, UploadImageSchemaType } from '@/libs/schema/product.schema'
 import { prisma } from '@/server/db'
+import { TRPCError } from '@trpc/server'
 import { UtilsService } from './utils.service'
 
 class ProductService extends UtilsService {
@@ -34,7 +35,17 @@ class ProductService extends UtilsService {
   async create(data: CreateProduct, userId: string) {
     this.CheckAdmin(userId)
 
-    const { name, price, quantity, unit_id, expired_date, status, category_id, ...res } = data
+    const {
+      name,
+      price,
+      quantity,
+      unit_id,
+      expired_date,
+      status,
+      category_id,
+      trademark_id,
+      ...res
+    } = data
 
     const product = await prisma.product.create({
       data: {
@@ -45,23 +56,31 @@ class ProductService extends UtilsService {
         category_id,
         price: Number(price),
         quantity: Number(quantity),
+        trademark_id,
       },
     })
 
-    let detail
-
-    if (product) {
-      const productDetail = await prisma.productDetail.create({
-        data: {
-          product_id: product.id,
-          ...res,
-        },
+    if (!product)
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: 'Create product failed',
       })
 
-      detail = productDetail
+    const productDetail = await prisma.productDetail.create({
+      data: {
+        product_id: product.id,
+        ...res,
+      },
+    })
+
+    if (!productDetail) {
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: 'Create product detail failed',
+      })
     }
 
-    return { ...product, detail }
+    return { ...product, productDetail }
   }
 
   async delete(id: string, userId: string) {
@@ -76,22 +95,45 @@ class ProductService extends UtilsService {
     return product
   }
 
-  async update(data: UpdateProduct, userId: string) {
-    this.CheckAdmin(userId)
-    const { id } = data
+  // async update(data: UpdateProduct, userId: string) {
+  //   this.CheckAdmin(userId)
+  //   const { id } = data
 
-    const product = await prisma.product.update({
+  //   const product = await prisma.product.update({
+  //     where: {
+  //       id,
+  //     },
+  //     data: {
+  //       ...data,
+  //       price: Number(data.price),
+  //       quantity: Number(data.quantity),
+  //     },
+  //   })
+
+  //   return product
+  // }
+
+  async uploadImage(data: UploadImageSchemaType, userId: string) {
+    this.CheckAdmin(userId)
+
+    const product = await prisma.product.findUnique({
       where: {
-        id,
-      },
-      data: {
-        ...data,
-        price: Number(data.price),
-        quantity: Number(data.quantity),
+        id: data.product_id,
       },
     })
 
-    return product
+    if (!product) {
+      throw new TRPCError({
+        code: 'NOT_FOUND',
+        message: 'Product not found',
+      })
+    }
+
+    const image = await prisma.imageProduct.create({
+      data,
+    })
+
+    return image
   }
 }
 

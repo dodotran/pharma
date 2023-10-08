@@ -36,8 +36,6 @@ const Update: React.FC<UpdateProps> = ({ category, open, handleClose }) => {
     resolver: zodResolver(CreateCategorySchema),
   })
 
-  console.log(category?.id)
-
   const onSubmit: SubmitHandler<CreateCategorySchemaType> = async (data) => {
     mutate(
       { name: data.name, id: category?.id as string },

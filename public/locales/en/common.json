@@ -23,7 +23,9 @@
     "user-not-found": "User not found!",
     "message-email": "Email is required!",
     "incorrect-password": "Incorrect old password!",
-    "same-password": "New password must be different from old password!"
+    "same-password": "New password must be different from old password!",
+    "go-to-pharmacy": "This product must be purchased directly at the pharmacy!",
+    "out-of-product": "Out of product!"
   },
   "verify": {
     "resend": "Resend verify email",
@@ -94,5 +96,11 @@
     "delete-failed": "Delete status failed!",
     "create-failed": "Create status failed!",
     "number-of-orders": "Number of orders"
+  },
+  "sidebar_account": {
+    "info_account": "Info Account",
+    "history_order": "History Order",
+    "address_management": "Address Management",
+    "logout": "Logout"
   }
 }

@@ -26,6 +26,7 @@ export class UtilsService {
       },
     })
 
+
     if (!userData) {
       throw new TRPCError({
         code: 'UNAUTHORIZED',

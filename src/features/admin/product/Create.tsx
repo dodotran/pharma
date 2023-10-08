@@ -1,6 +1,7 @@
 import { trueGrey } from '@/libs/config/colors'
 import { CreateProduct, createProductSchema } from '@/libs/schema/product.schema'
 import { DatePickerYear, Input, Select } from '@/libs/shared/Form'
+import { uploadCloundinary } from '@/libs/shared/hooks'
 import { api } from '@/utils/api'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
@@ -30,8 +31,11 @@ type CreateProps = {
 const Create: React.FC<CreateProps> = ({ open, handleClose }) => {
   const { t } = useTranslation('product')
   const { mutate, isLoading } = api.product.createProduct.useMutation()
+  const { mutate: uploadImage } = api.product.uploadImage.useMutation()
   const { data: CategoryData } = api.category.get.useQuery()
   const { data: UnitData } = api.unit.get.useQuery()
+  const { data: TradeMarkData } = api.trademark.get.useQuery()
+  const utils = api.useContext()
 
   const CategoryMapper = CategoryData?.map((item) => ({
     label: item.name,
@@ -39,6 +43,11 @@ const Create: React.FC<CreateProps> = ({ open, handleClose }) => {
   }))
 
   const UnitMapper = UnitData?.map((item) => ({
+    label: item.name,
+    value: item.id,
+  }))
+
+  const TradeMarkMapper = TradeMarkData?.map((item) => ({
     label: item.name,
     value: item.id,
   }))
@@ -62,7 +71,7 @@ const Create: React.FC<CreateProps> = ({ open, handleClose }) => {
     },
   ]
 
-  const { control, handleSubmit } = useForm<CreateProduct>({
+  const { control, handleSubmit, reset } = useForm<CreateProduct>({
     defaultValues: {
       category_id: '',
       name: '',
@@ -75,39 +84,20 @@ const Create: React.FC<CreateProps> = ({ open, handleClose }) => {
       ingredient: '',
       how_to_use: '',
       short_description: '',
+      trademark_id: '',
     },
     resolver: zodResolver(createProductSchema),
   })
 
-  const onSubmit: SubmitHandler<CreateProduct> = async (data) => {
-    mutate(
-      { ...data },
-      {
-        onSuccess: () => {
-          enqueueSnackbar(t('create.success'), {
-            variant: 'success',
-          })
-        },
-        onError: (err) => {
-          const error = String(err.message)
-          const description = t(error, { ns: 'common' })
-
-          enqueueSnackbar(t(`${description}`), {
-            variant: 'error',
-          })
-        },
-      },
-    )
-  }
-
   const [files, setFiles] = useState<File[]>([])
-
-  const [image, setImage] = useState<string>('')
+  const [imageList, setImageList] = useState<string[]>([])
 
   useEffect(() => {
-    if (files && files.length > 0 && files[0]) {
-      const url = URL.createObjectURL(files[0])
-      setImage(url)
+    if (files && files.length > 0) {
+      files.forEach((file) => {
+        const url = URL.createObjectURL(file)
+        setImageList((prev) => [...prev, url])
+      })
     }
   }, [files])
 
@@ -118,8 +108,30 @@ const Create: React.FC<CreateProps> = ({ open, handleClose }) => {
     onDrop: (acceptedFiles) => {
       setFiles(acceptedFiles)
     },
-    multiple: false,
   })
+
+  const onSubmit: SubmitHandler<CreateProduct> = async (data) => {
+    mutate(data, {
+      onSuccess: async (data) => {
+        for (let i = 0; i < files.length; i++) {
+          const res = await uploadCloundinary(files[i])
+          uploadImage({ product_id: data.id, url: res.url })
+        }
+      },
+      onError: (err) => {
+        const error = String(err.message)
+        const description = t(error, { ns: 'common' })
+        enqueueSnackbar(t(`${description}`), {
+          variant: 'error',
+        })
+      },
+      onSettled: () => {
+        utils.product.invalidate()
+        handleClose()
+        reset()
+      },
+    })
+  }
 
   return (
     <Modal
@@ -203,83 +215,77 @@ const Create: React.FC<CreateProps> = ({ open, handleClose }) => {
                 fullWidth
                 options={status || []}
               />
+
+              <Select
+                control={control}
+                name="trademark_id"
+                label={t('trademark') as string}
+                fullWidth
+                options={TradeMarkMapper || []}
+              />
             </Stack>
 
-            <Stack alignItems="center" justifyContent="center" width="100%" spacing={3}>
-              <Stack direction="row" spacing={3}>
-                <Box
-                  {...getRootProps({ className: 'dropzone' })}
-                  mb={2}
-                  width={200}
-                  height={200}
-                  border="1px dashed"
-                >
-                  <input {...getInputProps()} />
+            <Stack alignItems="center" justifyContent="center" width="100%">
+              <Stack direction="row" {...getRootProps({ className: 'dropzone' })}>
+                <input multiple {...getInputProps()} />
 
-                  <AvatarWhenEit>
-                    <Camera>
-                      <Image
-                        src={image ? image : AddIcon}
-                        width={image ? 200 : 30}
-                        height={image ? 200 : 30}
-                        alt="choose avatar"
-                        onLoad={() => {
-                          URL.revokeObjectURL(image)
-                        }}
-                      />
-                    </Camera>
-                  </AvatarWhenEit>
-                </Box>
+                <AvatarWhenEdit>
+                  <Camera>
+                    <Image
+                      src={imageList[0] ? imageList[0] : AddIcon}
+                      width={imageList[0] ? 200 : 30}
+                      height={imageList[0] ? 200 : 30}
+                      alt="choose avatar"
+                      onLoad={() => {
+                        URL.revokeObjectURL(imageList[0] as string)
+                      }}
+                    />
+                  </Camera>
+                </AvatarWhenEdit>
 
-                <Box
-                  {...getRootProps({ className: 'dropzone' })}
-                  mb={2}
-                  width={200}
-                  height={200}
-                  border="1px dashed"
-                >
-                  <input {...getInputProps()} />
-
-                  <AvatarWhenEit>
-                    <Camera>
-                      <Image src={AddIcon} width={30} height={30} alt="choose avatar" />
-                    </Camera>
-                  </AvatarWhenEit>
-                </Box>
+                <AvatarWhenEdit>
+                  <Camera>
+                    <Image
+                      src={imageList[1] ? imageList[1] : AddIcon}
+                      width={imageList[1] ? 200 : 30}
+                      height={imageList[1] ? 200 : 30}
+                      alt="choose avatar"
+                      onLoad={() => {
+                        URL.revokeObjectURL(imageList[1] as string)
+                      }}
+                    />
+                  </Camera>
+                </AvatarWhenEdit>
               </Stack>
 
-              <Stack direction="row" spacing={3}>
-                <Box
-                  {...getRootProps({ className: 'dropzone' })}
-                  mb={2}
-                  width={200}
-                  height={200}
-                  border="1px dashed"
-                >
-                  <input {...getInputProps()} />
+              <Stack direction="row">
+                <AvatarWhenEdit>
+                  <Camera>
+                    <Image
+                      src={imageList[2] ? imageList[2] : AddIcon}
+                      width={imageList[2] ? 200 : 30}
+                      height={imageList[2] ? 200 : 30}
+                      alt="choose avatar"
+                      onLoad={() => {
+                        URL.revokeObjectURL(imageList[2] as string)
+                      }}
+                    />
+                  </Camera>
+                </AvatarWhenEdit>
 
-                  <AvatarWhenEit>
-                    <Camera>
-                      <Image src={AddIcon} width={30} height={30} alt="choose avatar" />
-                    </Camera>
-                  </AvatarWhenEit>
-                </Box>
-
-                <Box
-                  {...getRootProps({ className: 'dropzone' })}
-                  mb={2}
-                  width={200}
-                  height={200}
-                  border="1px dashed"
-                >
-                  <input {...getInputProps()} />
-
-                  <AvatarWhenEit>
-                    <Camera>
-                      <Image src={AddIcon} width={30} height={30} alt="choose avatar" />
-                    </Camera>
-                  </AvatarWhenEit>
-                </Box>
+                <AvatarWhenEdit>
+                  <Camera>
+                    <Image
+                      src={imageList[3] ? imageList[3] : AddIcon}
+                      width={imageList[3] ? 200 : 30}
+                      height={imageList[3] ? 200 : 30}
+                      alt="choose avatar"
+                      onLoad={() => {
+                        URL.revokeObjectURL(imageList[3] as string)
+                      }}
+                    />
+                  </Camera>
+                </AvatarWhenEdit>
               </Stack>
             </Stack>
           </Stack>
@@ -340,7 +346,7 @@ const BoxContainer = styled(Box)(({ theme }) => ({
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: '40%',
+  width: 1000,
   boxShadow: theme.shadows[1],
   padding: 20,
   borderRadius: 2,
@@ -356,11 +362,12 @@ const ButtonClose = styled(Button)({
   padding: 0,
 })
 
-const AvatarWhenEit = styled(Box)({
+const AvatarWhenEdit = styled(Box)({
   position: 'relative',
-  width: '100%',
-  height: '100%',
+  width: 200,
+  height: 200,
   cursor: 'pointer',
+  border: '1px dashed ',
 })
 
 const Camera = styled(Box)({

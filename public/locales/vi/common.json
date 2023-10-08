@@ -23,7 +23,9 @@
     "user-not-found": "Email không tồn tại!",
     "message-email": "Email không hợp lệ!",
     "incorrect-password": "Mật khẩu không chính xác!",
-    "same-password": "Mật khẩu mới không được trùng với mật khẩu cũ!"
+    "same-password": "Mật khẩu mới không được trùng với mật khẩu cũ!",
+    "go-to-pharmacy": "Sản phẩm này phải mua trực tiếp tại nhà thuốc!",
+    "out-of-product": "Sản phẩm đã hết hàng!"
   },
   "verify": {
     "resend": "Gửi lại",
@@ -94,5 +96,11 @@
     "delete-failed": "Xóa trạng thái đơn hàng thất bại!",
     "create-failed": "Tạo trạng thái đơn hàng thất bại!",
     "number_of_drugs": "Số lượng thuốc"
+  },
+  "sidebar_account": {
+    "info_account": "Thông tin tài khoản",
+    "history_order": "Lịch sử đơn hàng",
+    "address_management": "Quản lý địa chỉ",
+    "logout": "Đăng xuất"
   }
 }

@@ -5,6 +5,7 @@ import { EmotionCache } from '@emotion/react'
 import { CssBaseline, ThemeProvider } from '@mui/material'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
+import { PayPalScriptProvider } from '@paypal/react-paypal-js'
 import { type Session } from 'next-auth'
 import { SessionProvider } from 'next-auth/react'
 import { appWithTranslation } from 'next-i18next'
@@ -15,6 +16,12 @@ export interface MyAppProps extends AppProps {
   emotionCache?: EmotionCache
 }
 
+const initialOptions = {
+  clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID as string,
+  currency: 'USD',
+  intent: 'capture',
+}
+
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
@@ -23,15 +30,17 @@ const MyApp: AppType<{ session: Session | null }> = ({
     <SessionProvider session={session}>
       <ThemeProvider theme={defaultTheme}>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <SnackbarProvider
-            anchorOrigin={defaultAnchor}
-            autoHideDuration={1000}
-            Components={customComponents}
-          >
-            <CssBaseline />
+          <PayPalScriptProvider options={initialOptions}>
+            <SnackbarProvider
+              anchorOrigin={defaultAnchor}
+              autoHideDuration={1000}
+              Components={customComponents}
+            >
+              <CssBaseline />
 
-            <Component {...pageProps} />
-          </SnackbarProvider>
+              <Component {...pageProps} />
+            </SnackbarProvider>
+          </PayPalScriptProvider>
         </LocalizationProvider>
       </ThemeProvider>
     </SessionProvider>

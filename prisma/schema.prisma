@@ -98,17 +98,17 @@ model Address {
     id             String      @id @default(cuid())
     name           String
     phone_number   String
-    province       Province    @relation(fields: [province_id], references: [province_id])
-    district       District    @relation(fields: [district_id], references: [district_id])
-    wards          Wards       @relation(fields: [wards_id], references: [wards_id])
+    province       Province?   @relation(fields: [province_id], references: [province_id])
+    district       District?   @relation(fields: [district_id], references: [district_id])
+    ward           Ward?       @relation(fields: [ward_id], references: [ward_id])
     address_detail String
     type_address   AddressType
     created_at     DateTime    @default(now())
     updated_at     DateTime    @updatedAt
     province_id    String
     district_id    String
-    wards_id       String
-    User           User?       @relation(fields: [userId], references: [id])
+    ward_id        String
+    user           User?       @relation(fields: [userId], references: [id])
     userId         String?
     order          Order[]
 }
@@ -118,7 +118,7 @@ model District {
     province_id String
     name        String
     Province    Province? @relation(fields: [province_id], references: [province_id])
-    ward        Wards[]
+    ward        Ward[]
     address     Address[]
 }
 
@@ -129,8 +129,8 @@ model Province {
     address     Address[]
 }
 
-model Wards {
-    wards_id    String    @id @default(cuid())
+model Ward {
+    ward_id     String    @id @default(cuid())
     district_id String
     name        String
     district    District? @relation(fields: [district_id], references: [district_id])
@@ -159,11 +159,11 @@ model Product {
     quantity       Int
     unit_id        String
     expired_date   DateTime
-    category_id    String?
-    trademark_id   String?
+    category_id    String
+    trademark_id   String
     status         status
     image          ImageProduct[]
-    unit           Unit           @relation(fields: [unit_id], references: [id])
+    unit           Unit?          @relation(fields: [unit_id], references: [id])
     category       Category?      @relation(fields: [category_id], references: [id])
     cart           Cart[]
     order          Order[]
@@ -228,7 +228,8 @@ model Order {
     product           Product        @relation(fields: [product_id], references: [id])
     status            StatusOrder    @relation(fields: [status_order_id], references: [id])
     status_order_id   String
-    payment_method    PaymentMethod? @relation(fields: [payment_method_id], references: [id])
+    payment_method    PaymentMethod?
+    paymentMethodId   String?
 }
 
 model StatusOrder {
@@ -250,10 +251,20 @@ model Trademark {
     product   Product[]
 }
 
+enum PaymentStatus {
+    PENDING
+    SUCCESS
+    FAILED
+}
+
 model PaymentMethod {
-    id        String   @id @default(cuid())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    order     Order[]
+    id               String        @id @default(cuid())
+    order_id         String        @unique
+    payment_resource String
+    order_payment_id String?
+    payment_id       String?
+    status           PaymentStatus
+    createdAt        DateTime      @default(now())
+    updatedAt        DateTime      @updatedAt
+    order            Order?        @relation(fields: [order_id], references: [id])
 }

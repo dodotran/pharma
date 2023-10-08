@@ -37,6 +37,7 @@
   "updated_at": "Updated at",
   "create_new_pharmaceutical": "Create new pharmaceutical",
   "detail_pharmaceutical": "Detail pharmaceutical",
+  "trademark": "Trademark",
   "create": {
     "title": "Create new pharmaceutical",
     "success": "Create new pharmaceutical success",

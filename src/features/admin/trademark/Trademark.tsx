@@ -4,8 +4,8 @@ import { ReactTable } from '@/libs/shared/Table'
 import { ButtonDetail, MuiImage } from '@/libs/shared/styled'
 import { api } from '@/utils/api'
 import { Button, Stack, Typography } from '@mui/material'
-import { CldImage } from 'next-cloudinary'
 import { useTranslation } from 'next-i18next'
+import Image from 'next/image'
 import DetailIcon from 'public/assets/imgs/detail.png'
 import EditIcon from 'public/assets/imgs/edit.png'
 import { useState } from 'react'
@@ -53,9 +53,7 @@ const Trademark = () => {
       header: t('image'),
       accessorKey: 'image',
       cell: ({ row }) => {
-        return (
-          <CldImage width="100" height="100" src={row.original.image} alt={row.original.name} />
-        )
+        return <Image width="100" height="100" src={row.original.image} alt={row.original.name} />
       },
     },
     {

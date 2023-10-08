@@ -12,12 +12,17 @@ import {
 export type TableSkeletonType = {
   row_number?: number
   col_number?: number
+  width?: number | string
 }
 
-const TableSkeleton: React.VFC<TableSkeletonType> = ({ col_number = 9, row_number = 10 }) => {
+const TableSkeleton: React.VFC<TableSkeletonType> = ({
+  col_number = 9,
+  row_number = 10,
+  width = '100%',
+}) => {
   return (
     <TableContainer component={Paper} variant="outlined" sx={{ border: 'none' }}>
-      <Table size="small">
+      <Table size="small" sx={{ width: width }}>
         <TableHead>
           <TableRow>
             {new Array(col_number).fill(0).map((el, idx) => (

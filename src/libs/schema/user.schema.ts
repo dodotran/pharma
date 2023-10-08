@@ -1,8 +1,9 @@
-import { z } from 'zod'
+import { string, z } from 'zod'
 
 export const UserSchema = z.object({
   id: z.string(),
   email: z.string(),
+  name: z.string(),
   password: z.string(),
   role: z.enum(['ADMIN', 'USER']),
   createdAt: z.date(),
@@ -13,13 +14,15 @@ export const UserSchema = z.object({
   date_of_birth: z.date(),
 })
 
-export const updateUser = UserSchema.omit({
-  updatedAt: true,
-  createdAt: true,
-  id: true,
-  email: true,
-  role: true,
+export const UpdateUserSchema = z.object({
+  name: z.string(),
+  date_of_birth: z.date(),
+  sex: string(),
+})
+export const UpdateImageUserSchema = z.object({
+  image: z.string(),
 })
 
-export type UpdateUser = z.infer<typeof updateUser>
+export type UpdateUser = z.infer<typeof UpdateUserSchema>
 export type UserSchemaType = z.infer<typeof UserSchema>
+export type UpdateImageUserType = z.infer<typeof UpdateImageUserSchema>

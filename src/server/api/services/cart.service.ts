@@ -8,10 +8,14 @@ class CartService extends UtilsService {
       where: {
         user_id: userId,
       },
+      orderBy: {
+        createdAt: 'asc',
+      },
       include: {
         product: {
           include: {
             category: true,
+            unit: true,
             image: true,
           },
         },
@@ -92,7 +96,27 @@ class CartService extends UtilsService {
       },
     })
 
+    const product = await prisma.product.findFirst({
+      where: {
+        id: productId,
+      },
+    })
+
+    if (!product) {
+      throw new TRPCError({
+        code: 'NOT_FOUND',
+        message: 'error.notFound',
+      })
+    }
+
     if (cart) {
+      if (cart.quantity > product.quantity) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'error.out-of-product',
+        })
+      }
+
       await prisma.cart.update({
         where: {
           id: cart.id,

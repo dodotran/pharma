@@ -3,7 +3,7 @@ import { useTranslation } from 'next-i18next'
 import Head from 'next/head'
 import React from 'react'
 import { Sidebar } from '../SideBar'
-import { Header } from './Header'
+import { HeaderAdmin } from './Header'
 import { HEADER_HEIGHT } from './Header/AppBar'
 
 type LayoutType = BoxProps<
@@ -31,7 +31,7 @@ const LayoutAdmin: React.FC<LayoutType> = ({
         <link rel="shortcut icon" href="/favicon.ico" />
         <title>{title ? t(title) : 'Pharma'}</title>
       </Head>
-      {HeaderComponent ? HeaderComponent : <Header />}
+      {HeaderComponent ? HeaderComponent : <HeaderAdmin />}
       <Stack direction="row">
         {!disableSidebar && <Sidebar />}
         <ContentPage {...contentProps}>{children}</ContentPage>

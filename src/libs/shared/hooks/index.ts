@@ -1,2 +1,2 @@
-export * from './usePreserveState'
+export * from './useUploadCloundinaty'
 export * from './useValidateImage'

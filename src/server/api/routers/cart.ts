@@ -10,7 +10,7 @@ export const cartRouter = createTRPCRouter({
   getAll: protectedProcedure
     .meta({ openapi: { method: 'GET', path: '/cart' } })
     .input(z.void())
-    .output(z.array(CartSchema))
+    .output(z.any())
     .query(({ ctx }) => {
       return cartService.getAllCarts(ctx.session?.user.id as string)
     }),
@@ -23,7 +23,7 @@ export const cartRouter = createTRPCRouter({
     }),
   delete: protectedProcedure
     .meta({ openapi: { method: 'DELETE', path: '/cart/:id' } })
-    .input(CreateCartSchema)
+    .input(z.object({ product_id: z.string() }))
     .output(z.string())
     .mutation(({ input, ctx }) => {
       return cartService.deleteCart(ctx.session?.user.id as string, input.product_id)
