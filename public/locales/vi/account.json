@@ -1,0 +1,32 @@
+{
+  "change_info_account": "Cập nhật thông tin tài khoản",
+  "upload_avatar": "Tải ảnh đại diện",
+  "name": "Tên",
+  "enter_name": "Nhập tên",
+  "general": "Giới tính",
+  "enter_general": "Nhập giới tính",
+  "date_of_birth": "Ngày sinh",
+  "update": "Cập nhật",
+  "update_success": "Cập nhật thành công",
+  "update_fail": "Cập nhật thất bại",
+  "create_success": "Tạo thành công",
+  "create_fail": "Tạo thất bại",
+  "address": {
+    "big_title": "Địa chỉ",
+    "title1": "Bạn chưa lưu địa chỉ nào",
+    "title2": "Cập nhật địa chỉ ngay để có trải nghiệm mua hàng nhanh nhất",
+    "create_address": "Thêm địa chỉ mới",
+    "phone_number": "Số điện thoại",
+    "enter_phone_number": "Nhập số điện thoại",
+    "province": "Tỉnh/Thành phố",
+    "district": "Quận/Huyện",
+    "ward": "Phường/Xã",
+    "address_detail": "Địa chỉ cụ thể",
+    "enter_address_detail": "Nhập địa chỉ cụ thể",
+    "type_address": "Loại địa chỉ",
+    "info_user": "Thông tin người nhận",
+    "home": "Nhà riêng",
+    "office": "Cơ quan",
+    "other": "Khác"
+  }
+}

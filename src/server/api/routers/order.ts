@@ -3,6 +3,7 @@ import {
   CategorySchemaUpdate,
   CreateCategorySchema,
 } from '@/libs/schema/category.schema'
+import { CreateOrderSchema } from '@/libs/schema/order.schema'
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '@/server/api/trpc'
 import { User } from 'next-auth'
 import { z } from 'zod'
@@ -45,5 +46,12 @@ export const orderRouter = createTRPCRouter({
     .output(z.any())
     .query(({ input }) => {
       return orderService.getById(input.id)
+    }),
+  createOrder: protectedProcedure
+    .meta({ openapi: { method: 'POST', path: '/order' } })
+    .input(CreateOrderSchema)
+    .output(z.any())
+    .mutation(({ input, ctx }) => {
+      return orderService.createOrder(input, ctx.session.user.id)
     }),
 })

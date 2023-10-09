@@ -1,0 +1,32 @@
+{
+  "change_info_account": "Change account information",
+  "upload_avatar": "Upload avatar",
+  "name": "Name",
+  "enter_name": "Enter name",
+  "general": "General",
+  "enter_general": "Enter general",
+  "date_of_birth": "Date of birth",
+  "update": "Update",
+  "update_success": "Update success",
+  "update_fail": "Update fail",
+  "create_success": "Create success",
+  "create_fail": "Create fail",
+  "address": {
+    "big_title": "Address",
+    "title1": "You haven't saved any addresses yet",
+    "title2": "Update your address now for the fastest shopping experience",
+    "create_address": "Add new address",
+    "phone_number": "Phone number",
+    "enter_phone_number": "Enter phone number",
+    "province": "Province",
+    "district": "District",
+    "ward": "Ward",
+    "address_detail": "Detail address",
+    "enter_address_detail": "Enter detail address",
+    "type_address": "Type address",
+    "info_user": "Information user",
+    "home": "Home",
+    "office": "Office",
+    "other": "Other"
+  }
+}

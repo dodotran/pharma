@@ -42,13 +42,13 @@ export const CategoryScalarFieldEnumSchema = z.enum(['id','name','createdAt','up
 
 export const CartScalarFieldEnumSchema = z.enum(['id','user_id','product_id','quantity','createdAt','updatedAt']);
 
-export const OrderScalarFieldEnumSchema = z.enum(['id','user_id','product_id','quantity','address_id','is_paid','createdAt','updatedAt','payment_method_id','status_order_id','paymentMethodId']);
+export const OrderScalarFieldEnumSchema = z.enum(['id','user_id','product_id','quantity','address_id','is_paid','createdAt','updatedAt','status_order_id']);
 
 export const StatusOrderScalarFieldEnumSchema = z.enum(['id','name','createdAt','updatedAt']);
 
 export const TrademarkScalarFieldEnumSchema = z.enum(['id','name','image','country','introduce','createdAt','updatedAt']);
 
-export const PaymentMethodScalarFieldEnumSchema = z.enum(['id','order_id','payment_resource','order_payment_id','payment_id','status','createdAt','updatedAt']);
+export const PaymentMethodScalarFieldEnumSchema = z.enum(['id','order_id','payment_source','order_payment_id','payment_id','payer_id','status','createdAt','updatedAt']);
 
 export const SortOrderSchema = z.enum(['asc','desc']);
 
@@ -316,9 +316,7 @@ export const OrderSchema = z.object({
   is_paid: z.boolean(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
-  payment_method_id: z.string().nullable(),
   status_order_id: z.string(),
-  paymentMethodId: z.string().nullable(),
 })
 
 export type Order = z.infer<typeof OrderSchema>
@@ -360,9 +358,10 @@ export const PaymentMethodSchema = z.object({
   status: PaymentStatusSchema,
   id: z.string().cuid(),
   order_id: z.string(),
-  payment_resource: z.string(),
+  payment_source: z.string(),
   order_payment_id: z.string().nullable(),
   payment_id: z.string().nullable(),
+  payer_id: z.string(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 })
@@ -848,9 +847,7 @@ export const OrderSelectSchema: z.ZodType<Prisma.OrderSelect> = z.object({
   is_paid: z.boolean().optional(),
   createdAt: z.boolean().optional(),
   updatedAt: z.boolean().optional(),
-  payment_method_id: z.boolean().optional(),
   status_order_id: z.boolean().optional(),
-  paymentMethodId: z.boolean().optional(),
   address: z.union([z.boolean(),z.lazy(() => AddressArgsSchema)]).optional(),
   User: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
   product: z.union([z.boolean(),z.lazy(() => ProductArgsSchema)]).optional(),
@@ -936,9 +933,10 @@ export const PaymentMethodArgsSchema: z.ZodType<Prisma.PaymentMethodDefaultArgs>
 export const PaymentMethodSelectSchema: z.ZodType<Prisma.PaymentMethodSelect> = z.object({
   id: z.boolean().optional(),
   order_id: z.boolean().optional(),
-  payment_resource: z.boolean().optional(),
+  payment_source: z.boolean().optional(),
   order_payment_id: z.boolean().optional(),
   payment_id: z.boolean().optional(),
+  payer_id: z.boolean().optional(),
   status: z.boolean().optional(),
   createdAt: z.boolean().optional(),
   updatedAt: z.boolean().optional(),
@@ -1787,9 +1785,7 @@ export const OrderWhereInputSchema: z.ZodType<Prisma.OrderWhereInput> = z.object
   is_paid: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
-  payment_method_id: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   status_order_id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  paymentMethodId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   address: z.union([ z.lazy(() => AddressRelationFilterSchema),z.lazy(() => AddressWhereInputSchema) ]).optional(),
   User: z.union([ z.lazy(() => UserRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
   product: z.union([ z.lazy(() => ProductRelationFilterSchema),z.lazy(() => ProductWhereInputSchema) ]).optional(),
@@ -1806,9 +1802,7 @@ export const OrderOrderByWithRelationInputSchema: z.ZodType<Prisma.OrderOrderByW
   is_paid: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
-  payment_method_id: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   status_order_id: z.lazy(() => SortOrderSchema).optional(),
-  paymentMethodId: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   address: z.lazy(() => AddressOrderByWithRelationInputSchema).optional(),
   User: z.lazy(() => UserOrderByWithRelationInputSchema).optional(),
   product: z.lazy(() => ProductOrderByWithRelationInputSchema).optional(),
@@ -1829,9 +1823,7 @@ export const OrderOrderByWithAggregationInputSchema: z.ZodType<Prisma.OrderOrder
   is_paid: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
-  payment_method_id: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   status_order_id: z.lazy(() => SortOrderSchema).optional(),
-  paymentMethodId: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   _count: z.lazy(() => OrderCountOrderByAggregateInputSchema).optional(),
   _avg: z.lazy(() => OrderAvgOrderByAggregateInputSchema).optional(),
   _max: z.lazy(() => OrderMaxOrderByAggregateInputSchema).optional(),
@@ -1851,9 +1843,7 @@ export const OrderScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.OrderSc
   is_paid: z.union([ z.lazy(() => BoolWithAggregatesFilterSchema),z.boolean() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
-  payment_method_id: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
   status_order_id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
-  paymentMethodId: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
 }).strict();
 
 export const StatusOrderWhereInputSchema: z.ZodType<Prisma.StatusOrderWhereInput> = z.object({
@@ -1960,9 +1950,10 @@ export const PaymentMethodWhereInputSchema: z.ZodType<Prisma.PaymentMethodWhereI
   NOT: z.union([ z.lazy(() => PaymentMethodWhereInputSchema),z.lazy(() => PaymentMethodWhereInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   order_id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  payment_resource: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  payment_source: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   order_payment_id: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   payment_id: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  payer_id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   status: z.union([ z.lazy(() => EnumPaymentStatusFilterSchema),z.lazy(() => PaymentStatusSchema) ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
@@ -1972,9 +1963,10 @@ export const PaymentMethodWhereInputSchema: z.ZodType<Prisma.PaymentMethodWhereI
 export const PaymentMethodOrderByWithRelationInputSchema: z.ZodType<Prisma.PaymentMethodOrderByWithRelationInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   order_id: z.lazy(() => SortOrderSchema).optional(),
-  payment_resource: z.lazy(() => SortOrderSchema).optional(),
+  payment_source: z.lazy(() => SortOrderSchema).optional(),
   order_payment_id: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   payment_id: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
+  payer_id: z.lazy(() => SortOrderSchema).optional(),
   status: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
@@ -1989,9 +1981,10 @@ export const PaymentMethodWhereUniqueInputSchema: z.ZodType<Prisma.PaymentMethod
 export const PaymentMethodOrderByWithAggregationInputSchema: z.ZodType<Prisma.PaymentMethodOrderByWithAggregationInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   order_id: z.lazy(() => SortOrderSchema).optional(),
-  payment_resource: z.lazy(() => SortOrderSchema).optional(),
+  payment_source: z.lazy(() => SortOrderSchema).optional(),
   order_payment_id: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   payment_id: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
+  payer_id: z.lazy(() => SortOrderSchema).optional(),
   status: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
@@ -2006,9 +1999,10 @@ export const PaymentMethodScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma
   NOT: z.union([ z.lazy(() => PaymentMethodScalarWhereWithAggregatesInputSchema),z.lazy(() => PaymentMethodScalarWhereWithAggregatesInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   order_id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
-  payment_resource: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  payment_source: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   order_payment_id: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
   payment_id: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
+  payer_id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   status: z.union([ z.lazy(() => EnumPaymentStatusWithAggregatesFilterSchema),z.lazy(() => PaymentStatusSchema) ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
@@ -3035,8 +3029,6 @@ export const OrderCreateInputSchema: z.ZodType<Prisma.OrderCreateInput> = z.obje
   is_paid: z.boolean(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  payment_method_id: z.string().optional().nullable(),
-  paymentMethodId: z.string().optional().nullable(),
   address: z.lazy(() => AddressCreateNestedOneWithoutOrderInputSchema),
   User: z.lazy(() => UserCreateNestedOneWithoutOrderInputSchema),
   product: z.lazy(() => ProductCreateNestedOneWithoutOrderInputSchema),
@@ -3053,9 +3045,7 @@ export const OrderUncheckedCreateInputSchema: z.ZodType<Prisma.OrderUncheckedCre
   is_paid: z.boolean(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  payment_method_id: z.string().optional().nullable(),
   status_order_id: z.string(),
-  paymentMethodId: z.string().optional().nullable(),
   payment_method: z.lazy(() => PaymentMethodUncheckedCreateNestedOneWithoutOrderInputSchema).optional()
 }).strict();
 
@@ -3065,8 +3055,6 @@ export const OrderUpdateInputSchema: z.ZodType<Prisma.OrderUpdateInput> = z.obje
   is_paid: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  payment_method_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  paymentMethodId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   address: z.lazy(() => AddressUpdateOneRequiredWithoutOrderNestedInputSchema).optional(),
   User: z.lazy(() => UserUpdateOneRequiredWithoutOrderNestedInputSchema).optional(),
   product: z.lazy(() => ProductUpdateOneRequiredWithoutOrderNestedInputSchema).optional(),
@@ -3083,9 +3071,7 @@ export const OrderUncheckedUpdateInputSchema: z.ZodType<Prisma.OrderUncheckedUpd
   is_paid: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  payment_method_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   status_order_id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  paymentMethodId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   payment_method: z.lazy(() => PaymentMethodUncheckedUpdateOneWithoutOrderNestedInputSchema).optional()
 }).strict();
 
@@ -3098,9 +3084,7 @@ export const OrderCreateManyInputSchema: z.ZodType<Prisma.OrderCreateManyInput> 
   is_paid: z.boolean(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  payment_method_id: z.string().optional().nullable(),
-  status_order_id: z.string(),
-  paymentMethodId: z.string().optional().nullable()
+  status_order_id: z.string()
 }).strict();
 
 export const OrderUpdateManyMutationInputSchema: z.ZodType<Prisma.OrderUpdateManyMutationInput> = z.object({
@@ -3109,8 +3093,6 @@ export const OrderUpdateManyMutationInputSchema: z.ZodType<Prisma.OrderUpdateMan
   is_paid: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  payment_method_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  paymentMethodId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const OrderUncheckedUpdateManyInputSchema: z.ZodType<Prisma.OrderUncheckedUpdateManyInput> = z.object({
@@ -3122,9 +3104,7 @@ export const OrderUncheckedUpdateManyInputSchema: z.ZodType<Prisma.OrderUnchecke
   is_paid: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  payment_method_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   status_order_id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  paymentMethodId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const StatusOrderCreateInputSchema: z.ZodType<Prisma.StatusOrderCreateInput> = z.object({
@@ -3256,9 +3236,10 @@ export const TrademarkUncheckedUpdateManyInputSchema: z.ZodType<Prisma.Trademark
 
 export const PaymentMethodCreateInputSchema: z.ZodType<Prisma.PaymentMethodCreateInput> = z.object({
   id: z.string().cuid().optional(),
-  payment_resource: z.string(),
+  payment_source: z.string(),
   order_payment_id: z.string().optional().nullable(),
   payment_id: z.string().optional().nullable(),
+  payer_id: z.string(),
   status: z.lazy(() => PaymentStatusSchema),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -3268,9 +3249,10 @@ export const PaymentMethodCreateInputSchema: z.ZodType<Prisma.PaymentMethodCreat
 export const PaymentMethodUncheckedCreateInputSchema: z.ZodType<Prisma.PaymentMethodUncheckedCreateInput> = z.object({
   id: z.string().cuid().optional(),
   order_id: z.string(),
-  payment_resource: z.string(),
+  payment_source: z.string(),
   order_payment_id: z.string().optional().nullable(),
   payment_id: z.string().optional().nullable(),
+  payer_id: z.string(),
   status: z.lazy(() => PaymentStatusSchema),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
@@ -3278,9 +3260,10 @@ export const PaymentMethodUncheckedCreateInputSchema: z.ZodType<Prisma.PaymentMe
 
 export const PaymentMethodUpdateInputSchema: z.ZodType<Prisma.PaymentMethodUpdateInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  payment_resource: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  payment_source: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   order_payment_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   payment_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  payer_id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   status: z.union([ z.lazy(() => PaymentStatusSchema),z.lazy(() => EnumPaymentStatusFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -3290,9 +3273,10 @@ export const PaymentMethodUpdateInputSchema: z.ZodType<Prisma.PaymentMethodUpdat
 export const PaymentMethodUncheckedUpdateInputSchema: z.ZodType<Prisma.PaymentMethodUncheckedUpdateInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   order_id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  payment_resource: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  payment_source: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   order_payment_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   payment_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  payer_id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   status: z.union([ z.lazy(() => PaymentStatusSchema),z.lazy(() => EnumPaymentStatusFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -3301,9 +3285,10 @@ export const PaymentMethodUncheckedUpdateInputSchema: z.ZodType<Prisma.PaymentMe
 export const PaymentMethodCreateManyInputSchema: z.ZodType<Prisma.PaymentMethodCreateManyInput> = z.object({
   id: z.string().cuid().optional(),
   order_id: z.string(),
-  payment_resource: z.string(),
+  payment_source: z.string(),
   order_payment_id: z.string().optional().nullable(),
   payment_id: z.string().optional().nullable(),
+  payer_id: z.string(),
   status: z.lazy(() => PaymentStatusSchema),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
@@ -3311,9 +3296,10 @@ export const PaymentMethodCreateManyInputSchema: z.ZodType<Prisma.PaymentMethodC
 
 export const PaymentMethodUpdateManyMutationInputSchema: z.ZodType<Prisma.PaymentMethodUpdateManyMutationInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  payment_resource: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  payment_source: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   order_payment_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   payment_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  payer_id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   status: z.union([ z.lazy(() => PaymentStatusSchema),z.lazy(() => EnumPaymentStatusFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -3322,9 +3308,10 @@ export const PaymentMethodUpdateManyMutationInputSchema: z.ZodType<Prisma.Paymen
 export const PaymentMethodUncheckedUpdateManyInputSchema: z.ZodType<Prisma.PaymentMethodUncheckedUpdateManyInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   order_id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  payment_resource: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  payment_source: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   order_payment_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   payment_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  payer_id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   status: z.union([ z.lazy(() => PaymentStatusSchema),z.lazy(() => EnumPaymentStatusFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -4204,9 +4191,7 @@ export const OrderCountOrderByAggregateInputSchema: z.ZodType<Prisma.OrderCountO
   is_paid: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
-  payment_method_id: z.lazy(() => SortOrderSchema).optional(),
-  status_order_id: z.lazy(() => SortOrderSchema).optional(),
-  paymentMethodId: z.lazy(() => SortOrderSchema).optional()
+  status_order_id: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const OrderAvgOrderByAggregateInputSchema: z.ZodType<Prisma.OrderAvgOrderByAggregateInput> = z.object({
@@ -4222,9 +4207,7 @@ export const OrderMaxOrderByAggregateInputSchema: z.ZodType<Prisma.OrderMaxOrder
   is_paid: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
-  payment_method_id: z.lazy(() => SortOrderSchema).optional(),
-  status_order_id: z.lazy(() => SortOrderSchema).optional(),
-  paymentMethodId: z.lazy(() => SortOrderSchema).optional()
+  status_order_id: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const OrderMinOrderByAggregateInputSchema: z.ZodType<Prisma.OrderMinOrderByAggregateInput> = z.object({
@@ -4236,9 +4219,7 @@ export const OrderMinOrderByAggregateInputSchema: z.ZodType<Prisma.OrderMinOrder
   is_paid: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
-  payment_method_id: z.lazy(() => SortOrderSchema).optional(),
-  status_order_id: z.lazy(() => SortOrderSchema).optional(),
-  paymentMethodId: z.lazy(() => SortOrderSchema).optional()
+  status_order_id: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const OrderSumOrderByAggregateInputSchema: z.ZodType<Prisma.OrderSumOrderByAggregateInput> = z.object({
@@ -4319,9 +4300,10 @@ export const OrderRelationFilterSchema: z.ZodType<Prisma.OrderRelationFilter> = 
 export const PaymentMethodCountOrderByAggregateInputSchema: z.ZodType<Prisma.PaymentMethodCountOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   order_id: z.lazy(() => SortOrderSchema).optional(),
-  payment_resource: z.lazy(() => SortOrderSchema).optional(),
+  payment_source: z.lazy(() => SortOrderSchema).optional(),
   order_payment_id: z.lazy(() => SortOrderSchema).optional(),
   payment_id: z.lazy(() => SortOrderSchema).optional(),
+  payer_id: z.lazy(() => SortOrderSchema).optional(),
   status: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional()
@@ -4330,9 +4312,10 @@ export const PaymentMethodCountOrderByAggregateInputSchema: z.ZodType<Prisma.Pay
 export const PaymentMethodMaxOrderByAggregateInputSchema: z.ZodType<Prisma.PaymentMethodMaxOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   order_id: z.lazy(() => SortOrderSchema).optional(),
-  payment_resource: z.lazy(() => SortOrderSchema).optional(),
+  payment_source: z.lazy(() => SortOrderSchema).optional(),
   order_payment_id: z.lazy(() => SortOrderSchema).optional(),
   payment_id: z.lazy(() => SortOrderSchema).optional(),
+  payer_id: z.lazy(() => SortOrderSchema).optional(),
   status: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional()
@@ -4341,9 +4324,10 @@ export const PaymentMethodMaxOrderByAggregateInputSchema: z.ZodType<Prisma.Payme
 export const PaymentMethodMinOrderByAggregateInputSchema: z.ZodType<Prisma.PaymentMethodMinOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   order_id: z.lazy(() => SortOrderSchema).optional(),
-  payment_resource: z.lazy(() => SortOrderSchema).optional(),
+  payment_source: z.lazy(() => SortOrderSchema).optional(),
   order_payment_id: z.lazy(() => SortOrderSchema).optional(),
   payment_id: z.lazy(() => SortOrderSchema).optional(),
+  payer_id: z.lazy(() => SortOrderSchema).optional(),
   status: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional()
@@ -6193,8 +6177,6 @@ export const OrderCreateWithoutUserInputSchema: z.ZodType<Prisma.OrderCreateWith
   is_paid: z.boolean(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  payment_method_id: z.string().optional().nullable(),
-  paymentMethodId: z.string().optional().nullable(),
   address: z.lazy(() => AddressCreateNestedOneWithoutOrderInputSchema),
   product: z.lazy(() => ProductCreateNestedOneWithoutOrderInputSchema),
   status: z.lazy(() => StatusOrderCreateNestedOneWithoutOrderInputSchema),
@@ -6209,9 +6191,7 @@ export const OrderUncheckedCreateWithoutUserInputSchema: z.ZodType<Prisma.OrderU
   is_paid: z.boolean(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  payment_method_id: z.string().optional().nullable(),
   status_order_id: z.string(),
-  paymentMethodId: z.string().optional().nullable(),
   payment_method: z.lazy(() => PaymentMethodUncheckedCreateNestedOneWithoutOrderInputSchema).optional()
 }).strict();
 
@@ -6393,9 +6373,7 @@ export const OrderScalarWhereInputSchema: z.ZodType<Prisma.OrderScalarWhereInput
   is_paid: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
-  payment_method_id: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   status_order_id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  paymentMethodId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
 }).strict();
 
 export const UserCreateWithoutPassword_resetInputSchema: z.ZodType<Prisma.UserCreateWithoutPassword_resetInput> = z.object({
@@ -6586,8 +6564,6 @@ export const OrderCreateWithoutAddressInputSchema: z.ZodType<Prisma.OrderCreateW
   is_paid: z.boolean(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  payment_method_id: z.string().optional().nullable(),
-  paymentMethodId: z.string().optional().nullable(),
   User: z.lazy(() => UserCreateNestedOneWithoutOrderInputSchema),
   product: z.lazy(() => ProductCreateNestedOneWithoutOrderInputSchema),
   status: z.lazy(() => StatusOrderCreateNestedOneWithoutOrderInputSchema),
@@ -6602,9 +6578,7 @@ export const OrderUncheckedCreateWithoutAddressInputSchema: z.ZodType<Prisma.Ord
   is_paid: z.boolean(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  payment_method_id: z.string().optional().nullable(),
   status_order_id: z.string(),
-  paymentMethodId: z.string().optional().nullable(),
   payment_method: z.lazy(() => PaymentMethodUncheckedCreateNestedOneWithoutOrderInputSchema).optional()
 }).strict();
 
@@ -7231,8 +7205,6 @@ export const OrderCreateWithoutProductInputSchema: z.ZodType<Prisma.OrderCreateW
   is_paid: z.boolean(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  payment_method_id: z.string().optional().nullable(),
-  paymentMethodId: z.string().optional().nullable(),
   address: z.lazy(() => AddressCreateNestedOneWithoutOrderInputSchema),
   User: z.lazy(() => UserCreateNestedOneWithoutOrderInputSchema),
   status: z.lazy(() => StatusOrderCreateNestedOneWithoutOrderInputSchema),
@@ -7247,9 +7219,7 @@ export const OrderUncheckedCreateWithoutProductInputSchema: z.ZodType<Prisma.Ord
   is_paid: z.boolean(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  payment_method_id: z.string().optional().nullable(),
   status_order_id: z.string(),
-  paymentMethodId: z.string().optional().nullable(),
   payment_method: z.lazy(() => PaymentMethodUncheckedCreateNestedOneWithoutOrderInputSchema).optional()
 }).strict();
 
@@ -7976,9 +7946,10 @@ export const StatusOrderCreateOrConnectWithoutOrderInputSchema: z.ZodType<Prisma
 
 export const PaymentMethodCreateWithoutOrderInputSchema: z.ZodType<Prisma.PaymentMethodCreateWithoutOrderInput> = z.object({
   id: z.string().cuid().optional(),
-  payment_resource: z.string(),
+  payment_source: z.string(),
   order_payment_id: z.string().optional().nullable(),
   payment_id: z.string().optional().nullable(),
+  payer_id: z.string(),
   status: z.lazy(() => PaymentStatusSchema),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
@@ -7986,9 +7957,10 @@ export const PaymentMethodCreateWithoutOrderInputSchema: z.ZodType<Prisma.Paymen
 
 export const PaymentMethodUncheckedCreateWithoutOrderInputSchema: z.ZodType<Prisma.PaymentMethodUncheckedCreateWithoutOrderInput> = z.object({
   id: z.string().cuid().optional(),
-  payment_resource: z.string(),
+  payment_source: z.string(),
   order_payment_id: z.string().optional().nullable(),
   payment_id: z.string().optional().nullable(),
+  payer_id: z.string(),
   status: z.lazy(() => PaymentStatusSchema),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
@@ -8140,9 +8112,10 @@ export const PaymentMethodUpsertWithoutOrderInputSchema: z.ZodType<Prisma.Paymen
 
 export const PaymentMethodUpdateWithoutOrderInputSchema: z.ZodType<Prisma.PaymentMethodUpdateWithoutOrderInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  payment_resource: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  payment_source: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   order_payment_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   payment_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  payer_id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   status: z.union([ z.lazy(() => PaymentStatusSchema),z.lazy(() => EnumPaymentStatusFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -8150,9 +8123,10 @@ export const PaymentMethodUpdateWithoutOrderInputSchema: z.ZodType<Prisma.Paymen
 
 export const PaymentMethodUncheckedUpdateWithoutOrderInputSchema: z.ZodType<Prisma.PaymentMethodUncheckedUpdateWithoutOrderInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  payment_resource: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  payment_source: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   order_payment_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   payment_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  payer_id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   status: z.union([ z.lazy(() => PaymentStatusSchema),z.lazy(() => EnumPaymentStatusFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -8164,8 +8138,6 @@ export const OrderCreateWithoutStatusInputSchema: z.ZodType<Prisma.OrderCreateWi
   is_paid: z.boolean(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  payment_method_id: z.string().optional().nullable(),
-  paymentMethodId: z.string().optional().nullable(),
   address: z.lazy(() => AddressCreateNestedOneWithoutOrderInputSchema),
   User: z.lazy(() => UserCreateNestedOneWithoutOrderInputSchema),
   product: z.lazy(() => ProductCreateNestedOneWithoutOrderInputSchema),
@@ -8181,8 +8153,6 @@ export const OrderUncheckedCreateWithoutStatusInputSchema: z.ZodType<Prisma.Orde
   is_paid: z.boolean(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  payment_method_id: z.string().optional().nullable(),
-  paymentMethodId: z.string().optional().nullable(),
   payment_method: z.lazy(() => PaymentMethodUncheckedCreateNestedOneWithoutOrderInputSchema).optional()
 }).strict();
 
@@ -8278,8 +8248,6 @@ export const OrderCreateWithoutPayment_methodInputSchema: z.ZodType<Prisma.Order
   is_paid: z.boolean(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  payment_method_id: z.string().optional().nullable(),
-  paymentMethodId: z.string().optional().nullable(),
   address: z.lazy(() => AddressCreateNestedOneWithoutOrderInputSchema),
   User: z.lazy(() => UserCreateNestedOneWithoutOrderInputSchema),
   product: z.lazy(() => ProductCreateNestedOneWithoutOrderInputSchema),
@@ -8295,9 +8263,7 @@ export const OrderUncheckedCreateWithoutPayment_methodInputSchema: z.ZodType<Pri
   is_paid: z.boolean(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  payment_method_id: z.string().optional().nullable(),
-  status_order_id: z.string(),
-  paymentMethodId: z.string().optional().nullable()
+  status_order_id: z.string()
 }).strict();
 
 export const OrderCreateOrConnectWithoutPayment_methodInputSchema: z.ZodType<Prisma.OrderCreateOrConnectWithoutPayment_methodInput> = z.object({
@@ -8316,8 +8282,6 @@ export const OrderUpdateWithoutPayment_methodInputSchema: z.ZodType<Prisma.Order
   is_paid: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  payment_method_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  paymentMethodId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   address: z.lazy(() => AddressUpdateOneRequiredWithoutOrderNestedInputSchema).optional(),
   User: z.lazy(() => UserUpdateOneRequiredWithoutOrderNestedInputSchema).optional(),
   product: z.lazy(() => ProductUpdateOneRequiredWithoutOrderNestedInputSchema).optional(),
@@ -8333,9 +8297,7 @@ export const OrderUncheckedUpdateWithoutPayment_methodInputSchema: z.ZodType<Pri
   is_paid: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  payment_method_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   status_order_id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  paymentMethodId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const AccountCreateManyUserInputSchema: z.ZodType<Prisma.AccountCreateManyUserInput> = z.object({
@@ -8387,9 +8349,7 @@ export const OrderCreateManyUserInputSchema: z.ZodType<Prisma.OrderCreateManyUse
   is_paid: z.boolean(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  payment_method_id: z.string().optional().nullable(),
-  status_order_id: z.string(),
-  paymentMethodId: z.string().optional().nullable()
+  status_order_id: z.string()
 }).strict();
 
 export const AccountUpdateWithoutUserInputSchema: z.ZodType<Prisma.AccountUpdateWithoutUserInput> = z.object({
@@ -8523,8 +8483,6 @@ export const OrderUpdateWithoutUserInputSchema: z.ZodType<Prisma.OrderUpdateWith
   is_paid: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  payment_method_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  paymentMethodId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   address: z.lazy(() => AddressUpdateOneRequiredWithoutOrderNestedInputSchema).optional(),
   product: z.lazy(() => ProductUpdateOneRequiredWithoutOrderNestedInputSchema).optional(),
   status: z.lazy(() => StatusOrderUpdateOneRequiredWithoutOrderNestedInputSchema).optional(),
@@ -8539,9 +8497,7 @@ export const OrderUncheckedUpdateWithoutUserInputSchema: z.ZodType<Prisma.OrderU
   is_paid: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  payment_method_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   status_order_id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  paymentMethodId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   payment_method: z.lazy(() => PaymentMethodUncheckedUpdateOneWithoutOrderNestedInputSchema).optional()
 }).strict();
 
@@ -8553,9 +8509,7 @@ export const OrderUncheckedUpdateManyWithoutOrderInputSchema: z.ZodType<Prisma.O
   is_paid: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  payment_method_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   status_order_id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  paymentMethodId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const OrderCreateManyAddressInputSchema: z.ZodType<Prisma.OrderCreateManyAddressInput> = z.object({
@@ -8566,9 +8520,7 @@ export const OrderCreateManyAddressInputSchema: z.ZodType<Prisma.OrderCreateMany
   is_paid: z.boolean(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  payment_method_id: z.string().optional().nullable(),
-  status_order_id: z.string(),
-  paymentMethodId: z.string().optional().nullable()
+  status_order_id: z.string()
 }).strict();
 
 export const OrderUpdateWithoutAddressInputSchema: z.ZodType<Prisma.OrderUpdateWithoutAddressInput> = z.object({
@@ -8577,8 +8529,6 @@ export const OrderUpdateWithoutAddressInputSchema: z.ZodType<Prisma.OrderUpdateW
   is_paid: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  payment_method_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  paymentMethodId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   User: z.lazy(() => UserUpdateOneRequiredWithoutOrderNestedInputSchema).optional(),
   product: z.lazy(() => ProductUpdateOneRequiredWithoutOrderNestedInputSchema).optional(),
   status: z.lazy(() => StatusOrderUpdateOneRequiredWithoutOrderNestedInputSchema).optional(),
@@ -8593,9 +8543,7 @@ export const OrderUncheckedUpdateWithoutAddressInputSchema: z.ZodType<Prisma.Ord
   is_paid: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  payment_method_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   status_order_id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  paymentMethodId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   payment_method: z.lazy(() => PaymentMethodUncheckedUpdateOneWithoutOrderNestedInputSchema).optional()
 }).strict();
 
@@ -8851,9 +8799,7 @@ export const OrderCreateManyProductInputSchema: z.ZodType<Prisma.OrderCreateMany
   is_paid: z.boolean(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  payment_method_id: z.string().optional().nullable(),
-  status_order_id: z.string(),
-  paymentMethodId: z.string().optional().nullable()
+  status_order_id: z.string()
 }).strict();
 
 export const ImageProductUpdateWithoutProductInputSchema: z.ZodType<Prisma.ImageProductUpdateWithoutProductInput> = z.object({
@@ -8899,8 +8845,6 @@ export const OrderUpdateWithoutProductInputSchema: z.ZodType<Prisma.OrderUpdateW
   is_paid: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  payment_method_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  paymentMethodId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   address: z.lazy(() => AddressUpdateOneRequiredWithoutOrderNestedInputSchema).optional(),
   User: z.lazy(() => UserUpdateOneRequiredWithoutOrderNestedInputSchema).optional(),
   status: z.lazy(() => StatusOrderUpdateOneRequiredWithoutOrderNestedInputSchema).optional(),
@@ -8915,9 +8859,7 @@ export const OrderUncheckedUpdateWithoutProductInputSchema: z.ZodType<Prisma.Ord
   is_paid: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  payment_method_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   status_order_id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  paymentMethodId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   payment_method: z.lazy(() => PaymentMethodUncheckedUpdateOneWithoutOrderNestedInputSchema).optional()
 }).strict();
 
@@ -8976,9 +8918,7 @@ export const OrderCreateManyStatusInputSchema: z.ZodType<Prisma.OrderCreateManyS
   address_id: z.string(),
   is_paid: z.boolean(),
   createdAt: z.coerce.date().optional(),
-  updatedAt: z.coerce.date().optional(),
-  payment_method_id: z.string().optional().nullable(),
-  paymentMethodId: z.string().optional().nullable()
+  updatedAt: z.coerce.date().optional()
 }).strict();
 
 export const OrderUpdateWithoutStatusInputSchema: z.ZodType<Prisma.OrderUpdateWithoutStatusInput> = z.object({
@@ -8987,8 +8927,6 @@ export const OrderUpdateWithoutStatusInputSchema: z.ZodType<Prisma.OrderUpdateWi
   is_paid: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  payment_method_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  paymentMethodId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   address: z.lazy(() => AddressUpdateOneRequiredWithoutOrderNestedInputSchema).optional(),
   User: z.lazy(() => UserUpdateOneRequiredWithoutOrderNestedInputSchema).optional(),
   product: z.lazy(() => ProductUpdateOneRequiredWithoutOrderNestedInputSchema).optional(),
@@ -9004,8 +8942,6 @@ export const OrderUncheckedUpdateWithoutStatusInputSchema: z.ZodType<Prisma.Orde
   is_paid: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  payment_method_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  paymentMethodId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   payment_method: z.lazy(() => PaymentMethodUncheckedUpdateOneWithoutOrderNestedInputSchema).optional()
 }).strict();
 

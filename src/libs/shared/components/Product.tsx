@@ -57,9 +57,9 @@ const Product: React.FC<ProductProps> = ({ id, name, price, unitName, image }) =
       </Stack>
 
       <Stack padding={2} spacing={2}>
-        <NamePharmacy variant="subtitle1">{name}</NamePharmacy>
+        <NamePharmacy fontSize={14}>{name}</NamePharmacy>
 
-        <Typography variant="subtitle1" color={yellow[500]} fontWeight={700}>
+        <Typography fontSize={14} color={yellow[500]} fontWeight={700}>
           {price} đ/ {unitName}
         </Typography>
 

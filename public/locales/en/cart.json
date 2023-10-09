@@ -3,5 +3,6 @@
   "name_product": "Product name",
   "price": "Price",
   "quantity": "Quantity",
-  "unit": "Unit"
+  "unit": "Unit",
+  "total": "Total"
 }

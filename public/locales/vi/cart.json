@@ -3,5 +3,6 @@
   "name_product": "Tên sản phẩm",
   "price": "Giá",
   "quantity": "Số lượng",
-  "unit": "Đơn vị"
+  "unit": "Đơn vị",
+  "total": "Tổng tiền"
 }

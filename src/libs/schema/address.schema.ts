@@ -7,11 +7,9 @@ export const WardSchema = z.object({
 })
 
 export const DistrictSchema = z.object({
-  id: z.string(),
+  district_id: z.string(),
   name: z.string(),
   province_id: z.string(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
 })
 
 export const ProvinceSchema = z.object({

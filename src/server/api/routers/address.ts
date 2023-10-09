@@ -1,5 +1,5 @@
 import {
-  ProvinceSchema,
+  DistrictSchema,
   WardSchema,
   createAddressSchema,
   updateAddressSchema,
@@ -15,14 +15,14 @@ export const addressRouter = createTRPCRouter({
   getProvince: publicProcedure
     .meta({ openapi: { method: 'GET', path: '/province' } })
     .input(z.void())
-    .output(z.array(ProvinceSchema))
+    .output(z.any())
     .query(() => {
       return addressService.getProvince()
     }),
   getDistrictById: publicProcedure
     .meta({ openapi: { method: 'GET', path: '/district/:id' } })
     .input(z.object({ province_id: z.string() }))
-    .output(z.array(ProvinceSchema))
+    .output(z.array(DistrictSchema))
     .query(({ input }) => {
       return addressService.getDistrict(input.province_id)
     }),
@@ -43,7 +43,7 @@ export const addressRouter = createTRPCRouter({
   getAddress: protectedProcedure
     .meta({ openapi: { method: 'GET', path: '/get-address' } })
     .input(z.void())
-    .output(z.array(AddressSchema))
+    .output(z.any())
     .query(({ ctx }) => {
       return addressService.getAddress(ctx.session.user.id)
     }),
@@ -53,5 +53,12 @@ export const addressRouter = createTRPCRouter({
     .output(AddressSchema)
     .mutation(({ input, ctx }) => {
       return addressService.updateAddress(input, ctx.session.user.id)
+    }),
+  getAddressById: protectedProcedure
+    .meta({ openapi: { method: 'GET', path: '/get-address/:id' } })
+    .input(z.object({ id: z.string() }))
+    .output(z.any())
+    .query(({ input, ctx }) => {
+      return addressService.getAddressById(input.id, ctx.session.user.id)
     }),
 })

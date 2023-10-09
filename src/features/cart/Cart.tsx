@@ -6,6 +6,7 @@ import { Box, Button, Stack, Tooltip, Typography, styled } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { enqueueSnackbar } from 'notistack'
 import NoImage from 'public/assets/imgs/no-image.png'
 import DecrementIcon from 'public/assets/svgs/minus.svg'
@@ -18,7 +19,7 @@ const Cart = () => {
   const { mutate: decrementCart } = api.cart.decrementCart.useMutation()
   const { mutate: deleteCart } = api.cart.delete.useMutation()
   const utils = api.useContext()
-
+  const router = useRouter()
   const { t } = useTranslation(['cart', 'common'])
 
   const handleIncrement = (id: string) => {
@@ -79,7 +80,7 @@ const Cart = () => {
               />
             </Box>
 
-            <Typography variant="subtitle2">{row.original.product.name}</Typography>
+            <Typography fontSize={14}>{row.original.product.name}</Typography>
           </Stack>
         )
       },
@@ -91,7 +92,7 @@ const Cart = () => {
         const price = row.original.quantity * row.original.product.price
 
         return (
-          <Typography variant="subtitle2">
+          <Typography fontSize={14}>
             {price.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}
           </Typography>
         )
@@ -108,7 +109,7 @@ const Cart = () => {
             </ButtonCart>
 
             <Box border={`2px dashed ${grey[300]}`} padding={1}>
-              <Typography variant="subtitle1" fontWeight={700}>
+              <Typography fontSize={14} fontWeight={700}>
                 {row.original.quantity}
               </Typography>
             </Box>
@@ -202,7 +203,9 @@ const Cart = () => {
             </Typography>
           </DetailTotal>
 
-          <Button variant="contained">Mua hàng</Button>
+          <Button variant="contained" onClick={() => router.push('/checkout')}>
+            Mua hàng
+          </Button>
 
           <Typography fontSize={14} textAlign="center">
             Bằng việc tiến hành đặt mua hàng, bạn đồng ý với&nbsp;

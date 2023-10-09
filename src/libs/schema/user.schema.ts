@@ -15,9 +15,9 @@ export const UserSchema = z.object({
 })
 
 export const UpdateUserSchema = z.object({
-  name: z.string(),
+  name: z.string().min(1),
   date_of_birth: z.date(),
-  sex: string(),
+  sex: string().min(1),
 })
 export const UpdateImageUserSchema = z.object({
   image: z.string(),

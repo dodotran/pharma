@@ -1,3 +1,4 @@
+import { grey } from '@/libs/config/colors'
 import { UpdateUser, UpdateUserSchema } from '@/libs/schema/user.schema'
 import { DatePickerYear, Input } from '@/libs/shared/Form'
 import { LayoutAccount } from '@/libs/shared/Layout'
@@ -20,15 +21,11 @@ const Account = () => {
   const { mutate: mutateImage } = api.user.updateImage.useMutation()
   const { mutate: mutateInfo } = api.user.update.useMutation()
   const utils = api.useContext()
-  const { data: session } = useSession()
   const [files, setFiles] = useState<File[]>([])
   const [image, setImage] = useState<string>('')
+  const { data: session, update } = useSession()
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<UpdateUser>({
+  const { control, handleSubmit } = useForm<UpdateUser>({
     defaultValues: {
       name: (data?.name as string) || '',
       sex: (data?.sex as string) || '',
@@ -41,8 +38,6 @@ const Account = () => {
     },
     resolver: zodResolver(UpdateUserSchema),
   })
-
-  console.log(errors)
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
@@ -87,12 +82,14 @@ const Account = () => {
           { image: imageData.url },
           {
             onSuccess: () => {
-              enqueueSnackbar(t('update.success'), {
+              enqueueSnackbar(t('update_success'), {
                 variant: 'success',
               })
+              setImage('')
+              update()
             },
             onError: () => {
-              enqueueSnackbar(t('update.error'), {
+              enqueueSnackbar(t('update_fail'), {
                 variant: 'error',
               })
             },
@@ -103,7 +100,7 @@ const Account = () => {
         )
       },
       onError: () => {
-        enqueueSnackbar(t('update.error'), {
+        enqueueSnackbar(t('update_fail'), {
           variant: 'error',
         })
       },
@@ -113,12 +110,12 @@ const Account = () => {
   const onSubmit = (data: UpdateUser) => {
     mutateInfo(data, {
       onSuccess: () => {
-        enqueueSnackbar(t('update.success'), {
+        enqueueSnackbar(t('update_success'), {
           variant: 'success',
         })
       },
       onError: () => {
-        enqueueSnackbar(t('update.error'), {
+        enqueueSnackbar(t('update_fail'), {
           variant: 'error',
         })
       },
@@ -130,25 +127,32 @@ const Account = () => {
 
   return (
     <LayoutAccount>
-      <Stack>
-        <Typography variant="h1">{t('change_info_account')}</Typography>
+      <Stack spacing={2}>
+        <Typography variant="h4" textTransform="uppercase" fontWeight={700}>
+          {t('change_info_account')}
+        </Typography>
 
         <Stack
           direction="row"
-          width={600}
+          width={500}
           border="1px dashed"
           justifyContent="center"
-          spacing={9}
+          spacing={2}
           padding={2}
         >
-          <Stack spacing={3}>
-            <Box {...getRootProps({ className: 'dropzone' })}>
+          <Stack spacing={3} borderRight="1px dashed" paddingRight={2}>
+            <Box
+              {...getRootProps({ className: 'dropzone' })}
+              border={`1px solid ${grey[300]}`}
+              padding={2}
+              fontSize={14}
+            >
               <input multiple {...getInputProps()} />
 
               <Image
-                src={image ? image : session?.user.image ? session?.user.image : AvatarDefault}
-                width={image ? 100 : 100}
-                height={image ? 100 : 100}
+                src={image ? image : session?.user?.image ? session?.user?.image : AvatarDefault}
+                width={image ? 200 : 200}
+                height={image ? 200 : 200}
                 alt="choose avatar"
                 onLoad={() => {
                   URL.revokeObjectURL(image as string)
@@ -157,18 +161,25 @@ const Account = () => {
             </Box>
 
             <Button onClick={handleUploadImage} disabled={!image} variant="contained">
-              Upload
+              {t('upload_avatar')}
             </Button>
           </Stack>
 
           <Stack spacing={2} component="form" onSubmit={handleSubmit(onSubmit)}>
-            <Input control={control} name="name" label={t('name')} placeholder={t('enter_name')} />
+            <Input
+              control={control}
+              name="name"
+              label={t('name')}
+              placeholder={t('enter_name')}
+              required
+            />
 
             <Input
               control={control}
               name="sex"
               label={t('general')}
-              placeholder={t('enter_geneal')}
+              placeholder={t('general')}
+              required
             />
 
             <DatePickerYear

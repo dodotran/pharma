@@ -214,22 +214,20 @@ model Cart {
 }
 
 model Order {
-    id                String         @id @default(cuid())
-    user_id           String
-    product_id        String
-    quantity          Int
-    address_id        String
-    is_paid           Boolean
-    createdAt         DateTime       @default(now())
-    updatedAt         DateTime       @updatedAt
-    payment_method_id String?
-    address           Address        @relation(fields: [address_id], references: [id])
-    User              User           @relation(fields: [user_id], references: [id])
-    product           Product        @relation(fields: [product_id], references: [id])
-    status            StatusOrder    @relation(fields: [status_order_id], references: [id])
-    status_order_id   String
-    payment_method    PaymentMethod?
-    paymentMethodId   String?
+    id              String         @id @default(cuid())
+    user_id         String
+    product_id      String
+    quantity        Int
+    address_id      String
+    is_paid         Boolean
+    createdAt       DateTime       @default(now())
+    updatedAt       DateTime       @updatedAt
+    address         Address        @relation(fields: [address_id], references: [id])
+    User            User           @relation(fields: [user_id], references: [id])
+    product         Product        @relation(fields: [product_id], references: [id])
+    status          StatusOrder    @relation(fields: [status_order_id], references: [id])
+    status_order_id String
+    payment_method  PaymentMethod?
 }
 
 model StatusOrder {
@@ -260,9 +258,10 @@ enum PaymentStatus {
 model PaymentMethod {
     id               String        @id @default(cuid())
     order_id         String        @unique
-    payment_resource String
+    payment_source   String
     order_payment_id String?
     payment_id       String?
+    payer_id         String
     status           PaymentStatus
     createdAt        DateTime      @default(now())
     updatedAt        DateTime      @updatedAt

@@ -17,7 +17,7 @@ function TableCart<T extends RowData>(
   })
 
   return (
-    <Box mr={2} bgcolor="base.white" borderRadius={1} maxWidth={800} padding={2} paddingBottom={8}>
+    <Box mr={2} bgcolor="base.white" borderRadius={1} width={800} padding={2} paddingBottom={8}>
       <Table>
         <TableHead>
           {instance.getHeaderGroups().map((headerGroup) => (

@@ -9,7 +9,7 @@ export async function getServerSideProps({ locale, req, res }: GetServerSideProp
 
   return {
     props: {
-      ...(await serverSideTranslations(locale as string, ['common', 'auth', 'cart'])),
+      ...(await serverSideTranslations(locale as string, ['common', 'auth', 'account'])),
     },
   }
 }

@@ -73,6 +73,23 @@ class AddressService extends UtilsService {
 
     return address
   }
+
+  async getAddressById(id: string, userId: string) {
+    this.CheckAuth(userId)
+
+    const address = await prisma.address.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        ward: true,
+        district: true,
+        province: true,
+      },
+    })
+
+    return address
+  }
 }
 
 export default AddressService

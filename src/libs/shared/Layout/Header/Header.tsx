@@ -56,7 +56,7 @@ const Header = () => {
             endIcon={<Image src={CartIcon} alt="cart" width={30} height={30} />}
             onClick={handelOpenCart}
           >
-            <Typography variant="subtitle1" color="black" fontWeight="bold">
+            <Typography fontSize={14} color="black" fontWeight="bold">
               Cart
             </Typography>
           </Button>
