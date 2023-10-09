@@ -93,6 +93,22 @@ export const UploadImageSchema = z.object({
   url: z.string().min(1),
 })
 
+export const statusSchema = z.enum(['DANG_BAN', 'HET_HANG', 'DUNG_BAN', 'DEN_HIEU_THUOC'])
+export const ProductSchemaZod = z.object({
+  status: statusSchema,
+  id: z.string().cuid(),
+  name: z.string(),
+  price: z.number(),
+  quantity: z.number().int(),
+  unit_id: z.string(),
+  expired_date: z.coerce.date(),
+  category_id: z.string(),
+  trademark_id: z.string(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+})
+
+export type Product = z.infer<typeof ProductSchema>
 export type CreateProduct = z.infer<typeof createProductSchema>
 export type UpdateProduct = z.infer<typeof updateProductSchema>
 export type CreateUnit = z.infer<typeof createUnitSchema>

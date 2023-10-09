@@ -90,6 +90,18 @@ class AddressService extends UtilsService {
 
     return address
   }
+
+  async deleteAddress(id: string, userId: string) {
+    this.CheckAuth(userId)
+
+    const address = await prisma.address.delete({
+      where: {
+        id,
+      },
+    })
+
+    return address
+  }
 }
 
 export default AddressService

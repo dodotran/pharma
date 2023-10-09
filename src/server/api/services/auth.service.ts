@@ -96,7 +96,6 @@ class AuthService {
 
         return userWithoutPassword
       } catch (error) {
-        console.log(error)
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
         })
@@ -215,7 +214,6 @@ class AuthService {
         }),
       ])
     } catch (error) {
-      console.log('verify error', error)
       throw new TRPCError({
         code: 'INTERNAL_SERVER_ERROR',
         message: 'error.internal_server_error',

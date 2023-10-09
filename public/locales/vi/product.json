@@ -38,6 +38,10 @@
   "detail_pharmaceutical": "Chi tiết thuốc",
   "create_new_pharmaceutical": "Thêm thuốc mới",
   "trademark": "Thương hiệu",
+  "payment_method": "Phương thức thanh toán",
+  "address": "Địa chỉ",
+  "payment_status": "Trạng thái thanh toán",
+  "title_order": "Đơn hàng",
   "create": {
     "title": "Thêm thuốc",
     "success": "Thêm thuốc thành công",

@@ -45,13 +45,11 @@ export const authOptions: NextAuthOptions = {
 
       if (!session) {
         const data = await prisma.user.findUnique({ where: { id: token.id as string } })
-        console.log(data)
         token.picture = data?.image || token.picture
         token.name = data?.name || token.name
       } else if (trigger === 'update') {
         token.picture = session.image || token.picture
         token.name = session.name || token.name
-        console.log('TOKEN', token)
       }
 
       return token
@@ -138,7 +136,6 @@ export const authOptions: NextAuthOptions = {
 
           return user
         } else {
-          console.log('incorrect')
           throw new Error('incorrect')
         }
       },

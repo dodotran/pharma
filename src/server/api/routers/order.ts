@@ -54,4 +54,25 @@ export const orderRouter = createTRPCRouter({
     .mutation(({ input, ctx }) => {
       return orderService.createOrder(input, ctx.session.user.id)
     }),
+  getHistoryOrder: protectedProcedure
+    .meta({ openapi: { method: 'GET', path: '/order/history' } })
+    .input(z.void())
+    .output(z.any())
+    .query(({ ctx }) => {
+      return orderService.getHistoryOrder(ctx.session.user.id)
+    }),
+  updateStatusOrder: protectedProcedure
+    .meta({ openapi: { method: 'PUT', path: '/order/:id' } })
+    .input(z.object({ id: z.string(), statusId: z.string() }))
+    .output(z.any())
+    .mutation(({ input, ctx }) => {
+      return orderService.updateStatusOrder(input.id, input.statusId, ctx.session.user.id)
+    }),
+  getAllOrder: protectedProcedure
+    .meta({ openapi: { method: 'GET', path: '/order' } })
+    .input(z.void())
+    .output(z.any())
+    .query(({ ctx }) => {
+      return orderService.getAllOrder(ctx.session.user.id)
+    }),
 })

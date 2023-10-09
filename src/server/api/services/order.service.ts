@@ -122,12 +122,123 @@ class OrderService extends UtilsService {
     })
 
     if (order) {
-      await prisma.cart.deleteMany({
+      const cart = await prisma.cart.deleteMany({
         where: {
           product_id: data.product_id,
         },
       })
+
+      if (cart) {
+        await prisma.product.update({
+          where: {
+            id: data.product_id,
+          },
+          data: {
+            quantity: {
+              decrement: data.quantity,
+            },
+          },
+        })
+      }
     }
+  }
+
+  async getHistoryOrder(userId: string) {
+    this.CheckAuth(userId)
+
+    const order = await prisma.order.findMany({
+      where: {
+        user_id: userId,
+      },
+      include: {
+        product: {
+          include: {
+            category: true,
+            trademark: true,
+            unit: true,
+            image: true,
+          },
+        },
+        address: true,
+        status: true,
+        payment_method: true,
+      },
+    })
+
+    return order
+  }
+  async updateStatusOrder(id: string, statusId: string, userId: string) {
+    this.CheckAuth(userId)
+
+    const order = await prisma.order.findUnique({
+      where: {
+        id,
+      },
+    })
+
+    if (!order) {
+      throw new TRPCError({ code: 'NOT_FOUND', message: 'error.order-not-found' })
+    }
+
+    await prisma.product.update({
+      where: {
+        id: order.product_id,
+      },
+      data: {
+        quantity: {
+          increment: order.quantity,
+        },
+      },
+    })
+
+    const statusOrder = await prisma.statusOrder.findUnique({
+      where: {
+        id: statusId,
+      },
+    })
+
+    if (!statusOrder) {
+      throw new TRPCError({ code: 'NOT_FOUND', message: 'error.status-order-not-found' })
+    }
+
+    const orderUpdate = await prisma.order.update({
+      where: {
+        id,
+      },
+      data: {
+        status_order_id: statusId,
+      },
+    })
+
+    return orderUpdate
+  }
+
+  async getAllOrder(userId: string) {
+    this.CheckAdmin(userId)
+
+    const order = await prisma.order.findMany({
+      include: {
+        product: {
+          include: {
+            category: true,
+            trademark: true,
+            unit: true,
+            image: true,
+          },
+        },
+        address: {
+          include: {
+            province: true,
+            district: true,
+            ward: true,
+          },
+        },
+        status: true,
+        payment_method: true,
+      },
+    })
+
+    return order
   }
 }
 

@@ -65,7 +65,6 @@ const FormSignIn: React.FC<FormSignInType> = ({ handleChangeTab, handleToSignUp 
 
   const githubSignIn = async () => {
     const res = await signIn('google', { callbackUrl: callbackUrl as string })
-    console.log(res)
   }
 
   return (

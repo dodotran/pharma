@@ -27,6 +27,8 @@
     "info_user": "Thông tin người nhận",
     "home": "Nhà riêng",
     "office": "Cơ quan",
-    "other": "Khác"
+    "other": "Khác",
+    "delete": "Xóa",
+    "delete_success": "Xóa thành công"
   }
 }

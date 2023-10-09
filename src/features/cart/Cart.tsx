@@ -158,9 +158,24 @@ const Cart = () => {
   return (
     <Layout title="Giỏ hàng" bgcolor={grey[300]}>
       <Stack direction="row" justifyContent="center" spacing={6}>
-        <Box>
-          <TableCart columns={columns} data={cartData || []} isLoading={isLoading} />
-        </Box>
+        {cartData?.length === 0 ? (
+          <Stack
+            width={800}
+            padding={2}
+            paddingBottom={8}
+            mr={2}
+            bgcolor="base.white"
+            justifyContent="center"
+          >
+            <Typography variant="h5" fontWeight={700} textAlign="center">
+              Giỏ hàng trống
+            </Typography>
+          </Stack>
+        ) : (
+          <Box>
+            <TableCart columns={columns} data={cartData || []} isLoading={isLoading} />
+          </Box>
+        )}
 
         <BoxTotal spacing={3}>
           <DetailTotal direction="row">
@@ -203,7 +218,11 @@ const Cart = () => {
             </Typography>
           </DetailTotal>
 
-          <Button variant="contained" onClick={() => router.push('/checkout')}>
+          <Button
+            variant="contained"
+            onClick={() => router.push('/checkout')}
+            disabled={cartData?.length === 0}
+          >
             Mua hàng
           </Button>
 

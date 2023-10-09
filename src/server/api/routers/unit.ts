@@ -1,8 +1,7 @@
-import { CategorySchemaUpdate } from '@/libs/schema/category.schema'
+import { CategorySchema, CategorySchemaUpdate } from '@/libs/schema/category.schema'
 import { createUnitSchema } from '@/libs/schema/product.schema'
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '@/server/api/trpc'
 import { User } from 'next-auth'
-import { UnitSchema } from 'prisma/generated/zod'
 import { z } from 'zod'
 import UnitService from '../services/unit.service'
 
@@ -25,7 +24,7 @@ export const unitRouter = createTRPCRouter({
   update: protectedProcedure
     .meta({ openapi: { method: 'PUT', path: '/unit/:id' } })
     .input(CategorySchemaUpdate)
-    .output(UnitSchema)
+    .output(CategorySchema)
     .mutation(({ input, ctx }) => {
       return unitService.update(input, ctx.session.user as User)
     }),
@@ -39,7 +38,7 @@ export const unitRouter = createTRPCRouter({
   byId: publicProcedure
     .meta({ openapi: { method: 'GET', path: '/unit/:id' } })
     .input(z.object({ id: z.string() }))
-    .output(UnitSchema)
+    .output(CategorySchema)
     .query(({ input }) => {
       return unitService.get(input.id)
     }),

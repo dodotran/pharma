@@ -9,7 +9,6 @@ const Home = () => {
   const router = useRouter()
 
   const { data: productData } = api.product.getAll.useQuery()
-  console.log(productData)
   return (
     <Layout>
       {/* <PayPalButton

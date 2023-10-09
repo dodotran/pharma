@@ -50,7 +50,6 @@ function ReactTable<T extends RowData>(
                       <Typography
                         variant="subtitle2"
                         maxWidth={250}
-                        maxHeight={100}
                         textOverflow="ellipsis"
                         overflow="hidden"
                         color={base.black}

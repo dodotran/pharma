@@ -39,7 +39,6 @@ const Product = () => {
       header: t('image'),
       accessorKey: 'image[0]',
       cell: ({ row }) => {
-        console.log(row.original.image[0])
         return (
           <Image
             width="100"
@@ -76,7 +75,7 @@ const Product = () => {
               <MuiImage src={DetailIcon} alt="detail" />
             </ButtonDetail>
 
-            <ButtonDetail onClick={() => handleOpenUpdate(row.original)}>
+            <ButtonDetail>
               <MuiImage src={EditIcon} alt="edit" />
             </ButtonDetail>
           </Stack>

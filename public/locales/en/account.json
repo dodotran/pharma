@@ -27,6 +27,8 @@
     "info_user": "Information user",
     "home": "Home",
     "office": "Office",
-    "other": "Other"
+    "other": "Other",
+    "delete": "Delete",
+    "delete_success": "Delete success"
   }
 }

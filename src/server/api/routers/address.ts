@@ -1,11 +1,11 @@
 import {
+  AddressSchemaZod,
   DistrictSchema,
   WardSchema,
   createAddressSchema,
   updateAddressSchema,
 } from '@/libs/schema/address.schema'
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '@/server/api/trpc'
-import { AddressSchema } from 'prisma/generated/zod'
 import { z } from 'zod'
 import AddressService from '../services/address.service'
 
@@ -36,7 +36,7 @@ export const addressRouter = createTRPCRouter({
   createdAddress: protectedProcedure
     .meta({ openapi: { method: 'POST', path: '/create' } })
     .input(createAddressSchema)
-    .output(AddressSchema)
+    .output(AddressSchemaZod)
     .mutation(({ input, ctx }) => {
       return addressService.createAddress(input, ctx.session.user.id)
     }),
@@ -50,7 +50,7 @@ export const addressRouter = createTRPCRouter({
   updateAddress: protectedProcedure
     .meta({ openapi: { method: 'PUT', path: '/update-address' } })
     .input(updateAddressSchema)
-    .output(AddressSchema)
+    .output(AddressSchemaZod)
     .mutation(({ input, ctx }) => {
       return addressService.updateAddress(input, ctx.session.user.id)
     }),
@@ -60,5 +60,12 @@ export const addressRouter = createTRPCRouter({
     .output(z.any())
     .query(({ input, ctx }) => {
       return addressService.getAddressById(input.id, ctx.session.user.id)
+    }),
+  deleteAddress: protectedProcedure
+    .meta({ openapi: { method: 'DELETE', path: '/delete-address/:id' } })
+    .input(z.object({ id: z.string() }))
+    .output(z.any())
+    .mutation(({ input, ctx }) => {
+      return addressService.deleteAddress(input.id, ctx.session.user.id)
     }),
 })

@@ -1,4 +1,4 @@
-import { grey } from '@/libs/config/colors'
+import { blueGrey, grey } from '@/libs/config/colors'
 import { Layout } from '@/libs/shared/Layout'
 import { TableCart } from '@/libs/shared/Table'
 import { api } from '@/utils/api'
@@ -8,6 +8,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { enqueueSnackbar } from 'notistack'
 import NoImage from 'public/assets/imgs/no-image.png'
+import { useState } from 'react'
 import { PayPalButton } from 'react-paypal-button-v2'
 
 const Checkout = () => {
@@ -15,6 +16,12 @@ const Checkout = () => {
   const utils = api.useContext()
   const { t } = useTranslation(['cart', 'common'])
   const { mutate } = api.order.createOrder.useMutation()
+  const { data: addressData } = api.address.getAddress.useQuery()
+  const [id, setId] = useState('')
+
+  const handleSetId = (id: string) => {
+    setId(id)
+  }
 
   const columns = [
     {
@@ -97,11 +104,120 @@ const Checkout = () => {
     return total + item.quantity * item.product.price
   }, 0)
 
+  const handleOrder = () => {
+    cartData?.forEach((item) => {
+      {
+        mutate(
+          {
+            product_id: item.product_id,
+            quantity: item.quantity,
+            address_id: id,
+            is_paid: true,
+            order_payment_id: '',
+            payment_id: '',
+            payment_source: 'SHIP_CODE',
+            payer_id: '',
+            status: 'PENDING',
+            status_order_id: 'clnj0828b0000wdy8q34ux2jf',
+          },
+          {
+            onSuccess: () => {
+              enqueueSnackbar('ĐẶt hàng thành công!', { variant: 'success' })
+            },
+            onError: () => {
+              enqueueSnackbar('ĐẶt hàng thất bại!', { variant: 'error' })
+            },
+            onSettled: () => {
+              utils.order.invalidate()
+            },
+          },
+        )
+      }
+    })
+  }
+
+  if (cartData?.length === 0) {
+    return (
+      <Layout title="Giỏ hàng" bgcolor={grey[300]}>
+        <Stack direction="row" justifyContent="center" alignItems="center" height="80vh">
+          <Typography fontSize={20} fontWeight={700}>
+            Giỏ hàng trống
+          </Typography>
+        </Stack>
+      </Layout>
+    )
+  }
+
   return (
     <Layout title="Giỏ hàng" bgcolor={grey[300]}>
       <Stack direction="row" justifyContent="center" spacing={6}>
         <Stack spacing={2}>
           <TableCart columns={columns} data={cartData || []} isLoading={isLoading} />
+
+          <Stack direction="row" spacing={6}>
+            <Stack width={800} padding={3} bgcolor="base.white" borderRadius={1} spacing={3}>
+              <Typography fontSize={20} fontWeight={700}>
+                Chọn địa chỉ giao hàng
+              </Typography>
+
+              {addressData?.map((item) => {
+                return (
+                  <Stack
+                    key={item.id}
+                    direction="row"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    borderRadius={1}
+                    padding={3}
+                    border={`1px dashed ${grey[400]}`}
+                    sx={{ backgroundColor: id === item.id ? blueGrey[100] : '' }}
+                  >
+                    <Stack direction="row" spacing={2}>
+                      <Stack borderRight={`1px dashed ${grey[400]}`} pr={4}>
+                        <Typography fontSize={14}>
+                          <b>Họ và tên:</b> {item.name}
+                        </Typography>
+
+                        <Typography fontSize={14}>
+                          <b>SDT:</b> {item.phone_number}
+                        </Typography>
+
+                        <Typography fontSize={14}>
+                          <b>Loại địa chỉ:</b> {item.type_address}
+                        </Typography>
+                      </Stack>
+
+                      <Stack borderRight={`1px dashed ${grey[400]}`} pr={4}>
+                        <Typography fontSize={14}>
+                          <b>Tỉnh/Thành phố:</b> {item?.province?.name}
+                        </Typography>
+
+                        <Typography fontSize={14}>
+                          <b>Quận/Huyện:</b> {item.district?.name}
+                        </Typography>
+
+                        <Typography fontSize={14}>
+                          <b>Phường/Xã</b>: {item.phone_number}
+                        </Typography>
+                      </Stack>
+
+                      <Stack>
+                        <Typography fontSize={14}>
+                          <b>Địa chỉ chi tiết:</b> {item?.address_detail}
+                        </Typography>
+                      </Stack>
+                    </Stack>
+
+                    <ButtonCart onClick={() => handleSetId(item.id)}>
+                      <Typography fontSize={14} fontWeight={700}>
+                        Chọn
+                      </Typography>
+                    </ButtonCart>
+                  </Stack>
+                )
+              })}
+            </Stack>
+          </Stack>
 
           <Stack direction="row" spacing={6}>
             <Stack width={800} padding={3} bgcolor="base.white" borderRadius={1} spacing={3}>
@@ -114,22 +230,31 @@ const Checkout = () => {
                 onSuccess={(details, data) => {
                   cartData?.forEach((item) => {
                     {
-                      mutate({
-                        product_id: item.product_id,
-                        quantity: item.quantity,
-                        address_id: 'clngs7pi20000wd9oarkztjt0',
-                        is_paid: true,
-                        order_payment_id: data.orderID,
-                        payment_id: data.paymentID,
-                        payment_source: data.paymentSource,
-                        payer_id: data.payerID,
-                        status: 'SUCCESS',
-                        status_order_id: 'clngs7pi20000wd9oarkztjt0',
-                      })
+                      mutate(
+                        {
+                          product_id: item.product_id,
+                          quantity: item.quantity,
+                          address_id: id,
+                          is_paid: true,
+                          order_payment_id: data.orderID,
+                          payment_id: data.paymentID,
+                          payment_source: data.paymentSource,
+                          payer_id: data.payerID,
+                          status: 'SUCCESS',
+                          status_order_id: 'clnj0828b0000wdy8q34ux2jf',
+                        },
+                        {
+                          onSuccess: () => {
+                            enqueueSnackbar('Thanh toán thành công!', { variant: 'success' })
+                          },
+                          onSettled: () => {
+                            utils.order.invalidate()
+                            utils.cart.invalidate()
+                          },
+                        },
+                      )
                     }
                   })
-
-                  enqueueSnackbar('Thanh toán thành công!', { variant: 'success' })
                 }}
                 onError={(err) => {
                   enqueueSnackbar('Thanh toán thất bại!', { variant: 'error' })
@@ -163,7 +288,13 @@ const Checkout = () => {
               </Typography>
             </DetailTotal>
 
-            <Button variant="contained">Đặt hàng</Button>
+            <Button
+              variant="contained"
+              disabled={!id || cartData?.length === 0}
+              onClick={handleOrder}
+            >
+              Đặt hàng
+            </Button>
 
             <Typography fontSize={14} textAlign="center">
               Bằng việc tiến hành đặt mua hàng, bạn đồng ý với&nbsp;

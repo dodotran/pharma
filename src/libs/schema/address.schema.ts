@@ -69,6 +69,22 @@ export const updateAddressSchema = z.object({
   ward_id: z.string(),
 })
 
+export const AddressTypeSchema = z.enum(['HOME', 'OFFICE', 'OTHER'])
+
+export const AddressSchemaZod = z.object({
+  type_address: AddressTypeSchema,
+  id: z.string().cuid(),
+  name: z.string(),
+  phone_number: z.string(),
+  address_detail: z.string(),
+  created_at: z.coerce.date(),
+  updated_at: z.coerce.date(),
+  province_id: z.string(),
+  district_id: z.string(),
+  ward_id: z.string(),
+  userId: z.string().nullable(),
+})
+
 export type AddressType = z.infer<typeof AddressSchema>
 export type CreateAddress = z.infer<typeof createAddressSchema>
 export type UpdateAddress = z.infer<typeof updateAddressSchema>

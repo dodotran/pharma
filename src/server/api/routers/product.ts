@@ -1,10 +1,10 @@
 import {
   ImageProductSchema,
+  ProductSchemaZod,
   UploadImageSchema,
   createProductSchema,
 } from '@/libs/schema/product.schema'
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '@/server/api/trpc'
-import { ProductSchema } from 'prisma/generated/zod'
 import { z } from 'zod'
 import ProductService from '../services/product.service'
 
@@ -21,14 +21,14 @@ export const productRoute = createTRPCRouter({
   byId: protectedProcedure
     .meta({ openapi: { method: 'GET', path: '/product/:id' } })
     .input(z.object({ id: z.string().min(1) }))
-    .output(ProductSchema.nullable())
+    .output(ProductSchemaZod.nullable())
     .query(({ input }) => {
       return productService.byId(input.id)
     }),
   createProduct: protectedProcedure
     .meta({ openapi: { method: 'POST', path: '/product' } })
     .input(createProductSchema)
-    .output(ProductSchema)
+    .output(ProductSchemaZod)
     .mutation(({ input, ctx }) => {
       return productService.create(input, ctx.session?.user.id as string)
     }),

@@ -1,6 +1,5 @@
-import { CreateCartSchema } from '@/libs/schema/cart.schema'
+import { CartSchema, CreateCartSchema } from '@/libs/schema/cart.schema'
 import { createTRPCRouter, protectedProcedure } from '@/server/api/trpc'
-import { CartSchema } from 'prisma/generated/zod'
 import { z } from 'zod'
 import CartService from '../services/cart.service'
 

@@ -38,6 +38,10 @@
   "create_new_pharmaceutical": "Create new pharmaceutical",
   "detail_pharmaceutical": "Detail pharmaceutical",
   "trademark": "Trademark",
+  "payment_method": "Payment method",
+  "address": "Address",
+  "payment_status": "Payment status",
+  "title_order": "Order",
   "create": {
     "title": "Create new pharmaceutical",
     "success": "Create new pharmaceutical success",

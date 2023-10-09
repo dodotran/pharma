@@ -24,6 +24,7 @@ const Address = () => {
   const { data: dataProvince } = api.address.getProvince.useQuery()
   const { data: dataDistrict } = api.address.getDistrictById.useQuery({ province_id: provinceId })
   const { data: dataWard } = api.address.getWardById.useQuery({ district_id: districtId })
+  const { mutate: deleteAddress } = api.address.deleteAddress.useMutation()
   const { mutate } = api.address.createdAddress.useMutation()
   const { update } = useSession()
   const utils = api.useContext()
@@ -74,7 +75,7 @@ const Address = () => {
     },
   ]
 
-  const onSubmit: SubmitHandler<CreateAddress> = async (data) => {
+  const onSubmit: SubmitHandler<CreateAddress> = (data) => {
     mutate(
       { ...data },
       {
@@ -84,6 +85,30 @@ const Address = () => {
           })
           handleClose()
           reset()
+          update()
+        },
+        onError: (err) => {
+          const error = String(err.message)
+          const description = t(error, { ns: 'common' })
+          enqueueSnackbar(t(`${description}`), {
+            variant: 'error',
+          })
+        },
+        onSettled: () => {
+          utils.address.invalidate()
+        },
+      },
+    )
+  }
+
+  const handleDelete = (id: string) => {
+    deleteAddress(
+      { id },
+      {
+        onSuccess: () => {
+          enqueueSnackbar(t('address.delete_success'), {
+            variant: 'success',
+          })
           update()
         },
         onError: (err) => {
@@ -129,6 +154,17 @@ const Address = () => {
     {
       header: t('address.type_address'),
       accessorKey: 'type_address',
+    },
+    {
+      header: '',
+      accessorKey: 'action',
+      cell: ({ row }) => {
+        return (
+          <Button variant="contained" onClick={() => handleDelete(row.original.id as string)}>
+            {t('address.delete')}
+          </Button>
+        )
+      },
     },
   ]
 

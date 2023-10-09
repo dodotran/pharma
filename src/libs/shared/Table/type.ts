@@ -4,9 +4,9 @@ interface CellInfo<TData extends RowData> {
   row: Row<TData>
 }
 
-export interface ColumnsTable<TData extends RowData> {
-  accessorKey: keyof TData
-  cell: (info: CellInfo<TData>) => React.ReactNode
+export interface ColumnsTable {
+  accessorKey: unknown
+  cell?: (info: CellInfo<unknown>) => React.ReactNode
   header: React.ReactNode
 }
 
