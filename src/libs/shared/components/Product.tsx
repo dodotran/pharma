@@ -3,6 +3,7 @@ import { api } from '@/utils/api'
 import { Button, Stack, Typography, styled } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 import { enqueueSnackbar } from 'notistack'
 import NoImage from 'public/assets/imgs/no-image.png'
 
@@ -16,9 +17,9 @@ type ProductProps = {
 
 const Product: React.FC<ProductProps> = ({ id, name, price, unitName, image }) => {
   const { mutate } = api.cart.create.useMutation()
-  const { data } = api.cart.getAll.useQuery()
   const utils = api.useContext()
   const { t } = useTranslation('common')
+  const router = useRouter()
 
   const handleAddToCart = async () => {
     await mutate(
@@ -47,6 +48,7 @@ const Product: React.FC<ProductProps> = ({ id, name, price, unitName, image }) =
         height={250}
         width={250}
         borderBottom={`1px dashed ${green[700]}`}
+        onClick={() => router.push(`detail-product/${id}`)}
       >
         <MuiImage
           src={image ? image : NoImage}

@@ -3,6 +3,7 @@ import { useTranslation } from 'next-i18next'
 import Head from 'next/head'
 import React from 'react'
 import { Header } from './Header'
+import { HEADER_CLIENT_HEIGHT } from './Header/AppBar'
 
 type LayoutType = BoxProps<
   'div',
@@ -34,8 +35,8 @@ const Layout: React.FC<LayoutType> = ({ title, children, HeaderComponent, ...con
 export { Layout }
 
 const ContentPage = styled(Box)(({ theme }) => ({
-  marginTop: 60,
-  minHeight: `calc(100vh - ${60}px)`,
+  marginTop: HEADER_CLIENT_HEIGHT,
+  minHeight: `calc(100vh - ${HEADER_CLIENT_HEIGHT}px)`,
   flex: 1,
   justifyContent: 'center',
   alignItems: 'center',

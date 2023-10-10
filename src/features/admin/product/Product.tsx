@@ -1,4 +1,4 @@
-import { Product } from '@/libs/schema/product.schema'
+import { UpdateProduct } from '@/libs/schema/product.schema'
 import { LayoutAdmin } from '@/libs/shared/Layout'
 import { ReactTable } from '@/libs/shared/Table'
 import { ButtonDetail, MuiImage } from '@/libs/shared/styled'
@@ -11,14 +11,13 @@ import EditIcon from 'public/assets/imgs/edit.png'
 import NoImage from 'public/assets/imgs/no-image.png'
 import { useState } from 'react'
 import { Create } from './Create'
-import { Update } from './Update'
 
 const Product = () => {
   const { data, isLoading } = api.product.getAll.useQuery()
   const { t } = useTranslation('product')
   const [open, setOpen] = useState(false)
   const [openUpdate, setOpenUpdate] = useState(false)
-  const [product, setProduct] = useState<Product>()
+  const [product, setProduct] = useState<UpdateProduct>()
 
   const handleOpen = () => {
     setOpen(true)
@@ -28,7 +27,7 @@ const Product = () => {
     setOpen(false)
   }
 
-  const handleOpenUpdate = (product: Product) => {
+  const handleOpenUpdate = (product: UpdateProduct) => {
     setProduct(product)
     setOpenUpdate(true)
   }
@@ -122,9 +121,13 @@ const Product = () => {
 
       {open && <Create open={open} handleClose={handleClose} />}
 
-      {openUpdate && (
-        <Update product={product as Product} open={open} handleClose={handleCloseUpdate} />
-      )}
+      {/* {openUpdate && (
+        <Update
+          product={product as UpdateProduct}
+          open={openUpdate}
+          handleClose={handleCloseUpdate}
+        />
+      )} */}
     </LayoutAdmin>
   )
 }

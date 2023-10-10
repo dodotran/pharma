@@ -26,6 +26,8 @@ class ProductService extends UtilsService {
         unit: true,
         category: true,
         image: true,
+        product_detail: true,
+        trademark: true,
       },
     })
 
@@ -95,24 +97,6 @@ class ProductService extends UtilsService {
     return product
   }
 
-  // async update(data: UpdateProduct, userId: string) {
-  //   this.CheckAdmin(userId)
-  //   const { id } = data
-
-  //   const product = await prisma.product.update({
-  //     where: {
-  //       id,
-  //     },
-  //     data: {
-  //       ...data,
-  //       price: Number(data.price),
-  //       quantity: Number(data.quantity),
-  //     },
-  //   })
-
-  //   return product
-  // }
-
   async uploadImage(data: UploadImageSchemaType, userId: string) {
     this.CheckAdmin(userId)
 
@@ -134,6 +118,19 @@ class ProductService extends UtilsService {
     })
 
     return image
+  }
+
+  async getRandomProduct() {
+    const product = await prisma.product.findMany({
+      include: {
+        unit: true,
+        category: true,
+        image: true,
+      },
+      take: 4,
+    })
+
+    return product
   }
 }
 

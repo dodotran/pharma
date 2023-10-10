@@ -303,6 +303,8 @@ const Create: React.FC<CreateProps> = ({ open, handleClose }) => {
               label={t('description') as string}
               fullWidth
               placeholder={t('enter_description') as string}
+              multiline
+              minRows={6}
             />
 
             <Input

@@ -129,6 +129,7 @@ const Checkout = () => {
             },
             onSettled: () => {
               utils.order.invalidate()
+              utils.cart.invalidate()
             },
           },
         )

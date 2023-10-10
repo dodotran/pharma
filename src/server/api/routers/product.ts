@@ -21,7 +21,7 @@ export const productRoute = createTRPCRouter({
   byId: protectedProcedure
     .meta({ openapi: { method: 'GET', path: '/product/:id' } })
     .input(z.object({ id: z.string().min(1) }))
-    .output(ProductSchemaZod.nullable())
+    .output(z.any())
     .query(({ input }) => {
       return productService.byId(input.id)
     }),
@@ -38,5 +38,12 @@ export const productRoute = createTRPCRouter({
     .output(ImageProductSchema)
     .mutation(({ input, ctx }) => {
       return productService.uploadImage(input, ctx.session?.user.id as string)
+    }),
+  getRandomProduct: publicProcedure
+    .meta({ openapi: { method: 'GET', path: '/product/random' } })
+    .input(z.void())
+    .output(z.any())
+    .query(() => {
+      return productService.getRandomProduct()
     }),
 })

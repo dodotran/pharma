@@ -1,4 +1,4 @@
-import { Address } from '@/features/account'
+import { Address } from '@/features/account/address'
 import { authOptions } from '@/server/auth'
 import { GetServerSidePropsContext } from 'next'
 import { getServerSession } from 'next-auth'

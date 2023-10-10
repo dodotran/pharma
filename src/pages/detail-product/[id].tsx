@@ -1,4 +1,4 @@
-import { HistoryOrder } from '@/features/account'
+import { DetailProduct } from '@/features/detail-product'
 import { authOptions } from '@/server/auth'
 import { GetServerSidePropsContext } from 'next'
 import { getServerSession } from 'next-auth'
@@ -9,9 +9,9 @@ export async function getServerSideProps({ locale, req, res }: GetServerSideProp
 
   return {
     props: {
-      ...(await serverSideTranslations(locale as string, ['common', 'auth', 'account'])),
+      ...(await serverSideTranslations(locale as string, ['common', 'auth', 'product'])),
     },
   }
 }
 
-export default HistoryOrder
+export default DetailProduct

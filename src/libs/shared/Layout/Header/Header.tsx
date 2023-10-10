@@ -8,9 +8,10 @@ import LogoHeader from 'public/assets/imgs/logo.png'
 import CartIcon from 'public/assets/imgs/shop.png'
 import { useEffect, useState } from 'react'
 import { Account } from './Account'
-import { AppBar } from './AppBar'
+import { AppBar, HEADER_CLIENT_HEIGHT } from './AppBar'
 import { Language } from './Language'
 import { ModalAuth } from './ModalAuth'
+import { Search } from './Search'
 
 const Header = () => {
   const { data } = useSession()
@@ -45,14 +46,17 @@ const Header = () => {
   return (
     <AppBar elevation={0}>
       <StackContainer>
-        <Stack direction="row" spacing={18.75} alignItems="center">
+        <Stack direction="row" spacing={33} alignItems="center">
           <Link href={'/'}>
             <MuiImage src={LogoHeader} alt="logo-header" priority />
           </Link>
+
+          <Search />
         </Stack>
 
         <Stack direction="row" alignItems="center" spacing={2}>
           <Button
+            variant="outlined"
             endIcon={<Image src={CartIcon} alt="cart" width={30} height={30} />}
             onClick={handelOpenCart}
           >
@@ -85,7 +89,7 @@ const StackContainer = styled(Stack)(({ theme }) => ({
   flexDirection: 'row',
   alignItems: 'center',
   justifyContent: 'space-between',
-  height: '100%',
+  height: HEADER_CLIENT_HEIGHT,
   [theme.breakpoints.down('sm')]: {
     padding: theme.spacing(0, 2),
   },

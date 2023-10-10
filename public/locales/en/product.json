@@ -42,6 +42,7 @@
   "address": "Address",
   "payment_status": "Payment status",
   "title_order": "Order",
+  "trademark_national": "Trademark national",
   "create": {
     "title": "Create new pharmaceutical",
     "success": "Create new pharmaceutical success",

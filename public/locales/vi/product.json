@@ -42,6 +42,7 @@
   "address": "Địa chỉ",
   "payment_status": "Trạng thái thanh toán",
   "title_order": "Đơn hàng",
+  "trademark_national": "Thương hiệu quốc gia",
   "create": {
     "title": "Thêm thuốc",
     "success": "Thêm thuốc thành công",

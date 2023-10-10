@@ -1,5 +1,5 @@
 import { trueGrey } from '@/libs/config/colors'
-import { CreateProduct, Product, createProductSchema } from '@/libs/schema/product.schema'
+import { CreateProduct, Product, updateProductSchema } from '@/libs/schema/product.schema'
 import { DatePickerYear, Input, Select } from '@/libs/shared/Form'
 import { uploadCloundinary } from '@/libs/shared/hooks'
 import { api } from '@/utils/api'
@@ -29,7 +29,7 @@ type UpdateProps = {
   product: Product
 }
 
-const Update: React.FC<UpdateProps> = ({ open, handleClose }) => {
+const Update: React.FC<UpdateProps> = ({ open, handleClose, product }) => {
   const { t } = useTranslation('product')
   const { mutate, isLoading } = api.product.createProduct.useMutation()
   const { mutate: uploadImage } = api.product.uploadImage.useMutation()
@@ -74,20 +74,20 @@ const Update: React.FC<UpdateProps> = ({ open, handleClose }) => {
 
   const { control, handleSubmit, reset } = useForm<CreateProduct>({
     defaultValues: {
-      category_id: '',
-      name: '',
-      price: '',
-      quantity: '',
-      unit_id: '',
-      status: 'DANG_BAN',
-      expired_date: new Date(),
-      description: '',
-      ingredient: '',
-      how_to_use: '',
-      short_description: '',
-      trademark_id: '',
+      category_id: product?.category.id,
+      name: product?.name,
+      price: product?.price,
+      quantity: product?.quantity,
+      unit_id: product?.unit.id,
+      status: product?.status,
+      expired_date: product?.expired_date,
+      // description: product?.description,
+      // ingredient: product?.ingredient,
+      // how_to_use: product?.how_to_use,
+      // short_description: product?.short_description,
+      // trademark_id: product?.trademark.id,
     },
-    resolver: zodResolver(createProductSchema),
+    resolver: zodResolver(updateProductSchema),
   })
 
   const [files, setFiles] = useState<File[]>([])

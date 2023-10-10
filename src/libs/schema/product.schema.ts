@@ -54,10 +54,19 @@ export const createProductSchema = z
   })
   .merge(ProductDetailSchema.omit({ id: true, createdAt: true, updatedAt: true, product_id: true }))
 
-export const updateProductSchema = ProductSchema.omit({
-  createdAt: true,
-  updatedAt: true,
-})
+export const updateProductSchema = z
+  .object({
+    id: z.string().min(1),
+    status: z.enum(['DANG_BAN', 'HET_HANG', 'DUNG_BAN', 'DEN_HIEU_THUOC']),
+    name: z.string().min(1),
+    price: z.string().min(1),
+    quantity: z.string().min(1),
+    unit_id: z.string().min(1),
+    expired_date: z.date(),
+    category_id: z.string().min(1),
+    trademark_id: z.string().min(1),
+  })
+  .merge(ProductDetailSchema.omit({ createdAt: true, updatedAt: true, product_id: true }))
 
 export const createUnitSchema = z.object({
   name: z.string().min(1),

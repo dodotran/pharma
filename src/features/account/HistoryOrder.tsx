@@ -48,7 +48,7 @@ const HistoryOrder = () => {
                 border={`1px dashed ${grey[400]}`}
               >
                 <Stack direction="row" spacing={2}>
-                  <Stack borderRight={`1px dashed ${grey[400]}`} pr={4}>
+                  <Stack borderRight={`1px dashed ${grey[400]}`} pr={4} width={200}>
                     <Typography fontSize={14}>
                       <b>{t('name')}:</b> {item.address.name}
                     </Typography>
@@ -62,7 +62,7 @@ const HistoryOrder = () => {
                     </Typography>
                   </Stack>
 
-                  <Stack borderRight={`1px dashed ${grey[400]}`} pr={4}>
+                  <Stack borderRight={`1px dashed ${grey[400]}`} pr={4} width={200}>
                     <Typography fontSize={14}>
                       <b>{t('name_product')}:</b> {item.product.name}
                     </Typography>
@@ -77,7 +77,7 @@ const HistoryOrder = () => {
                     </Typography>
                   </Stack>
 
-                  <Stack borderRight={`1px dashed ${grey[400]}`} pr={4}>
+                  <Stack borderRight={`1px dashed ${grey[400]}`} pr={4} width={200}>
                     <Typography fontSize={14}>
                       <b>{t('status_payment')}:</b> {item.payment_method?.status}
                     </Typography>

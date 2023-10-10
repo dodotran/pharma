@@ -6,7 +6,7 @@ import Link from 'next/link'
 import LogoHeader from 'public/assets/imgs/logo.png'
 import { useEffect, useState } from 'react'
 import { Account } from './Account'
-import { AppBar } from './AppBar'
+import { AppBarAdmin } from './AppBar'
 import { Language } from './Language'
 import { ModalAuth } from './ModalAuth'
 
@@ -31,7 +31,7 @@ const HeaderAdmin = () => {
   }, [data])
 
   return (
-    <AppBar elevation={0}>
+    <AppBarAdmin elevation={0}>
       <StackContainer>
         <Stack direction="row" spacing={18.75} alignItems="center">
           <Link href={'/'}>
@@ -53,7 +53,7 @@ const HeaderAdmin = () => {
           )}
         </Stack>
       </StackContainer>
-    </AppBar>
+    </AppBarAdmin>
   )
 }
 
