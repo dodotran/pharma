@@ -52,7 +52,7 @@ const Trademark = () => {
     {
       header: t('image'),
       accessorKey: 'image',
-      cell: ({ row }) => {
+      cell: ({ row }: { row: any }) => {
         return <Image width="100" height="100" src={row.original.image} alt={row.original.name} />
       },
     },
@@ -75,7 +75,7 @@ const Trademark = () => {
     {
       header: '',
       accessorKey: 'action',
-      cell: ({ row }) => {
+      cell: ({ row }: { row: any }) => {
         return (
           <Stack direction="row" alignItems="center" spacing={3.5}>
             <ButtonDetail>

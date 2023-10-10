@@ -33,7 +33,7 @@ class TrademarkService extends UtilsService {
   }
 
   async create(data: TrademarkCreate, userId: string) {
-    this.CheckAuth(userId)
+    this.CheckAdmin(userId)
 
     const trademark = await prisma.trademark.create({
       data,
@@ -43,7 +43,7 @@ class TrademarkService extends UtilsService {
   }
 
   async update(data: TrademarkUpdate, userId: string) {
-    this.CheckAuth(userId)
+    this.CheckAdmin(userId)
 
     const trademark = await prisma.trademark.findUnique({
       where: { id: data.id },
@@ -65,7 +65,7 @@ class TrademarkService extends UtilsService {
   }
 
   async delete(id: string, userId: string) {
-    this.CheckAuth(userId)
+    this.CheckAdmin(userId)
 
     const trademark = await prisma.trademark.findUnique({
       where: { id },

@@ -158,7 +158,7 @@ const Address = () => {
     {
       header: '',
       accessorKey: 'action',
-      cell: ({ row }) => {
+      cell: ({ row }: { row: any }) => {
         return (
           <Button variant="contained" onClick={() => handleDelete(row.original.id as string)}>
             {t('address.delete')}

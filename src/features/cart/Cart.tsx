@@ -68,7 +68,7 @@ const Cart = () => {
     {
       header: t('name_product'),
       accessorKey: 'product.name',
-      cell: ({ row }) => {
+      cell: ({ row }: { row: any }) => {
         return (
           <Stack direction="row" alignItems="center" spacing={3}>
             <Box border={`1px solid ${grey[300]}`} borderRadius={1} padding={1}>
@@ -88,7 +88,7 @@ const Cart = () => {
     {
       header: t('price'),
       accessorKey: 'product.price',
-      cell: ({ row }) => {
+      cell: ({ row }: { row: any }) => {
         const price = row.original.quantity * row.original.product.price
 
         return (
@@ -101,7 +101,7 @@ const Cart = () => {
     {
       header: t('quantity'),
       accessorKey: 'quantity',
-      cell: ({ row }) => {
+      cell: ({ row }: { row: any }) => {
         return (
           <Stack direction="row" alignItems="center" width={100} spacing={1} component="form">
             <ButtonCart onClick={() => handleDecrement(row.original.product_id)}>
@@ -124,7 +124,7 @@ const Cart = () => {
     {
       header: t('unit'),
       accessorKey: 'product.unit.name',
-      cell: ({ row }) => {
+      cell: ({ row }: { row: any }) => {
         const price = row.original.product.price
         const title = `${price.toLocaleString('it-IT', {
           style: 'currency',
@@ -141,7 +141,7 @@ const Cart = () => {
     {
       header: '',
       accessorKey: 'action',
-      cell: ({ row }) => {
+      cell: ({ row }: { row: any }) => {
         return (
           <ButtonCustom onClick={() => handleDeleteCart(row.original.product_id)}>
             <Image src={TrashIcon} alt="icon" />

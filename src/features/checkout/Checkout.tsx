@@ -27,7 +27,7 @@ const Checkout = () => {
     {
       header: t('name_product'),
       accessorKey: 'product.name',
-      cell: ({ row }) => {
+      cell: ({ row }: { row: any }) => {
         return (
           <Stack direction="row" alignItems="center" spacing={3}>
             <Box border={`1px solid ${grey[300]}`} borderRadius={1} padding={1}>
@@ -47,7 +47,7 @@ const Checkout = () => {
     {
       header: t('price'),
       accessorKey: 'product.price',
-      cell: ({ row }) => {
+      cell: ({ row }: { row: any }) => {
         const price = row.original.product.price
 
         return (
@@ -60,7 +60,7 @@ const Checkout = () => {
     {
       header: t('quantity'),
       accessorKey: 'quantity',
-      cell: ({ row }) => {
+      cell: ({ row }: { row: any }) => {
         return (
           <Typography fontSize={14} fontWeight={700} color="red">
             {row.original.quantity}
@@ -71,7 +71,7 @@ const Checkout = () => {
     {
       header: t('unit'),
       accessorKey: 'product.unit.name',
-      cell: ({ row }) => {
+      cell: ({ row }: { row: any }) => {
         const price = row.original.product.price
         const title = `${price.toLocaleString('it-IT', {
           style: 'currency',
@@ -88,7 +88,7 @@ const Checkout = () => {
     {
       header: t('total'),
       accessorKey: 'total',
-      cell: ({ row }) => {
+      cell: ({ row }: { row: any }) => {
         const price = row.original.quantity * row.original.product.price
 
         return (
@@ -227,7 +227,7 @@ const Checkout = () => {
 
               <PayPalButton
                 amount={totalPrice}
-                onSuccess={(details, data) => {
+                onSuccess={(details: any, data: any) => {
                   cartData?.forEach((item) => {
                     {
                       mutate(
@@ -256,7 +256,7 @@ const Checkout = () => {
                     }
                   })
                 }}
-                onError={(err) => {
+                onError={() => {
                   enqueueSnackbar('Thanh toán thất bại!', { variant: 'error' })
                 }}
               />

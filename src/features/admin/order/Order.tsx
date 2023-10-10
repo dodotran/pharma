@@ -51,7 +51,7 @@ const OrderAdminPage = () => {
     {
       header: t('image'),
       accessorKey: 'product.image[0].url',
-      cell: ({ row }) => {
+      cell: ({ row }: { row: any }) => {
         return (
           <Image
             width="100"
@@ -77,7 +77,7 @@ const OrderAdminPage = () => {
     {
       header: t('address'),
       accessorKey: 'address.name',
-      cell: ({ row }) => {
+      cell: ({ row }: { row: any }) => {
         const { address } = row.original
         return (
           <Stack>
@@ -117,7 +117,7 @@ const OrderAdminPage = () => {
     {
       header: '',
       accessorKey: 'action',
-      cell: ({ row }) => {
+      cell: ({ row }: { row: any }) => {
         return (
           <Button
             onClick={() => handleUpdateStatusOrder(row.original.id)}

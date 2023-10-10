@@ -59,7 +59,7 @@ const Unit = () => {
     {
       header: '',
       accessorKey: 'action',
-      cell: ({ row }) => {
+      cell: ({ row }: { row: any }) => {
         return (
           <Stack direction="row" alignItems="center" spacing={3.5}>
             <ButtonDetail>

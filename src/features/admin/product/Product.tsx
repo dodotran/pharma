@@ -1,3 +1,4 @@
+import { Product } from '@/libs/schema/product.schema'
 import { LayoutAdmin } from '@/libs/shared/Layout'
 import { ReactTable } from '@/libs/shared/Table'
 import { ButtonDetail, MuiImage } from '@/libs/shared/styled'
@@ -10,10 +11,33 @@ import EditIcon from 'public/assets/imgs/edit.png'
 import NoImage from 'public/assets/imgs/no-image.png'
 import { useState } from 'react'
 import { Create } from './Create'
+import { Update } from './Update'
 
 const Product = () => {
   const { data, isLoading } = api.product.getAll.useQuery()
   const { t } = useTranslation('product')
+  const [open, setOpen] = useState(false)
+  const [openUpdate, setOpenUpdate] = useState(false)
+  const [product, setProduct] = useState<Product>()
+
+  const handleOpen = () => {
+    setOpen(true)
+  }
+
+  const handleClose = () => {
+    setOpen(false)
+  }
+
+  const handleOpenUpdate = (product: Product) => {
+    setProduct(product)
+    setOpenUpdate(true)
+  }
+
+  const handleCloseUpdate = () => {
+    setOpenUpdate(false)
+    setProduct(undefined)
+  }
+
   const columns = [
     {
       header: t('name'),
@@ -38,7 +62,7 @@ const Product = () => {
     {
       header: t('image'),
       accessorKey: 'image[0]',
-      cell: ({ row }) => {
+      cell: ({ row }: { row: any }) => {
         return (
           <Image
             width="100"
@@ -68,14 +92,14 @@ const Product = () => {
     {
       header: '',
       accessorKey: 'action',
-      cell: ({ row }) => {
+      cell: ({ row }: { row: any }) => {
         return (
           <Stack direction="row" alignItems="center" spacing={3.5}>
             <ButtonDetail>
               <MuiImage src={DetailIcon} alt="detail" />
             </ButtonDetail>
 
-            <ButtonDetail>
+            <ButtonDetail onClick={() => handleOpenUpdate(row.original)}>
               <MuiImage src={EditIcon} alt="edit" />
             </ButtonDetail>
           </Stack>
@@ -83,16 +107,6 @@ const Product = () => {
       },
     },
   ]
-
-  const [open, setOpen] = useState(false)
-
-  const handleOpen = () => {
-    setOpen(true)
-  }
-
-  const handleClose = () => {
-    setOpen(false)
-  }
 
   return (
     <LayoutAdmin>
@@ -107,6 +121,10 @@ const Product = () => {
       <ReactTable columns={columns} data={data || []} isLoading={isLoading} />
 
       {open && <Create open={open} handleClose={handleClose} />}
+
+      {openUpdate && (
+        <Update product={product as Product} open={open} handleClose={handleCloseUpdate} />
+      )}
     </LayoutAdmin>
   )
 }

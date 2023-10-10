@@ -18,11 +18,15 @@ const config = {
   plugins: ['@typescript-eslint'],
   extends: ['next/core-web-vitals', 'plugin:@typescript-eslint/recommended'],
   rules: {
+    'react/prop-types': 'off',
+    'react/react-in-jsx-scope': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
+    'react/display-name': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-unused-vars': [
       'warn',
       { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
     ],
-    '@typescript-eslint/no-extra-semi': 'off',
   },
 }
 
