@@ -80,7 +80,7 @@ export const updateUnitSchema = z.object({
 export const ProductSchemas = z
   .object({
     unit: UnitSchema,
-    ProductDetail: z.array(ProductDetailSchema),
+    ProductDetail: ProductDetailSchema,
     image: z.array(ImageProductSchema),
     category: UnitSchema,
   })

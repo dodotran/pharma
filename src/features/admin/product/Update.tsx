@@ -1,5 +1,9 @@
 import { trueGrey } from '@/libs/config/colors'
-import { CreateProduct, Product, updateProductSchema } from '@/libs/schema/product.schema'
+import {
+  CreateProduct,
+  ProductSchemasType,
+  updateProductSchema,
+} from '@/libs/schema/product.schema'
 import { DatePickerYear, Input, Select } from '@/libs/shared/Form'
 import { uploadCloundinary } from '@/libs/shared/hooks'
 import { api } from '@/utils/api'
@@ -26,7 +30,7 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 type UpdateProps = {
   open: boolean
   handleClose: () => void
-  product: Product
+  product: ProductSchemasType
 }
 
 const Update: React.FC<UpdateProps> = ({ open, handleClose, product }) => {
@@ -81,11 +85,25 @@ const Update: React.FC<UpdateProps> = ({ open, handleClose, product }) => {
       unit_id: product?.unit.id,
       status: product?.status,
       expired_date: product?.expired_date,
-      // description: product?.description,
-      // ingredient: product?.ingredient,
-      // how_to_use: product?.how_to_use,
-      // short_description: product?.short_description,
-      // trademark_id: product?.trademark.id,
+      description: product.ProductDetail.description,
+      ingredient: product.ProductDetail.ingredient,
+      how_to_use: product.ProductDetail.how_to_use,
+      short_description: product?.ProductDetail.short_description,
+      trademark_id: product?.trademark_id,
+    },
+    values: {
+      category_id: product?.category.id,
+      name: product?.name,
+      price: product?.price,
+      quantity: product?.quantity,
+      unit_id: product?.unit.id,
+      status: product?.status,
+      expired_date: product?.expired_date,
+      description: product.ProductDetail.description,
+      ingredient: product.ProductDetail.ingredient,
+      how_to_use: product.ProductDetail.how_to_use,
+      short_description: product?.ProductDetail.short_description,
+      trademark_id: product?.trademark_id,
     },
     resolver: zodResolver(updateProductSchema),
   })
