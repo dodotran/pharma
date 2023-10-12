@@ -1,5 +1,4 @@
-import { Product } from '@/features/admin'
-import { StatusOrder } from '@/features/admin/status-order'
+import { Dashboard } from '@/features/admin/dashboard'
 import { GetStaticPropsContext } from 'next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
@@ -11,4 +10,4 @@ export async function getStaticProps({ locale }: GetStaticPropsContext) {
   }
 }
 
-export default StatusOrder
+export default Dashboard

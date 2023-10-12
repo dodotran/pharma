@@ -167,6 +167,7 @@ class OrderService extends UtilsService {
 
     return order
   }
+
   async updateStatusOrder(id: string, statusId: string, userId: string) {
     this.CheckAuth(userId)
 
@@ -239,6 +240,41 @@ class OrderService extends UtilsService {
     })
 
     return order
+  }
+
+  async getRevenueOrder(userId: string) {
+    this.CheckAdmin(userId)
+
+    const order = await prisma.order.findMany({
+      include: {
+        product: {
+          include: {
+            category: true,
+            trademark: true,
+            unit: true,
+            image: true,
+          },
+        },
+        address: {
+          include: {
+            province: true,
+            district: true,
+            ward: true,
+          },
+        },
+        status: true,
+        payment_method: true,
+      },
+    })
+
+    let total = []
+    order.map((item) => {
+      if (item.payment_method && item.payment_method.status === 'SUCCESS') {
+        total.push(item)
+      }
+    })
+
+    return total
   }
 }
 

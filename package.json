@@ -36,7 +36,6 @@
     "@trpc/react-query": "^10.37.1",
     "@trpc/server": "^10.37.1",
     "argon2": "^0.31.1",
-    "chart.js": "^4.4.0",
     "cloudinary": "^1.41.0",
     "date-fns": "^2.30.0",
     "firebase": "^10.4.0",

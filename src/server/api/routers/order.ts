@@ -75,4 +75,11 @@ export const orderRouter = createTRPCRouter({
     .query(({ ctx }) => {
       return orderService.getAllOrder(ctx.session.user.id)
     }),
+  getRevenue: protectedProcedure
+    .meta({ openapi: { method: 'GET', path: '/order/revenue' } })
+    .input(z.void())
+    .output(z.any())
+    .query(({ ctx }) => {
+      return orderService.getRevenueOrder(ctx.session.user.id)
+    }),
 })

@@ -102,7 +102,9 @@ const Checkout = () => {
 
   const totalPrice = cartData?.reduce((total, item) => {
     return total + item.quantity * item.product.price
-  }, 0)
+  }, 0) as number
+
+  const total = Math.floor(totalPrice / 24000)
 
   const handleOrder = () => {
     cartData?.forEach((item) => {
@@ -227,7 +229,7 @@ const Checkout = () => {
               </Typography>
 
               <PayPalButton
-                amount={totalPrice}
+                amount={total}
                 onSuccess={(details: any, data: any) => {
                   cartData?.forEach((item) => {
                     {
