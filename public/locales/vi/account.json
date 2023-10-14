@@ -22,6 +22,7 @@
   "status_payment": "Trạng thái thanh toán",
   "status_order": "Trạng thái đơn hàng",
   "cancel_order": "Hủy đơn hàng",
+  "final_order": "Đã nhận hàng",
   "address": {
     "big_title": "Địa chỉ",
     "title1": "Bạn chưa lưu địa chỉ nào",

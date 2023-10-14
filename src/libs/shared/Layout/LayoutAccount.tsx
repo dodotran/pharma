@@ -4,7 +4,7 @@ import Head from 'next/head'
 import React from 'react'
 import { SidebarAccount } from '../SideBar'
 import { Header } from './Header'
-import { HEADER_HEIGHT } from './Header/AppBar'
+import { HEADER_CLIENT_HEIGHT } from './Header/AppBar'
 
 type LayoutType = BoxProps<
   'div',
@@ -43,8 +43,8 @@ const LayoutAccount: React.FC<LayoutType> = ({
 export { LayoutAccount }
 
 const ContentPage = styled(Box)(({ theme }) => ({
-  marginTop: HEADER_HEIGHT,
-  minHeight: `calc(100vh - ${HEADER_HEIGHT}px)`,
+  marginTop: HEADER_CLIENT_HEIGHT,
+  minHeight: `calc(100vh - ${HEADER_CLIENT_HEIGHT}px)`,
   flex: 1,
   justifyContent: 'center',
   alignItems: 'center',

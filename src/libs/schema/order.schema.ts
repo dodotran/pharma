@@ -13,4 +13,9 @@ export const CreateOrderSchema = z.object({
   payer_id: z.string(),
 })
 
+export const UpdateStatusOrderSchema = z.object({
+  statusId: z.string(),
+})
+
 export type CreateOrderType = z.infer<typeof CreateOrderSchema>
+export type UpdateStatusOrderType = z.infer<typeof UpdateStatusOrderSchema>

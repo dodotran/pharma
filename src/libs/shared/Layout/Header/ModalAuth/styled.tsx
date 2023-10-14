@@ -5,10 +5,10 @@ const BoxContainer = styled(Box)(({ theme }) => ({
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 600,
+  width: 500,
   minHeight: 250,
   boxShadow: theme.shadows[1],
-  padding: 20,
+  padding: '20px 15px',
   borderRadius: 10,
   background: theme.palette.base.white,
 }))

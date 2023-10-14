@@ -6,11 +6,13 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import LogoHeader from 'public/assets/imgs/logo.png'
 import CartIcon from 'public/assets/imgs/shop.png'
+import ArrowDown from 'public/assets/svgs/arrow-down.svg'
 import { useEffect, useState } from 'react'
 import { Account } from './Account'
 import { AppBar, HEADER_CLIENT_HEIGHT } from './AppBar'
 import { Language } from './Language'
 import { ModalAuth } from './ModalAuth'
+import { ModalCategory } from './ModalCategory'
 import { Search } from './Search'
 
 const Header = () => {
@@ -43,15 +45,35 @@ const Header = () => {
     router.push('/cart')
   }
 
+  const [openCategory, setOpenCategory] = useState(false)
+
+  const handleOpenCategory = () => {
+    setOpenCategory(!openCategory)
+  }
+
+  const handleCloseCategory = () => {
+    setOpenCategory(false)
+  }
+
   return (
     <AppBar elevation={0}>
       <StackContainer>
-        <Stack direction="row" spacing={33} alignItems="center">
+        <Stack direction="row" spacing={14} alignItems="center">
           <Link href={'/'}>
             <MuiImage src={LogoHeader} alt="logo-header" priority />
           </Link>
 
-          <Search />
+          <Stack direction="row" spacing={4}>
+            <ButtonCategory
+              endIcon={<Image src={ArrowDown} alt="icon" />}
+              variant="outlined"
+              onClick={handleOpenCategory}
+            >
+              Danh mục
+            </ButtonCategory>
+
+            <Search />
+          </Stack>
         </Stack>
 
         <Stack direction="row" alignItems="center" spacing={2}>
@@ -73,10 +95,12 @@ const Header = () => {
             <>
               <Button onClick={handleOpen}>{t('sign-in')}</Button>
 
-              <ModalAuth open={open} handleClose={handleClose} />
+              {open && <ModalAuth open={open} handleClose={handleClose} />}
             </>
           )}
         </Stack>
+
+        {openCategory && <ModalCategory open={openCategory} handleClose={handleCloseCategory} />}
       </StackContainer>
     </AppBar>
   )
@@ -90,6 +114,7 @@ const StackContainer = styled(Stack)(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'space-between',
   height: HEADER_CLIENT_HEIGHT,
+  background: theme.palette.blue[0o0],
   [theme.breakpoints.down('sm')]: {
     padding: theme.spacing(0, 2),
   },
@@ -100,3 +125,10 @@ const MuiImage = styled(Image)({
   width: 40,
   height: 40,
 })
+
+const ButtonCategory = styled(Button)(({ theme }) => ({
+  minWidth: 0,
+  background: theme.palette.base.white,
+  padding: 14,
+  color: theme.palette.common.black,
+}))

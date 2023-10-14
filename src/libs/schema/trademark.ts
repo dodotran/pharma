@@ -36,7 +36,7 @@ export const TrademarkCreateSchema = z.object({
 export const TrademarkUpdateSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
-  image: z.string().min(1),
+  image: z.string().optional(),
   country: z.string().min(1),
   introduce: z.string().min(1),
 })

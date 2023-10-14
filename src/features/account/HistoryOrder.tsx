@@ -10,6 +10,8 @@ import NoImage from 'public/assets/imgs/no-image.png'
 const HistoryOrder = () => {
   const { data } = api.order.getHistoryOrder.useQuery()
   const { mutate } = api.order.updateStatusOrder.useMutation()
+  const { mutate: mutateOrder } = api.order.finalOrder.useMutation()
+
   const utils = api.useContext()
   const { t } = useTranslation('account')
 
@@ -22,6 +24,23 @@ const HistoryOrder = () => {
         },
         onError: () => {
           enqueueSnackbar('cancel_order_failed', { variant: 'error' })
+        },
+        onSettled: () => {
+          utils.order.invalidate()
+        },
+      },
+    )
+  }
+
+  const handleFinalOrder = (id: string) => {
+    mutateOrder(
+      { id },
+      {
+        onSuccess: () => {
+          enqueueSnackbar(t('final_order_success'), { variant: 'success' })
+        },
+        onError: () => {
+          enqueueSnackbar('final_order_failed', { variant: 'error' })
         },
         onSettled: () => {
           utils.order.invalidate()
@@ -96,13 +115,27 @@ const HistoryOrder = () => {
                     />
                   </Stack>
 
-                  <Stack>
+                  <Stack spacing={4}>
                     <Button
                       variant="outlined"
                       onClick={() => handleUpdateStatusOrder(item.id)}
-                      disabled={item.status.id === 'clnj24r0i0006wdy8sac4si32'}
+                      disabled={
+                        item.status.id === 'clnj24r0i0006wdy8sac4si32' ||
+                        item.status.id === 'clnq7yp8n0002wdekwpmedkdn'
+                      }
                     >
                       {t('cancel_order')}
+                    </Button>
+
+                    <Button
+                      variant="outlined"
+                      onClick={() => handleFinalOrder(item.id)}
+                      disabled={
+                        item.status.id === 'clnj24r0i0006wdy8sac4si32' ||
+                        item.status.id === 'clnq7yp8n0002wdekwpmedkdn'
+                      }
+                    >
+                      {t('final_order')}
                     </Button>
                   </Stack>
                 </Stack>

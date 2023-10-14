@@ -1,11 +1,6 @@
 import { trueGrey } from '@/libs/config/colors'
-import {
-  CreateProduct,
-  ProductSchemasType,
-  updateProductSchema,
-} from '@/libs/schema/product.schema'
+import { UpdateProduct, updateProductSchema } from '@/libs/schema/product.schema'
 import { DatePickerYear, Input, Select } from '@/libs/shared/Form'
-import { uploadCloundinary } from '@/libs/shared/hooks'
 import { api } from '@/utils/api'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
@@ -21,7 +16,7 @@ import {
 import { useTranslation } from 'next-i18next'
 import Image from 'next/image'
 import { enqueueSnackbar } from 'notistack'
-import AddIcon from 'public/assets/imgs/add.png'
+import NoImage from 'public/assets/imgs/no-image.png'
 import CloseIcon from 'public/assets/svgs/exit.svg'
 import { useEffect, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
@@ -30,12 +25,12 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 type UpdateProps = {
   open: boolean
   handleClose: () => void
-  product: ProductSchemasType
+  product: any
 }
 
 const Update: React.FC<UpdateProps> = ({ open, handleClose, product }) => {
   const { t } = useTranslation('product')
-  const { mutate, isLoading } = api.product.createProduct.useMutation()
+  const { mutate, isLoading } = api.product.updateProduct.useMutation()
   const { mutate: uploadImage } = api.product.uploadImage.useMutation()
   const { data: CategoryData } = api.category.get.useQuery()
   const { data: UnitData } = api.unit.get.useQuery()
@@ -75,23 +70,24 @@ const Update: React.FC<UpdateProps> = ({ open, handleClose, product }) => {
       value: 'DEN_HIEU_THUOC',
     },
   ]
-
-  const { control, handleSubmit, reset } = useForm<CreateProduct>({
+  const { control, handleSubmit, reset } = useForm<UpdateProduct>({
     defaultValues: {
-      category_id: product?.category.id,
+      id: product?.id,
+      category_id: product?.category.id || '',
       name: product?.name,
       price: product?.price,
       quantity: product?.quantity,
       unit_id: product?.unit.id,
       status: product?.status,
       expired_date: product?.expired_date,
-      description: product.ProductDetail.description,
-      ingredient: product.ProductDetail.ingredient,
-      how_to_use: product.ProductDetail.how_to_use,
-      short_description: product?.ProductDetail.short_description,
-      trademark_id: product?.trademark_id,
+      description: product?.product_detail?.description || '',
+      ingredient: product.product_detail?.ingredient || '',
+      how_to_use: product.product_detail?.how_to_use || '',
+      short_description: product?.product_detail?.short_description || '',
+      trademark_id: product?.trademark_id || '',
     },
     values: {
+      id: product?.id,
       category_id: product?.category.id,
       name: product?.name,
       price: product?.price,
@@ -99,10 +95,10 @@ const Update: React.FC<UpdateProps> = ({ open, handleClose, product }) => {
       unit_id: product?.unit.id,
       status: product?.status,
       expired_date: product?.expired_date,
-      description: product.ProductDetail.description,
-      ingredient: product.ProductDetail.ingredient,
-      how_to_use: product.ProductDetail.how_to_use,
-      short_description: product?.ProductDetail.short_description,
+      description: product.product_detail?.description || '',
+      ingredient: product.product_detail?.ingredient || '',
+      how_to_use: product.product_detail?.how_to_use || '',
+      short_description: product?.product_detail?.short_description || '',
       trademark_id: product?.trademark_id,
     },
     resolver: zodResolver(updateProductSchema),
@@ -129,13 +125,10 @@ const Update: React.FC<UpdateProps> = ({ open, handleClose, product }) => {
     },
   })
 
-  const onSubmit: SubmitHandler<CreateProduct> = async (data) => {
+  const onSubmit: SubmitHandler<UpdateProduct> = async (data) => {
     mutate(data, {
       onSuccess: async (data) => {
-        for (let i = 0; i < files.length; i++) {
-          const res = await uploadCloundinary(files[i])
-          uploadImage({ product_id: data.id, url: res.url })
-        }
+        enqueueSnackbar('Update success', { variant: 'success' })
       },
       onError: (err) => {
         const error = String(err.message)
@@ -251,9 +244,15 @@ const Update: React.FC<UpdateProps> = ({ open, handleClose, product }) => {
                 <AvatarWhenEdit>
                   <Camera>
                     <Image
-                      src={imageList[0] ? imageList[0] : AddIcon}
-                      width={imageList[0] ? 200 : 30}
-                      height={imageList[0] ? 200 : 30}
+                      src={
+                        imageList[0]
+                          ? imageList[0]
+                          : product.image[0]?.url
+                          ? product.image[0].url
+                          : NoImage
+                      }
+                      width={imageList[0] ? 200 : 200}
+                      height={imageList[0] ? 200 : 200}
                       alt="choose avatar"
                       onLoad={() => {
                         URL.revokeObjectURL(imageList[0] as string)
@@ -265,9 +264,15 @@ const Update: React.FC<UpdateProps> = ({ open, handleClose, product }) => {
                 <AvatarWhenEdit>
                   <Camera>
                     <Image
-                      src={imageList[1] ? imageList[1] : AddIcon}
-                      width={imageList[1] ? 200 : 30}
-                      height={imageList[1] ? 200 : 30}
+                      src={
+                        imageList[1]
+                          ? imageList[1]
+                          : product.image[1]?.url
+                          ? product.image[1].url
+                          : NoImage
+                      }
+                      width={imageList[1] ? 200 : 200}
+                      height={imageList[1] ? 200 : 200}
                       alt="choose avatar"
                       onLoad={() => {
                         URL.revokeObjectURL(imageList[1] as string)
@@ -281,9 +286,15 @@ const Update: React.FC<UpdateProps> = ({ open, handleClose, product }) => {
                 <AvatarWhenEdit>
                   <Camera>
                     <Image
-                      src={imageList[2] ? imageList[2] : AddIcon}
-                      width={imageList[2] ? 200 : 30}
-                      height={imageList[2] ? 200 : 30}
+                      src={
+                        imageList[2]
+                          ? imageList[2]
+                          : product.image[2]?.url
+                          ? product.image[2].url
+                          : NoImage
+                      }
+                      width={imageList[2] ? 200 : 200}
+                      height={imageList[2] ? 200 : 200}
                       alt="choose avatar"
                       onLoad={() => {
                         URL.revokeObjectURL(imageList[2] as string)
@@ -295,9 +306,15 @@ const Update: React.FC<UpdateProps> = ({ open, handleClose, product }) => {
                 <AvatarWhenEdit>
                   <Camera>
                     <Image
-                      src={imageList[3] ? imageList[3] : AddIcon}
-                      width={imageList[3] ? 200 : 30}
-                      height={imageList[3] ? 200 : 30}
+                      src={
+                        imageList[3]
+                          ? imageList[3]
+                          : product.image[3]?.url
+                          ? product.image[3].url
+                          : NoImage
+                      }
+                      width={imageList[3] ? 200 : 200}
+                      height={imageList[3] ? 200 : 200}
                       alt="choose avatar"
                       onLoad={() => {
                         URL.revokeObjectURL(imageList[3] as string)
@@ -352,7 +369,7 @@ const Update: React.FC<UpdateProps> = ({ open, handleClose, product }) => {
           <Button variant="contained" type="submit">
             {isLoading && <CircularProgress size={18} sx={{ color: 'base.white', mr: 1 }} />}
 
-            {t('create.submit')}
+            {t('update.title')}
           </Button>
         </Stack>
       </BoxContainer>

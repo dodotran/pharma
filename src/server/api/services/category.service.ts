@@ -96,7 +96,11 @@ class CategoryService extends UtilsService {
         id,
       },
       include: {
-        product: true,
+        product: {
+          include: {
+            image: true,
+          },
+        },
       },
     })
 

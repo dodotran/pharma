@@ -3,6 +3,7 @@ import {
   ProductSchemaZod,
   UploadImageSchema,
   createProductSchema,
+  updateProductSchema,
 } from '@/libs/schema/product.schema'
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '@/server/api/trpc'
 import { z } from 'zod'
@@ -45,5 +46,19 @@ export const productRoute = createTRPCRouter({
     .output(z.any())
     .query(() => {
       return productService.getRandomProduct()
+    }),
+  getTrademarkProduct: publicProcedure
+    .meta({ openapi: { method: 'GET', path: '/product/trademark' } })
+    .input(z.object({ id: z.string().min(1) }))
+    .output(z.any())
+    .query(({ input }) => {
+      return productService.getTrademarkProduct(input.id)
+    }),
+  updateProduct: protectedProcedure
+    .meta({ openapi: { method: 'PUT', path: '/product/:id' } })
+    .input(updateProductSchema)
+    .output(z.any())
+    .mutation(({ input, ctx }) => {
+      return productService.updateProduct(input, ctx.session?.user.id as string)
     }),
 })

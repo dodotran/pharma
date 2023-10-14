@@ -22,6 +22,7 @@
   "status_payment": "Status payment",
   "status_order": "Status order",
   "cancel_order": "Cancel order",
+  "final_price": "Success",
   "address": {
     "big_title": "Address",
     "title1": "You haven't saved any addresses yet",

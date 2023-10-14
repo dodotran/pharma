@@ -7,12 +7,25 @@ import { useTranslation } from 'next-i18next'
 import Image from 'next/image'
 import { enqueueSnackbar } from 'notistack'
 import NoImage from 'public/assets/imgs/no-image.png'
+import { useState } from 'react'
+import { UpdateStatus } from './UpdateStatus'
 
 const OrderAdminPage = () => {
   const { data, isLoading } = api.order.getAllOrder.useQuery()
   const { mutate } = api.order.updateStatusOrder.useMutation()
   const { t } = useTranslation('product')
   const utils = api.useContext()
+  const [open, setOpen] = useState(false)
+  const [order, setOrder] = useState()
+
+  const handleOpen = (order: any) => {
+    setOrder(order)
+    setOpen(true)
+  }
+  const handleClose = () => {
+    setOrder(undefined)
+    setOpen(false)
+  }
 
   const handleUpdateStatusOrder = (id: string) => {
     mutate(
@@ -65,6 +78,17 @@ const OrderAdminPage = () => {
     {
       header: t('status'),
       accessorKey: 'status.name',
+      cell: ({ row }: { row: any }) => {
+        return (
+          <Typography
+            onClick={() => handleOpen(row.original)}
+            variant="body2"
+            sx={{ cursor: 'pointer' }}
+          >
+            {row.original.status.name}
+          </Typography>
+        )
+      },
     },
     {
       header: t('payment_method'),
@@ -122,7 +146,10 @@ const OrderAdminPage = () => {
           <Button
             onClick={() => handleUpdateStatusOrder(row.original.id)}
             variant="outlined"
-            disabled={row.original.status.id === 'clnj24r0i0006wdy8sac4si32'}
+            disabled={
+              row.original.status.id === 'clnj24r0i0006wdy8sac4si32' ||
+              row.original.status.id === 'clnq7yp8n0002wdekwpmedkdn'
+            }
           >
             Huỷ đơn hàng
           </Button>
@@ -138,6 +165,7 @@ const OrderAdminPage = () => {
       </Stack>
 
       <ReactTable columns={columns} data={data || []} isLoading={isLoading} />
+      {open && <UpdateStatus open={open} handleClose={handleClose} order={order} />}
     </LayoutAdmin>
   )
 }

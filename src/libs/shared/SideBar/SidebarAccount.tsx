@@ -3,7 +3,7 @@ import { useTranslation } from 'next-i18next'
 import UnitIcon from 'public/assets/imgs/boxes.png'
 import CategoryIcon from 'public/assets/imgs/category.png'
 import DashBoardIcon from 'public/assets/imgs/dashboard.png'
-import { HEADER_HEIGHT } from '../Layout/Header/AppBar'
+import { HEADER_CLIENT_HEIGHT } from '../Layout/Header/AppBar'
 import { ListItemButton } from './ItemSideBar'
 
 const SIDE_BAR_WIDTH = 250
@@ -32,7 +32,7 @@ const SidebarAccount = () => {
   return (
     <Box
       sx={{
-        marginTop: `${HEADER_HEIGHT}px`,
+        marginTop: `${HEADER_CLIENT_HEIGHT}px`,
         width: SIDE_BAR_WIDTH,
         display: { xs: 'none', md: 'block' },
       }}

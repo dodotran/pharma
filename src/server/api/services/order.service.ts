@@ -267,14 +267,191 @@ class OrderService extends UtilsService {
       },
     })
 
-    let total = []
+    let total = 0
     order.map((item) => {
       if (item.payment_method && item.payment_method.status === 'SUCCESS') {
-        total.push(item)
+        total = total + item.product.price * item.quantity
       }
     })
 
     return total
+  }
+
+  async getTotalOrderPending(userId: string) {
+    this.CheckAdmin(userId)
+    const order = await prisma.order.findMany({
+      include: {
+        product: {
+          include: {
+            category: true,
+            trademark: true,
+            unit: true,
+            image: true,
+          },
+        },
+        address: {
+          include: {
+            province: true,
+            district: true,
+            ward: true,
+          },
+        },
+        status: true,
+        payment_method: true,
+      },
+    })
+
+    const orderPending = order.filter((item) => item?.payment_method?.status === 'PENDING')
+
+    return orderPending.length
+  }
+
+  async finalOrder(id: string, userId: string) {
+    this.CheckAdmin(userId)
+
+    const order = await prisma.order.findUnique({
+      where: {
+        id,
+      },
+    })
+
+    if (!order) {
+      throw new TRPCError({ code: 'NOT_FOUND', message: 'error.order-not-found' })
+    }
+
+    const orderUpdate = await prisma.order.update({
+      where: {
+        id,
+      },
+      data: {
+        status_order_id: 'clnq7yp8n0002wdekwpmedkdn',
+      },
+    })
+
+    const payment_method = await prisma.paymentMethod.update({
+      where: {
+        order_id: id,
+      },
+      data: {
+        status: 'SUCCESS',
+      },
+    })
+
+    return { ...orderUpdate, payment_method }
+  }
+
+  async getOrderByMonth(userId: string) {
+    this.CheckAdmin(userId)
+
+    const dateMapper = [
+      {
+        title: 'Tháng 1',
+        startDate: new Date('2023-01-01T00:00:00.000Z'),
+        endDate: new Date('2023-01-31T00:00:00.000Z'),
+        total: 0,
+      },
+      {
+        title: 'Tháng 2',
+        startDate: new Date('2023-02-01T00:00:00.000Z'),
+        endDate: new Date('2023-02-28T00:00:00.000Z'),
+        total: 0,
+      },
+      {
+        title: 'Tháng 3',
+        startDate: new Date('2023-03-01T00:00:00.000Z'),
+        endDate: new Date('2023-03-31T00:00:00.000Z'),
+        total: 0,
+      },
+      {
+        title: 'Tháng 4',
+        startDate: new Date('2023-04-01T00:00:00.000Z'),
+        endDate: new Date('2023-04-30T00:00:00.000Z'),
+        total: 0,
+      },
+      {
+        title: 'Tháng 5',
+        startDate: new Date('2023-05-01T00:00:00.000Z'),
+        endDate: new Date('2023-05-31T00:00:00.000Z'),
+        total: 0,
+      },
+
+      {
+        title: 'Tháng 6',
+        startDate: new Date('2023-06-01T00:00:00.000Z'),
+        endDate: new Date('2023-06-30T00:00:00.000Z'),
+        total: 0,
+      },
+      {
+        title: 'Tháng 7',
+        startDate: new Date('2023-07-01T00:00:00.000Z'),
+        endDate: new Date('2023-07-31T00:00:00.000Z'),
+        total: 0,
+      },
+      {
+        title: 'Tháng 8',
+        startDate: new Date('2023-08-01T00:00:00.000Z'),
+        endDate: new Date('2023-08-31T00:00:00.000Z'),
+        total: 0,
+      },
+      {
+        title: 'Tháng 9',
+        startDate: new Date('2023-09-01T00:00:00.000Z'),
+        endDate: new Date('2023-09-30T00:00:00.000Z'),
+        total: 0,
+      },
+      {
+        title: 'Tháng 10',
+        startDate: new Date('2023-10-01T00:00:00.000Z'),
+        endDate: new Date('2023-10-31T00:00:00.000Z'),
+        total: 0,
+      },
+      {
+        title: 'Tháng 11',
+        startDate: new Date('2023-11-01T00:00:00.000Z'),
+        endDate: new Date('2023-11-30T00:00:00.000Z'),
+        total: 0,
+      },
+      {
+        title: 'Tháng 12',
+        startDate: new Date('2023-12-01T00:00:00.000Z'),
+        endDate: new Date('2023-12-31T00:00:00.000Z'),
+        total: 0,
+      },
+    ]
+
+    const results = await Promise.all(
+      dateMapper.map(async (item) => {
+        const res = await prisma.order.findMany({
+          where: {
+            createdAt: {
+              gte: item.startDate,
+              lte: item.endDate,
+            },
+          },
+          include: {
+            product: true,
+            payment_method: true,
+          },
+        })
+
+        const total = res
+          .map((order) => {
+            if (order.payment_method?.status !== 'SUCCESS') return 0
+            else return order.product.price * order.quantity
+          })
+          .reduce((a, b) => a + b, 0)
+
+        const result = {
+          ...item,
+          total: total,
+        }
+
+        return result
+      }),
+    )
+
+    // The 'results' array now contains the processed data for all items.
+    return results
   }
 }
 

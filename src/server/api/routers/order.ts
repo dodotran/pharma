@@ -82,4 +82,25 @@ export const orderRouter = createTRPCRouter({
     .query(({ ctx }) => {
       return orderService.getRevenueOrder(ctx.session.user.id)
     }),
+  orderPending: protectedProcedure
+    .meta({ openapi: { method: 'GET', path: '/order/pending' } })
+    .input(z.void())
+    .output(z.any())
+    .query(({ ctx }) => {
+      return orderService.getTotalOrderPending(ctx.session.user.id)
+    }),
+  getOrderByMonth: protectedProcedure
+    .meta({ openapi: { method: 'GET', path: '/order/month' } })
+    .input(z.void())
+    .output(z.any())
+    .query(({ ctx }) => {
+      return orderService.getOrderByMonth(ctx.session.user.id)
+    }),
+  finalOrder: protectedProcedure
+    .meta({ openapi: { method: 'GET', path: '/order/final' } })
+    .input(z.object({ id: z.string() }))
+    .output(z.any())
+    .mutation(({ input, ctx }) => {
+      return orderService.finalOrder(input.id, ctx.session.user.id)
+    }),
 })
